@@ -26,6 +26,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { readChangedFileStatus, readRangeInfo } from './src/git-status.mjs';
+import { generateNarrative } from './src/llm.mjs';
 import { GitNexusClient } from './src/gitnexus-client.mjs';
 import { buildLlmPrompt } from './src/prompt.mjs';
 import { buildReport, mergedRisk, selectAnalysisTargets, toPublicReport, validateReport } from './src/report.mjs';
@@ -59,6 +60,10 @@ Options:
   --out <dir>            Output directory (default: <engine>/out)
   --mcp-url <url>        Reuse an already-running GitNexus MCP HTTP server
   --cli <path>           Path to the built GitNexus CLI (default: ${DEFAULTS.cliPath})
+  --llm                  Call the LLM (Anthropic-Messages-compatible endpoint) and
+                         backfill llm.narrative automatically. Credentials/model come
+                         from ANTHROPIC_AUTH_TOKEN (or ANTHROPIC_API_KEY), ANTHROPIC_MODEL,
+                         ANTHROPIC_BASE_URL — same env the Anthropic SDK reads.
   --quiet                Only log errors to stderr
   -h, --help             Show this help
 
@@ -121,6 +126,7 @@ export function resolveConfig(argv, cwd = process.cwd()) {
     limit: toInt(options.limit, DEFAULTS.limit),
     depth: toInt(options.depth, DEFAULTS.depth),
     impactLimit: toInt(options['impact-limit'], DEFAULTS.impactLimit),
+    llm: options.llm === true,
     outDir,
     cliPath,
     mcpUrl: typeof options['mcp-url'] === 'string' ? options['mcp-url'] : null,
@@ -299,6 +305,21 @@ export async function run(config, log = () => {}) {
     // No extra notes here: buildReport already carried them into report.__engine.notes.
     const prompt = buildLlmPrompt(report);
     report.llm.prompt = prompt;
+
+    if (config.llm) {
+      log('calling LLM for the scenario narrative (ANTHROPIC_BASE_URL/ANTHROPIC_MODEL env)…');
+      const result = await generateNarrative(prompt);
+      if (result.error) {
+        notes.push(`LLM narrative step failed (${result.error}); report.json is written without llm.narrative.`);
+        log(`WARNING LLM step failed: ${result.error}`);
+      } else {
+        report.llm.narrative = result.text;
+        log(
+          `LLM narrative: ${result.text.length} chars (model ${result.model}, stop ${result.stopReason}, ` +
+            `in ${result.usage?.input_tokens ?? '?'} / out ${result.usage?.output_tokens ?? '?'} tokens)`,
+        );
+      }
+    }
 
     const publicReport = toPublicReport(report);
     const validation = validateReport(publicReport);

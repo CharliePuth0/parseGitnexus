@@ -54,6 +54,7 @@ Progress goes to **stderr** one line per symbol (`name → merged risk`); stdout
 | `--out <dir>` | `<engine>/out` | output directory (absolute, resolved from cwd) |
 | `--mcp-url <url>` | — | reuse an already-running `gitnexus mcp --http` server instead of spawning one |
 | `--cli <path>` | `<repo>/gitnexus/dist/cli/index.js` | built GitNexus CLI (or `GITNEXUS_CLI`) |
+| `--llm` | off | call the LLM and backfill `llm.narrative` (see [Where the LLM step plugs in](#where-the-llm-step-plugs-in)) |
 | `--quiet` | off | silence stderr progress |
 | `-h`, `--help` | — | usage |
 
@@ -160,15 +161,26 @@ tree as it now stands.
 
 ## Where the LLM step plugs in
 
-The engine never calls a model. It writes `llm-prompt.md` (also embedded verbatim in
-`llm.prompt`) containing the release context, the summary, every deduplicated flow, and per
-changed symbol the risk/epistemic verdict, the upstream and downstream node lists (top 15 per
-direction), the affected flows, the affected modules, and every boundary.
+The engine is zero-dependency and works without a model. It writes `llm-prompt.md` (also
+embedded verbatim in `llm.prompt`) containing the v2 instruction block (role, six-section
+output contract, per-section rules, risk calibration, honesty red lines, style example)
+followed by the release context, the summary, every deduplicated flow, and per changed symbol
+the risk/epistemic verdict, the upstream and downstream node lists (top 15 per direction), the
+affected flows, the affected modules, and every boundary.
 
-The prompt asks for exactly four markdown sections: **business scenarios at risk**, **release
-risk assessment**, **regression checks**, and a **rollout recommendation**.
+### Automatic: `--llm`
 
-To close the loop, write the answer back into the report and the frontend picks it up:
+`node release-impact.mjs --repo <path> --base-ref <ref> --llm` sends the brief to an
+Anthropic-Messages-compatible endpoint (`src/llm.mjs`, plain HTTPS, no new dependency) and
+backfills `llm.narrative` in the same run. Credentials/model come from the same env the
+Anthropic SDK reads — `ANTHROPIC_AUTH_TOKEN` (or `ANTHROPIC_API_KEY`), `ANTHROPIC_MODEL`
+(default `claude-opus-5`), `ANTHROPIC_BASE_URL` (default `https://api.anthropic.com`) — so
+the same code works against api.anthropic.com or a compatible gateway. A failed LLM step
+degrades to a report without `llm.narrative` (plus a note); it never fails the run.
+
+### Manual: hand the brief to a model
+
+To close the loop by hand, write the answer back into the report and the frontend picks it up:
 
 ```bash
 # 1. produce the brief

@@ -12,6 +12,7 @@ import { test } from 'node:test';
 import { parseNameStatusZ, resolveChangeType } from '../src/git-status.mjs';
 import { parseDetectChangesCliOutput } from '../src/gitnexus-client.mjs';
 import { buildLlmPrompt } from '../src/prompt.mjs';
+import { buildLlmRequest } from '../src/llm.mjs';
 import {
   buildReport,
   buildChangeEntry,
@@ -468,14 +469,48 @@ test('buildReport sorts changes by risk and counts processes once', () => {
   assert.equal(report.processes[0].summary, 'A → B');
 });
 
-test('buildLlmPrompt carries the context an LLM needs, and asks for the four sections', () => {
+test('buildLlmPrompt carries the context an LLM needs, and asks for the six v2 sections', () => {
   const prompt = buildLlmPrompt(sampleReport());
   assert.match(prompt, /## Release context/);
   assert.match(prompt, /HEAD~20/);
   assert.match(prompt, /## Changed symbols \(risk-descending\)/);
-  assert.match(prompt, /Business scenarios at risk/);
-  assert.match(prompt, /Regression checks/);
+  // v2 output contract: six fixed sections.
+  assert.match(prompt, /## 结论/);
+  assert.match(prompt, /## 评估范围与可信度/);
+  assert.match(prompt, /## 场景分析/);
+  assert.match(prompt, /## 回归建议/);
+  assert.match(prompt, /## 盲区与假设/);
+  assert.match(prompt, /## 发布建议/);
+  // Honesty red lines and evidence discipline.
+  assert.match(prompt, /诚实性红线/);
+  assert.match(prompt, /\[图证据\]/);
   assert.match(prompt, /proc_1_flow/);
   // The change type is part of the per-symbol context the model gets.
   assert.match(prompt, /- change type: added/);
+});
+
+test('buildLlmRequest honors the same env the Anthropic SDK reads', () => {
+  // Bearer auth token takes precedence over the API key.
+  const withToken = buildLlmRequest('hello', {
+    ANTHROPIC_BASE_URL: 'https://gw.example.com/anthropic',
+    ANTHROPIC_AUTH_TOKEN: 'tok',
+    ANTHROPIC_API_KEY: 'key',
+    ANTHROPIC_MODEL: 'some-model',
+  });
+  assert.equal(withToken.url, 'https://gw.example.com/anthropic/v1/messages');
+  assert.equal(withToken.headers.Authorization, 'Bearer tok');
+  assert.equal(withToken.headers['x-api-key'], undefined);
+  assert.equal(withToken.body.model, 'some-model');
+  assert.equal(withToken.body.messages[0].content, 'hello');
+  assert.equal(withToken.body.messages[0].role, 'user');
+
+  // API key fallback + defaults.
+  const withKey = buildLlmRequest('x', { ANTHROPIC_API_KEY: 'key' });
+  assert.equal(withKey.url, 'https://api.anthropic.com/v1/messages');
+  assert.equal(withKey.headers['x-api-key'], 'key');
+  assert.equal(withKey.body.model, 'claude-opus-5');
+  assert.equal(withKey.body.max_tokens, 8000);
+
+  // No credentials → an error, never a request.
+  assert.ok(buildLlmRequest('x', {}).error);
 });
