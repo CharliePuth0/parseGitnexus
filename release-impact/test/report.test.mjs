@@ -9,6 +9,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { parseNameStatusZ, resolveChangeType } from '../src/git-status.mjs';
 import { parseDetectChangesCliOutput } from '../src/gitnexus-client.mjs';
 import { buildLlmPrompt } from '../src/prompt.mjs';
 import {
@@ -281,6 +282,70 @@ test('parseDetectChangesCliOutput recovers the degraded CLI fallback', () => {
   assert.equal(payload.changed_symbols[1].id, 'Method:killshop-common/src/main/java/com/wang/common/utils/Query.java:getPage');
   // The CLI banner cannot be trusted to be complete.
   assert.equal(payload.truncated, true);
+  // The banner carries no classification, so changeType falls back to git (see below).
+  assert.equal(payload.changed_symbols[0].change_type, null);
+});
+
+// ─── changeType (git name-status) ─────────────────────────────────────────────
+
+test('parseNameStatusZ reads the NUL-delimited form, including spaces in paths', () => {
+  const stdout = ['A\0src/main/java/New.java\0', 'M\0src/main/java/Edited file.java\0', 'D\0src/main/java/Gone.java\0'].join('');
+  const status = parseNameStatusZ(stdout);
+  assert.equal(status.get('src/main/java/New.java'), 'added');
+  assert.equal(status.get('src/main/java/Edited file.java'), 'modified');
+  assert.equal(status.get('src/main/java/Gone.java'), 'removed');
+});
+
+test('parseNameStatusZ consumes both endpoints of a rename and one of a plain record', () => {
+  // R records carry TWO paths; positional parsing is what keeps the second path from
+  // being mistaken for the next record's status token.
+  const stdout = 'R100\0src/old/A.java\0src/new/A.java\0M\0src/new/B.java\0';
+  const status = parseNameStatusZ(stdout);
+  assert.equal(status.get('src/old/A.java'), 'modified');
+  assert.equal(status.get('src/new/A.java'), 'modified');
+  assert.equal(status.get('src/new/B.java'), 'modified');
+  assert.equal(status.size, 3);
+});
+
+test('parseNameStatusZ maps a copy destination to added and tolerates junk', () => {
+  const status = parseNameStatusZ('C75\0src/a/A.java\0src/b/A.java\0X\0whatever\0T\0src/c/C.java\0');
+  assert.equal(status.get('src/a/A.java'), 'modified');
+  assert.equal(status.get('src/b/A.java'), 'added');
+  // Unknown status letters are skipped without eating the following path.
+  assert.equal(status.has('whatever'), false);
+  assert.equal(status.get('src/c/C.java'), 'modified');
+  assert.deepEqual([...parseNameStatusZ('')], []);
+  assert.deepEqual([...parseNameStatusZ(null)], []);
+});
+
+test('resolveChangeType prefers a real tool value, then git, then "modified"', () => {
+  const fileStatus = new Map([['src/a/A.java', 'added']]);
+  // GitNexus 1.6.12 hardcodes "touched", so the git map is what actually decides today.
+  assert.equal(resolveChangeType('src/a/A.java', 'touched', fileStatus), 'added');
+  assert.equal(resolveChangeType('src/a/A.java', null, fileStatus), 'added');
+  // A future analyzer that does classify symbols wins over the file-level view.
+  assert.equal(resolveChangeType('src/a/A.java', 'removed', fileStatus), 'removed');
+  assert.equal(resolveChangeType('src/a/A.java', 'Removed ', fileStatus), 'removed');
+  // Unknown file (or no map at all) degrades to the documented default.
+  assert.equal(resolveChangeType('src/z/Z.java', null, fileStatus), 'modified');
+  assert.equal(resolveChangeType('src/a/A.java', null, undefined), 'modified');
+});
+
+test('buildChangeEntry emits changeType and flags a removed file as un-walkable', () => {
+  const symbol = selectAnalysisTargets([changedSymbol()], 1).targets[0];
+  const fileStatus = new Map([['src/main/java/A.java', 'removed']]);
+  const entry = buildChangeEntry({
+    symbol,
+    upstream: impactResult({ risk: 'LOW' }),
+    downstream: impactResult({ direction: 'downstream', risk: 'LOW' }),
+    fileStatus,
+  });
+  assert.equal(entry.changeType, 'removed');
+  // A LOW verdict on a deleted file must not read as "nothing to check".
+  assert.ok(
+    entry.impact.boundaries.some((line) => line.includes('changeType is "removed"')),
+    `expected a removed-file boundary, got ${JSON.stringify(entry.impact.boundaries)}`,
+  );
 });
 
 // ─── Report assembly + schema checker ─────────────────────────────────────────
@@ -313,6 +378,8 @@ function sampleReport() {
     },
     detect,
     analyses: [{ symbol: selection.targets[0], upstream: impactResult({ risk: 'CRITICAL' }), downstream: impactResult({ direction: 'downstream' }) }],
+    // File-level classification, as `run()` reads it from `git diff --name-status`.
+    fileStatus: new Map([['src/main/java/A.java', 'added']]),
     options: { source: 'mcp', depth: 3, limit: 30, notes: [] },
   });
   report.llm.prompt = buildLlmPrompt(report);
@@ -322,6 +389,38 @@ function sampleReport() {
 test('validateReport accepts a well-formed report', () => {
   const { ok, errors } = validateReport(sampleReport());
   assert.equal(ok, true, `unexpected schema errors: ${errors.join('; ')}`);
+});
+
+test('changeType reaches the report and the schema checker polices it', () => {
+  const report = sampleReport();
+  assert.equal(report.changes[0].changeType, 'added');
+
+  // Optional in v1.1: a report without it still validates (older engine, older fixture).
+  const withoutField = sampleReport();
+  delete withoutField.changes[0].changeType;
+  assert.equal(validateReport(withoutField).ok, true);
+
+  // But when present it must be one of the three literals.
+  const broken = sampleReport();
+  broken.changes[0].changeType = 'touched';
+  const { ok, errors } = validateReport(broken);
+  assert.equal(ok, false);
+  assert.ok(errors.some((line) => line.startsWith('changes[0].changeType')), errors.join('; '));
+});
+
+test('changeType defaults to "modified" when git status is unavailable', () => {
+  const detect = sampleDetect();
+  const selection = selectAnalysisTargets(detect.changed_symbols, 30);
+  const report = toPublicReport(
+    buildReport({
+      meta: { repo: 'demo', repoPath: '/tmp/demo', baseRef: 'HEAD~1', headRef: 'HEAD', generatedAt: 'x', indexStatus: 'unknown' },
+      detect,
+      analyses: [{ symbol: selection.targets[0], upstream: impactResult(), downstream: impactResult({ direction: 'downstream' }) }],
+      options: { source: 'mcp', depth: 3, limit: 30, notes: [] },
+      // No fileStatus at all — the git read failed, so every entry degrades, never omits.
+    }),
+  );
+  assert.equal(report.changes[0].changeType, 'modified');
 });
 
 test('the engine-only block never reaches the emitted report', () => {
@@ -377,4 +476,6 @@ test('buildLlmPrompt carries the context an LLM needs, and asks for the four sec
   assert.match(prompt, /Business scenarios at risk/);
   assert.match(prompt, /Regression checks/);
   assert.match(prompt, /proc_1_flow/);
+  // The change type is part of the per-symbol context the model gets.
+  assert.match(prompt, /- change type: added/);
 });

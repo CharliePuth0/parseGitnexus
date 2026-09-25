@@ -33,6 +33,9 @@ function formatChangeSection(entry, index) {
   lines.push(`- uid: \`${entry.uid}\``);
   lines.push(`- kind: ${entry.kind}`);
   lines.push(`- file: ${entry.filePath}${entry.isTestFile ? ' (test file)' : ''}`);
+  // `changeType` is file-level (git name-status), so it says how the FILE changed, not the
+  // symbol; an added symbol inside a modified file still reads "modified".
+  if (entry.changeType) lines.push(`- change type: ${entry.changeType}`);
   lines.push(`- risk: ${impact.risk} · epistemic: ${impact.epistemic}`);
 
   for (const [label, nodes] of [
@@ -132,6 +135,14 @@ export function buildLlmPrompt(report, options = {}) {
 
   lines.push('## Changed symbols (risk-descending)');
   lines.push('');
+  if (changes.some((entry) => entry.changeType)) {
+    lines.push(
+      '_Change type is file-level (`git name-status`): it says how the **file** changed, so a',
+      'symbol added inside a modified file still reads `modified`, and `removed` appears only',
+      'for a symbol the tool still lists after its file was deleted._',
+    );
+    lines.push('');
+  }
   if (changes.length === 0) {
     lines.push('_No symbol could be analyzed._');
     lines.push('');

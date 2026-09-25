@@ -73,7 +73,8 @@ export function parseDetectChangesCliOutput(stdout) {
       name,
       type,
       filePath,
-      change_type: 'touched',
+      // The banner carries no classification either, so `changeType` is derived from git.
+      change_type: null,
     });
   }
 

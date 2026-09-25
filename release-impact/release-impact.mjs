@@ -25,6 +25,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { readChangedFileStatus } from './src/git-status.mjs';
 import { GitNexusClient } from './src/gitnexus-client.mjs';
 import { buildLlmPrompt } from './src/prompt.mjs';
 import { buildReport, mergedRisk, selectAnalysisTargets, toPublicReport, validateReport } from './src/report.mjs';
@@ -181,6 +182,23 @@ export async function run(config, log = () => {}) {
       log('DEGRADED run: changed symbols recovered from the CLI banner, not the full set.');
     }
 
+    // File-level change classification for `changeType`. The tool hardcodes
+    // `change_type: 'touched'`, so the added/modified/removed split comes from git itself,
+    // with the same range semantics detect_changes uses (base ref vs the working tree).
+    const { status: fileStatus, error: gitStatusError } = await readChangedFileStatus(config.repoPath, config.baseRef);
+    if (gitStatusError) {
+      notes.push(
+        `could not read file change status from git (${gitStatusError}); every changeType falls back to "modified".`,
+      );
+      log(`WARNING git name-status unavailable: ${gitStatusError}`);
+    } else {
+      const counts = { added: 0, modified: 0, removed: 0 };
+      for (const kind of fileStatus.values()) counts[kind] = (counts[kind] ?? 0) + 1;
+      log(
+        `git name-status: ${counts.added} added, ${counts.modified} modified, ${counts.removed} removed file(s) in range`,
+      );
+    }
+
     const selection = selectAnalysisTargets(detect.changed_symbols, config.limit);
     if (selection.dropped.testFile > 0) {
       notes.push(`${selection.dropped.testFile} changed symbol(s) in test files were excluded from analysis.`);
@@ -248,6 +266,7 @@ export async function run(config, log = () => {}) {
       },
       detect,
       analyses,
+      fileStatus,
       options: { source: client.mode, depth: config.depth, limit: config.limit, notes },
     });
 
@@ -268,9 +287,15 @@ export async function run(config, log = () => {}) {
     writeOutput(reportPath, reportText);
     writeOutput(promptPath, promptText);
 
+    const changeTypeCounts = publicReport.changes.reduce((counts, change) => {
+      counts[change.changeType] = (counts[change.changeType] ?? 0) + 1;
+      return counts;
+    }, {});
     log(
-      `done in ${((Date.now() - started) / 1000).toFixed(1)}s — ${publicReport.changes.length} changes, ` +
-        `${publicReport.processes.length} processes, risk ${publicReport.summary.riskLevel}`,
+      `done in ${((Date.now() - started) / 1000).toFixed(1)}s — ${publicReport.changes.length} changes ` +
+        `(${Object.entries(changeTypeCounts)
+          .map(([kind, count]) => `${count} ${kind}`)
+          .join(', ')}), ${publicReport.processes.length} processes, risk ${publicReport.summary.riskLevel}`,
     );
     log(`wrote ${reportPath} (${formatBytes(reportText)})`);
     log(`wrote ${promptPath} (${formatBytes(promptText)})`);

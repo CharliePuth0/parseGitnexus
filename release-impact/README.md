@@ -6,7 +6,7 @@ Give it a repository and a release baseline (`HEAD~20`, a tag, a branch) and it 
 
 | file | who reads it |
 | --- | --- |
-| `out/report.json` | the frontend (`impact-web/`) — the machine contract, [REPORT_SCHEMA.md](./REPORT_SCHEMA.md) v1 |
+| `out/report.json` | the frontend (`impact-web/`) — the machine contract, [REPORT_SCHEMA.md](./REPORT_SCHEMA.md) v1 (+ the v1.1 `changeType` field) |
 | `out/llm-prompt.md` | a human or Claude — one self-contained brief for the release narrative |
 
 Zero npm dependencies. Plain Node ESM (`node:child_process`, `node:fs`, `fetch`), tested on
@@ -28,14 +28,15 @@ mcp server ready on port 61434
 analysis source: mcp
 detect-changes scope=compare base-ref=HEAD~20 (this walks the git diff)
 detect-changes: 932 files, 1240 symbols, 179 affected processes, risk critical (listing TRUNCATED)
+git name-status: 512 added, 97 modified, 325 removed file(s) in range
 analysis targets: 30 of 998 eligible symbols (limit 30); excluded 2 test-file, 0 path-less, 0 duplicate; 968 left unanalyzed by --limit
 [1/30] MemberFeignService → LOW
 ...
 [25/30] sendCode → CRITICAL
 ...
-done in 4.2s — 30 changes, 348 processes, risk critical
-wrote .../release-impact/out/report.json (148.6 KiB)
-wrote .../release-impact/out/llm-prompt.md (50.9 KiB)
+done in 4.2s — 30 changes (29 added, 1 modified), 348 processes, risk critical
+wrote .../release-impact/out/report.json (150.4 KiB)
+wrote .../release-impact/out/llm-prompt.md (51.8 KiB)
 ```
 
 Progress goes to **stderr** one line per symbol (`name → merged risk`); stdout stays clean.
@@ -88,6 +89,7 @@ and its own location, never against a relative assumption.
                                                               │ out/report.json  +  out/llm-prompt.md     │
                                                               └───────────────────────────────────────────┘
                 src/util.mjs — risk ordering, JSON extraction, uid→kind, dedupe (pure, unit-tested)
+                src/git-status.mjs — `git diff --name-status -z` → changeType (file-level, pure parser)
                 gitnexus-shared/dist/index.js — isTestFilePath (single source of truth for test paths)
 ```
 
@@ -100,6 +102,8 @@ and its own location, never against a relative assumption.
    path-less aggregate nodes, drop duplicate uids. Nothing is silently lost: the counts land
    in the log line and in the prompt's caveats.
 3. **rank + cap** — keep the tool's own listing order and take the first `--limit` symbols.
+   In the same pass, classify each analyzed file with `git diff --name-status` (see
+   [`src/git-status.mjs`](./src/git-status.mjs)) to fill `changeType`.
 4. **walk** — for each one, `impact` twice: `direction: 'upstream'` (callers — who breaks)
    and `direction: 'downstream'` (callees — what the change reaches). Sequential, addressed
    by `target_uid` for zero-ambiguity lookup.
@@ -122,6 +126,7 @@ and its own location, never against a relative assumption.
 | `meta.indexStatus` | `impact.staleness.status` (`current` / `behind` / `diverged`), else `unknown` |
 | `ChangeEntry.uid/name/kind/filePath` | `changed_symbols[].id/name/type/filePath` |
 | `ChangeEntry.isTestFile` | `isTestFilePath(filePath)` from `gitnexus-shared` |
+| `ChangeEntry.changeType` | `git diff --name-status` for that `filePath` (**file**-level; see [Deviations](#deviations-from-the-tool-contract) #10) — `gitnexus`' `change_type` is hardcoded to `touched` |
 | `ChangeEntry.impact.risk` | merged upstream/downstream `risk` (see below) |
 | `ChangeEntry.impact.epistemic` | merged `epistemic` (`lower-bound` beats `exact`; a failed leg → `unknown`) |
 | `ChangeEntry.impact.boundaries` | tool-reported `boundaries` + `riskNote` + engine notes (caps, failures) |
@@ -145,6 +150,11 @@ REPORT_SCHEMA.md fixes the order `CRITICAL > HIGH > MEDIUM > LOW > UNKNOWN`, so:
 Bounded lists state their bounds: `affectedProcesses` is capped at 50 per change, and each
 direction's node list at `--impact-limit` per depth level. Both add a boundary line naming the
 true size, and `report.processes` always carries the complete deduplicated union.
+
+`changeType: 'removed'` adds a boundary line of its own (`the file is gone from the working
+tree, so this impact walk describes the last indexed revision of the symbol`): a removal has
+no caller set left to break, so a LOW verdict there describes the graph as indexed, not the
+tree as it now stands.
 
 ---
 
@@ -202,14 +212,24 @@ frontend should render the structural views and show the narrative when present.
 | affected execution flows (deduped) | 348 |
 | overall risk | `critical` |
 | per-symbol risk | 1 CRITICAL, 3 HIGH, 6 MEDIUM, 20 LOW |
-| runtime | ~4.7 s (warm index) |
-| outputs | `out/report.json` (148.6 KiB, schema-valid), `out/llm-prompt.md` (50.9 KiB) |
+| `changeType` distribution (analyzed 30) | 29 `added`, 1 `modified`, 0 `removed` |
+| `changeType` distribution (all 998 eligible) | 773 `added`, 225 `modified`, 0 `removed` |
+| file-level git status over the range | 512 added, 97 modified, 325 removed, 2 renamed |
+| runtime | ~4.2 s (warm index) |
+| outputs | `out/report.json` (150.4 KiB, schema-valid), `out/llm-prompt.md` (51.8 KiB) |
 
 Top verdicts: `sendCode` (CRITICAL, upstream unresolved → boundary note), `weibo` / `register`
 / `login` (HIGH), `OAuth2Controller` and the `loginController$N` lambda classes (MEDIUM).
 Because the first 30 symbols follow `detect_changes`' own file-ordered listing, the slice is
 dominated by `killshop-auth-server` — raise `--limit` (impact calls are ~0.1 s each on a warm
 index) for a broader sample.
+
+The 325 deleted files in the range produce **no** `changeType: 'removed'` entry, and that is
+the tool's behavior rather than a bug in the classification: `detect_changes` reports a symbol
+only when a diff hunk overlaps its line range **in the file as it now exists** (a deleted file's
+header is `+++ /dev/null`, so it contributes no hunks), and a symbol that no longer exists in
+any file cannot be listed. `removed` is reachable only if a future tool version lists symbols
+from deleted files; the engine handles that case, and unit-tests it.
 
 The `killshop` working tree is untouched by a run: the engine is strictly read-only (MCP plus
 `git diff`).
@@ -219,12 +239,13 @@ The `killshop` working tree is untouched by a run: the engine is strictly read-o
 ## Tests
 
 ```bash
-cd release-impact && node --test        # 22 tests, no dependencies, Node 24
+cd release-impact && node --test        # 29 tests, no dependencies, Node 24
 ```
 
 Covers risk ordering and the upstream/downstream merge, test-file filtering and the `--limit`
 cap, boundary recording for capped/failed legs, the banner-tolerant JSON extractor, the CLI
-banner parser, the schema checker (including the rejects), report assembly, and the prompt.
+banner parser, the `git diff --name-status -z` parser and the `changeType` precedence rule, the
+schema checker (including the rejects), report assembly, and the prompt.
 
 ---
 
@@ -268,6 +289,16 @@ description assumed, and what the engine does about it:
 9. **`ProcessEntry.stepCount` is a floor for impact-only flows.** `byDepth[].processes[].step`
    is the symbol's index *inside* the flow, not the flow's length; `detect_changes` supplies
    the true `step_count` for flows it knows about.
+10. **`change_type` is hardcoded to `'touched'`.** Every `changed_symbols[]` entry carries that
+    literal (`local-backend.ts`: `change_type: 'touched'`), so the tool reports *that* a symbol
+    changed but never *how*. `ChangeEntry.changeType` is therefore derived by the engine from
+    `git diff --name-status -z <baseRef>` — the same range and the same "base ref vs working
+    tree" semantics the tool's own diff uses, so the two views cannot disagree about which
+    files changed. Consequences: the granularity is **file**-level (a symbol added inside a
+    modified file reads `modified`; `detect_changes` reports no line ranges for changed
+    symbols, so nothing finer exists), and a rename is reported as `modified` at both endpoints
+    while a copy's destination is `added`. If `git diff` fails, every entry falls back to
+    `modified` and the prompt says so, rather than dropping the field.
 
 ---
 
@@ -277,9 +308,12 @@ description assumed, and what the engine does about it:
   The contract keeps the field and the frontend keeps its hide-toggle; if you want test
   symbols analyzable, the engine needs an `--include-tests` flag (currently they are filtered
   before the `--limit` cut, and the count is stated in the prompt caveats).
-* **`change_type`** (`touched` / added / removed) is present on every `changed_symbols[]` entry
-  but is not part of schema v1, so it is not emitted. Worth adding — a "deleted symbol" badge
-  is high-signal for release review. Needs a schema bump.
+* **`changeType` is emitted but is file-level, and `'removed'` does not occur today.**
+  `detect_changes` never lists a symbol whose file no longer exists, so the deleted-file badge
+  the frontend would like to render has nothing to attach to on this tool version — the 325
+  deleted files in the killshop range yield zero `removed` entries (see the demo section). If
+  the UI needs "what disappeared" as a first-class view, that is a *file*-level list, and the
+  engine should surface `git name-status` output directly rather than through changed symbols.
 * **The first-`--limit` slice inherits `detect_changes`' listing order** (grouped by file, not
   by risk), so a large diff can cluster on one service. A future `--rank` option could order
   candidates by file churn or by a cheap risk probe before the full walk. Schema-neutral.

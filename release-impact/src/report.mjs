@@ -8,6 +8,7 @@
 // node_modules of its own, while the dependency-free compiled predicate is right next
 // door. This keeps the test-file classification to a single source of truth.
 import { isTestFilePath } from '../../gitnexus-shared/dist/index.js';
+import { CHANGE_TYPES, resolveChangeType } from './git-status.mjs';
 
 import {
   compareRiskDesc,
@@ -47,6 +48,9 @@ export function normalizeChangedSymbol(raw) {
     kind: raw.type ?? raw.kind ?? kindFromUid(uid) ?? 'Unknown',
     filePath,
     isTestFile: isTestFilePath(filePath),
+    // Carried, not yet resolved: the git file status is applied in buildChangeEntry, which
+    // is also where the tool's own (currently always `touched`) value is preferred.
+    toolChangeType: raw.change_type ?? raw.changeType ?? null,
   };
 }
 
@@ -278,8 +282,13 @@ export function mergedRisk(upstream, downstream) {
   return worstRisk([up.risk, down.risk]);
 }
 
-/** Merge the two direction verdicts for one symbol into a single ChangeEntry. */
-export function buildChangeEntry({ symbol, upstream, downstream, processIndex = new Map() }) {
+/**
+ * Merge the two direction verdicts for one symbol into a single ChangeEntry.
+ *
+ * `fileStatus` is the `Map<path, changeType>` from `readChangedFileStatus`; without it every
+ * entry falls back to `modified`.
+ */
+export function buildChangeEntry({ symbol, upstream, downstream, processIndex = new Map(), fileStatus = new Map() }) {
   const up = directionVerdict(upstream, 'upstream');
   const down = directionVerdict(downstream, 'downstream');
 
@@ -297,12 +306,22 @@ export function buildChangeEntry({ symbol, upstream, downstream, processIndex = 
     );
   }
 
+  const changeType = resolveChangeType(symbol.filePath, symbol.toolChangeType, fileStatus);
+  if (changeType === 'removed') {
+    // A removal has no caller set left to break, so the walk can only describe the graph as
+    // it was indexed. Say that instead of letting a LOW verdict read as "nothing to check".
+    boundaries.push(
+      'changeType is "removed": the file is gone from the working tree, so this impact walk describes the last indexed revision of the symbol',
+    );
+  }
+
   return {
     uid: symbol.uid,
     name: symbol.name,
     kind: symbol.kind,
     filePath: symbol.filePath,
     isTestFile: symbol.isTestFile,
+    changeType,
     impact: {
       risk: mergedRisk(upstream, downstream),
       epistemic: mergeEpistemic([up.ok ? up.epistemic : 'unknown', down.ok ? down.epistemic : 'unknown']),
@@ -319,17 +338,24 @@ export function buildChangeEntry({ symbol, upstream, downstream, processIndex = 
  * Assemble the full report.
  *
  * @param {object} input
- * @param {object} input.meta      meta block (already resolved paths/refs/timestamps)
- * @param {object} input.detect    `detect_changes` payload
- * @param {Array}  input.analyses  `[{symbol, upstream, downstream}]`
- * @param {object} [input.options] `{limit, depth, source}`
+ * @param {object} input.meta         meta block (already resolved paths/refs/timestamps)
+ * @param {object} input.detect       `detect_changes` payload
+ * @param {Array}  input.analyses     `[{symbol, upstream, downstream}]`
+ * @param {Map}    [input.fileStatus] `Map<path, changeType>` for `ChangeEntry.changeType`
+ * @param {object} [input.options]    `{limit, depth, source}`
  */
-export function buildReport({ meta, detect, analyses, options = {} }) {
+export function buildReport({ meta, detect, analyses, options = {}, fileStatus = new Map() }) {
   const processIndex = buildProcessIndex(detect?.affected_processes);
   const entryByUid = new Map();
 
   for (const analysis of analyses ?? []) {
-    const entry = buildChangeEntry({ symbol: analysis.symbol, upstream: analysis.upstream, downstream: analysis.downstream, processIndex });
+    const entry = buildChangeEntry({
+      symbol: analysis.symbol,
+      upstream: analysis.upstream,
+      downstream: analysis.downstream,
+      processIndex,
+      fileStatus,
+    });
     entryByUid.set(entry.uid, entry);
   }
 
@@ -484,6 +510,8 @@ function validateChangeEntry(errors, path, entry) {
   checkString(errors, `${path}.kind`, entry.kind);
   checkString(errors, `${path}.filePath`, entry.filePath);
   if (typeof entry.isTestFile !== 'boolean') errors.push(`${path}.isTestFile: expected boolean, got ${typeof entry.isTestFile}`);
+  // Optional in v1.1, but when present it must be one of the three literals.
+  if (entry.changeType !== undefined) checkEnum(errors, `${path}.changeType`, entry.changeType, CHANGE_TYPES);
 
   const impact = entry.impact;
   if (!isPlainObject(impact)) {
