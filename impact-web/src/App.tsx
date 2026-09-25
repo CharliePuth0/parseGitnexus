@@ -82,7 +82,20 @@ function Workspace() {
   // 演示 / 自动化验证入口:?sample=1 直接载入示例报告
   useEffect(() => {
     if (report !== null) return;
-    if (new URLSearchParams(window.location.search).has('sample')) loadSample();
+    const params = new URLSearchParams(window.location.search);
+    const reportUrl = params.get('report');
+    if (params.has('sample')) {
+      loadSample();
+    } else if (reportUrl) {
+      // ?report=/path/to/report.json — 从 dev server / public 目录按 URL 载入真实报告
+      fetch(reportUrl)
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.text();
+        })
+        .then((text) => loadText(text, reportUrl))
+        .catch((error) => setLoadError(`${reportUrl} — ${String(error?.message ?? error)}`));
+    }
     // 只在上传页检查一次
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
