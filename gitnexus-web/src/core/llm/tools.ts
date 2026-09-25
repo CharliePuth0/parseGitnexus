@@ -13,7 +13,13 @@
 
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-import { NODE_TABLES, REL_TYPES, scoreImpactRisk, unusedAxesForImpactWalk } from 'gitnexus-shared';
+import {
+  NODE_TABLES,
+  REL_TYPES,
+  scoreImpactRisk,
+  unusedAxesForImpactWalk,
+  isTestFilePath,
+} from 'gitnexus-shared';
 import type {
   EnrichedSearchResult,
   GrepOptions,
@@ -860,22 +866,6 @@ MATCH (n:Function {id: emb.nodeId}) RETURN n`,
       const showTests = includeTests ?? false; // Default: exclude test files
       const minConf = minConfidence ?? 0.7; // Default: exclude fuzzy matches (<70% confidence)
 
-      // Test file patterns
-      const isTestFile = (path: string): boolean => {
-        if (!path) return false;
-        const p = path.toLowerCase();
-        return (
-          p.includes('.test.') ||
-          p.includes('.spec.') ||
-          p.includes('__tests__') ||
-          p.includes('__mocks__') ||
-          p.endsWith('.test.ts') ||
-          p.endsWith('.test.tsx') ||
-          p.endsWith('.spec.ts') ||
-          p.endsWith('.spec.tsx')
-        );
-      };
-
       // Default to usage-based relation types (exclude CONTAINS, DEFINES for impact analysis)
       const defaultRelTypes = ['CALLS', 'IMPORTS', 'EXTENDS', 'IMPLEMENTS'];
       const activeRelTypes =
@@ -1198,7 +1188,7 @@ MATCH (n:Function {id: emb.nodeId}) RETURN n`,
           const filePath = Array.isArray(row) ? row[3] : row.filePath;
 
           // Skip test files if includeTests is false
-          if (!showTests && isTestFile(filePath)) return;
+          if (!showTests && isTestFilePath(filePath)) return;
 
           // Avoid duplicates (a node might appear at multiple depths)
           if (nodeId && !seenIds.has(nodeId)) {

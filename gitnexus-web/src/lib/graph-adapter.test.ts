@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { knowledgeGraphToTreeGraphology, knowledgeGraphToCirclesGraphology } from './graph-adapter';
+import {
+  knowledgeGraphToTreeGraphology,
+  knowledgeGraphToCirclesGraphology,
+  filterGraphByLabels,
+  filterGraphByDepth,
+} from './graph-adapter';
 import type { KnowledgeGraph } from '../core/graph/types';
 import type { GraphNode } from 'gitnexus-shared';
 import { EDGE_INFO } from './constants';
@@ -204,5 +209,84 @@ describe('knowledgeGraphToCirclesGraphology', () => {
       expect(attrs.isHierarchyEdge).toBe(false);
       expect(attrs.color).toBe(EDGE_INFO.CALLS.color);
     });
+  });
+});
+
+function makePathNode(id: string, label: string, name: string, filePath: string): GraphNode {
+  return {
+    id,
+    label: label as any,
+    properties: { name, filePath, startLine: 1, endLine: 1 },
+  };
+}
+
+const testFilterGraph: KnowledgeGraph = {
+  nodes: [
+    makePathNode('test-file', 'File', 'FooTest.java', 'src/test/java/com/x/FooTest.java'),
+    makePathNode('test-symbol', 'Function', 'fooTest', 'src/test/java/com/x/FooTest.java'),
+    makePathNode('prod-file', 'File', 'Service.java', 'src/main/java/com/x/Service.java'),
+    makePathNode('prod-symbol', 'Function', 'serve', 'src/main/java/com/x/Service.java'),
+  ],
+  relationships: [
+    { id: 'r1', type: 'CALLS', sourceId: 'test-symbol', targetId: 'prod-symbol' },
+  ],
+};
+
+describe('filterGraphByLabels with hideTestFiles', () => {
+  const buildGraph = () => knowledgeGraphToTreeGraphology(testFilterGraph);
+
+  it('hides test-file nodes and their symbol children when enabled', () => {
+    const sigmaGraph = buildGraph();
+    filterGraphByLabels(sigmaGraph, ['File', 'Function'], true);
+
+    expect(sigmaGraph.getNodeAttributes('test-file').hidden).toBe(true);
+    expect(sigmaGraph.getNodeAttributes('test-symbol').hidden).toBe(true);
+    expect(sigmaGraph.getNodeAttributes('prod-file').hidden).toBe(false);
+    expect(sigmaGraph.getNodeAttributes('prod-symbol').hidden).toBe(false);
+  });
+
+  it('keeps test-file nodes visible when disabled', () => {
+    const sigmaGraph = buildGraph();
+    filterGraphByLabels(sigmaGraph, ['File', 'Function'], false);
+
+    expect(sigmaGraph.getNodeAttributes('test-file').hidden).toBe(false);
+    expect(sigmaGraph.getNodeAttributes('prod-file').hidden).toBe(false);
+  });
+
+  it('keeps existing behavior with the default parameter', () => {
+    const sigmaGraph = buildGraph();
+    filterGraphByLabels(sigmaGraph, ['File', 'Function']);
+
+    expect(sigmaGraph.getNodeAttributes('test-file').hidden).toBe(false);
+    expect(sigmaGraph.getNodeAttributes('prod-file').hidden).toBe(false);
+  });
+
+  it('respects label visibility and hideTestFiles together', () => {
+    const sigmaGraph = buildGraph();
+    filterGraphByLabels(sigmaGraph, ['Function'], true);
+
+    expect(sigmaGraph.getNodeAttributes('test-symbol').hidden).toBe(true);
+    expect(sigmaGraph.getNodeAttributes('prod-symbol').hidden).toBe(false);
+    expect(sigmaGraph.getNodeAttributes('prod-file').hidden).toBe(true); // label hidden
+  });
+});
+
+describe('filterGraphByDepth with hideTestFiles', () => {
+  // Edge r1: test-symbol → prod-symbol; hops from the production anchor
+  // include the test caller at depth 1.
+  it('hides in-range test nodes while keeping in-range production nodes', () => {
+    const sigmaGraph = knowledgeGraphToTreeGraphology(testFilterGraph);
+    filterGraphByDepth(sigmaGraph, 'prod-symbol', 1, ['File', 'Function'], true);
+
+    expect(sigmaGraph.getNodeAttributes('prod-symbol').hidden).toBe(false);
+    expect(sigmaGraph.getNodeAttributes('test-symbol').hidden).toBe(true);
+  });
+
+  it('shows in-range test nodes when disabled', () => {
+    const sigmaGraph = knowledgeGraphToTreeGraphology(testFilterGraph);
+    filterGraphByDepth(sigmaGraph, 'prod-symbol', 1, ['File', 'Function'], false);
+
+    expect(sigmaGraph.getNodeAttributes('test-symbol').hidden).toBe(false);
+    expect(sigmaGraph.getNodeAttributes('test-file').hidden).toBe(true); // out of range (no edge)
   });
 });

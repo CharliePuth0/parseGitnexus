@@ -36,4 +36,21 @@ describe('GraphState', () => {
     });
     expect(result.current.graphMode).toBe('full');
   });
+
+  it('should default hideTestFiles to true', () => {
+    const { result } = renderHook(() => useGraphState(), { wrapper });
+    expect(result.current.hideTestFiles).toBe(true);
+  });
+
+  it('should toggle hideTestFiles', () => {
+    const { result } = renderHook(() => useGraphState(), { wrapper });
+    act(() => {
+      result.current.toggleHideTestFiles();
+    });
+    expect(result.current.hideTestFiles).toBe(false);
+    act(() => {
+      result.current.toggleHideTestFiles();
+    });
+    expect(result.current.hideTestFiles).toBe(true);
+  });
 });

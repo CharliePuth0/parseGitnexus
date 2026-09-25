@@ -1,4 +1,5 @@
 import Graph, { MultiGraph } from 'graphology';
+import { isTestFilePath } from 'gitnexus-shared';
 import type { NodeLabel } from 'gitnexus-shared';
 import type { KnowledgeGraph } from '../core/graph/types';
 import { EDGE_INFO, NODE_COLORS, NODE_SIZES, getCommunityColor } from './constants';
@@ -515,9 +516,12 @@ export const knowledgeGraphToCirclesGraphology = (
 export const filterGraphByLabels = (
   graph: Graph<SigmaNodeAttributes, SigmaEdgeAttributes>,
   visibleLabels: NodeLabel[],
+  hideTestFiles: boolean = false,
 ): void => {
   graph.forEachNode((nodeId, attributes) => {
-    const isVisible = visibleLabels.includes(attributes.nodeType);
+    const isVisible =
+      visibleLabels.includes(attributes.nodeType) &&
+      !(hideTestFiles && isTestFilePath(attributes.filePath));
     graph.setNodeAttribute(nodeId, 'hidden', !isVisible);
   });
 };
@@ -559,14 +563,15 @@ export const filterGraphByDepth = (
   selectedNodeId: string | null,
   maxHops: number | null,
   visibleLabels: NodeLabel[],
+  hideTestFiles: boolean = false,
 ): void => {
   if (maxHops === null) {
-    filterGraphByLabels(graph, visibleLabels);
+    filterGraphByLabels(graph, visibleLabels, hideTestFiles);
     return;
   }
 
   if (selectedNodeId === null || !graph.hasNode(selectedNodeId)) {
-    filterGraphByLabels(graph, visibleLabels);
+    filterGraphByLabels(graph, visibleLabels, hideTestFiles);
     return;
   }
 
@@ -575,6 +580,7 @@ export const filterGraphByDepth = (
   graph.forEachNode((nodeId, attributes) => {
     const isLabelVisible = visibleLabels.includes(attributes.nodeType);
     const isInRange = nodesInRange.has(nodeId);
-    graph.setNodeAttribute(nodeId, 'hidden', !isLabelVisible || !isInRange);
+    const isTestFile = hideTestFiles && isTestFilePath(attributes.filePath);
+    graph.setNodeAttribute(nodeId, 'hidden', !isLabelVisible || !isInRange || isTestFile);
   });
 };

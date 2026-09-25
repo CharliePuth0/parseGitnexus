@@ -93,14 +93,20 @@ describe('shared predicate stays dependency-free', () => {
   // Poka-yoke for #2802: `local-backend.ts` imports this module, so anything
   // imported here lands in MCP server startup. The duplication this module
   // replaced existed precisely because `entry-point-scoring.ts` pulls in the
-  // language-provider registry. An import added here would silently reintroduce
-  // that startup cost.
-  it('declares no imports', () => {
+  // language-provider registry. The predicate now lives in `gitnexus-shared`
+  // (a leaf package with zero runtime dependencies); this module may ONLY
+  // re-export it through the bare root specifier — a subpath import would
+  // break the build's specifier rewrite, and any other import would
+  // reintroduce the startup cost.
+  it('re-exports only the bare gitnexus-shared root', () => {
     const src = readFileSync(
       new URL('../../src/core/ingestion/utils/test-file-path.ts', import.meta.url),
       'utf8',
     );
-    const imports = src.split('\n').filter((l) => /^\s*(import\b|export\s.*\sfrom\s)/.test(l));
+    const lines = src.split('\n');
+    const reExports = lines.filter((l) => /^\s*export\s.*\sfrom\s/.test(l));
+    const imports = lines.filter((l) => /^\s*import\b/.test(l));
+    expect(reExports).toEqual(["export { isTestFilePath } from 'gitnexus-shared';"]);
     expect(imports).toEqual([]);
   });
 });

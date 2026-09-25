@@ -14,7 +14,7 @@ import {
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAppState } from '../hooks/useAppState';
-import { type GraphNode, getSyntaxLanguageFromFilename } from 'gitnexus-shared';
+import { type GraphNode, getSyntaxLanguageFromFilename, isTestFilePath } from 'gitnexus-shared';
 import { NODE_COLORS } from '../lib/constants';
 import { BackendError, readFile, type ReadFileResult } from '../services/backend-client';
 import { useTranslation } from 'react-i18next';
@@ -58,6 +58,7 @@ export const CodeReferencesPanel = ({ onFocusNode }: CodeReferencesPanelProps) =
     codeReferenceFocus,
     projectName,
     currentRepo,
+    hideTestFiles,
   } = useAppState();
 
   const nodeById = useMemo(() => {
@@ -181,18 +182,22 @@ export const CodeReferencesPanel = ({ onFocusNode }: CodeReferencesPanelProps) =
   }, [codeReferenceFocus, aiReferences]);
 
   const refsWithSnippets = useMemo(() => {
-    return aiReferences.map((ref) => {
-      return {
-        ref,
-        content: null as string | null,
-        start: 0,
-        end: 0,
-        highlightStart: 0,
-        highlightEnd: 0,
-        totalLines: 0,
-      };
-    });
-  }, [aiReferences]);
+    // Display-level filter only: entries stay in `aiReferences`, so toggling
+    // the hide-test-files switch off restores them without a refetch.
+    return aiReferences
+      .filter((ref) => !(hideTestFiles && isTestFilePath(ref.filePath)))
+      .map((ref) => {
+        return {
+          ref,
+          content: null as string | null,
+          start: 0,
+          end: 0,
+          highlightStart: 0,
+          highlightEnd: 0,
+          totalLines: 0,
+        };
+      });
+  }, [aiReferences, hideTestFiles]);
 
   const selectedFilePath = selectedNode?.properties?.filePath;
   const selectedIsFile = selectedNode?.label === 'File' && !!selectedFilePath;

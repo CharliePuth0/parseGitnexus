@@ -44,6 +44,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle>((_, ref) => {
     visibleEdgeTypes,
     openCodePanel,
     depthFilter,
+    hideTestFiles,
     highlightedNodeIds,
     setHighlightedNodeIds,
     aiCitationHighlightedNodeIds,
@@ -236,10 +237,16 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle>((_, ref) => {
     const sigmaGraph = sigma.getGraph() as Graph<SigmaNodeAttributes, SigmaEdgeAttributes>;
     if (sigmaGraph.order === 0) return; // Don't filter empty graph
 
-    filterGraphByDepth(sigmaGraph, appSelectedNode?.id || null, depthFilter, visibleLabels);
+    filterGraphByDepth(
+      sigmaGraph,
+      appSelectedNode?.id || null,
+      depthFilter,
+      visibleLabels,
+      hideTestFiles,
+    );
     sigma.refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- sigmaRef identity never changes
-  }, [graph, graphViewMode, visibleLabels, depthFilter, appSelectedNode]);
+  }, [graph, graphViewMode, visibleLabels, depthFilter, hideTestFiles, appSelectedNode]);
 
   // Sync app selected node with sigma
   useEffect(() => {

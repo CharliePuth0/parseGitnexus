@@ -17,10 +17,12 @@ import {
   List,
   AtSign,
   Type,
+  Check,
 } from '@/lib/lucide-icons';
 import { useAppState } from '../hooks/useAppState';
 import { useTranslation } from 'react-i18next';
 import { FILTERABLE_LABELS, NODE_COLORS, ALL_EDGE_TYPES, EDGE_INFO } from '../lib/constants';
+import { isTestFilePath } from 'gitnexus-shared';
 import type { GraphNode, NodeLabel } from 'gitnexus-shared';
 
 // Tree node structure
@@ -34,12 +36,17 @@ interface TreeNode {
 }
 
 // Build tree from graph nodes
-const buildFileTree = (nodes: GraphNode[]): TreeNode[] => {
+const buildFileTree = (nodes: GraphNode[], hideTestFiles: boolean = false): TreeNode[] => {
   const root: TreeNode[] = [];
   const pathMap = new Map<string, TreeNode>();
 
-  // Filter to only folders and files
-  const fileNodes = nodes.filter((n) => n.label === 'Folder' || n.label === 'File');
+  // Filter to only folders and files; hide test files (and their directory
+  // scaffolding) when the hide-test-files toggle is on.
+  const fileNodes = nodes.filter(
+    (n) =>
+      (n.label === 'Folder' || n.label === 'File') &&
+      !(hideTestFiles && isTestFilePath(n.properties.filePath)),
+  );
 
   // Sort by path to ensure parents come before children
   fileNodes.sort((a, b) => a.properties.filePath.localeCompare(b.properties.filePath));
@@ -231,6 +238,8 @@ export const FileTreePanel = ({ onFocusNode }: FileTreePanelProps) => {
     openCodePanel,
     depthFilter,
     setDepthFilter,
+    hideTestFiles,
+    toggleHideTestFiles,
   } = useAppState();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -241,8 +250,8 @@ export const FileTreePanel = ({ onFocusNode }: FileTreePanelProps) => {
   // Build file tree from graph
   const fileTree = useMemo(() => {
     if (!graph) return [];
-    return buildFileTree(graph.nodes);
-  }, [graph]);
+    return buildFileTree(graph.nodes, hideTestFiles);
+  }, [graph, hideTestFiles]);
 
   // Auto-expand first level on initial load
   useEffect(() => {
@@ -453,6 +462,37 @@ export const FileTreePanel = ({ onFocusNode }: FileTreePanelProps) => {
                 </button>
               );
             })}
+          </div>
+
+          {/* Test Files Toggle */}
+          <div className="mt-6 border-t border-border-subtle pt-4">
+            <h3 className="mb-2 text-xs font-medium tracking-wide text-text-secondary uppercase">
+              {t('graph:fileTree.testFiles')}
+            </h3>
+            <p className="mb-3 text-[11px] text-text-muted">{t('graph:fileTree.testFilesDesc')}</p>
+            <button
+              onClick={toggleHideTestFiles}
+              aria-pressed={hideTestFiles}
+              className={`flex w-full items-center gap-2.5 rounded px-2 py-1.5 text-left transition-colors ${
+                hideTestFiles
+                  ? 'bg-elevated text-text-primary'
+                  : 'text-text-muted hover:bg-hover hover:text-text-secondary'
+              } `}
+            >
+              <div
+                className={`flex h-4 w-4 items-center justify-center rounded-sm border ${
+                  hideTestFiles ? 'border-accent bg-accent' : 'border-border-subtle bg-transparent'
+                }`}
+              >
+                {hideTestFiles && <Check className="h-3 w-3 text-white" />}
+              </div>
+              <span className="flex-1 text-xs">{t('graph:fileTree.hideTestFiles')}</span>
+              <div
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  hideTestFiles ? 'bg-accent' : 'bg-border-subtle'
+                }`}
+              />
+            </button>
           </div>
 
           {/* Edge Type Toggles */}

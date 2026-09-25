@@ -17,6 +17,15 @@ interface GraphStateContextValue {
   toggleEdgeVisibility: (edgeType: EdgeType) => void;
   depthFilter: number | null;
   setDepthFilter: (depth: number | null) => void;
+  /**
+   * Hide unit-test files (and their symbol children) from the graph canvas,
+   * the file tree, and the code references panel. Defaults to true — test
+   * files are hidden on page load until the user turns the toggle off.
+   * Not persisted (like visibleLabels/depthFilter): default-ON satisfies the
+   * "hidden on load" requirement deterministically.
+   */
+  hideTestFiles: boolean;
+  toggleHideTestFiles: () => void;
   highlightedNodeIds: Set<string>;
   setHighlightedNodeIds: (ids: Set<string>) => void;
   graphViewMode: 'force' | 'tree' | 'circles';
@@ -47,6 +56,7 @@ export const GraphStateProvider = ({ children }: { children: ReactNode }) => {
   const [visibleLabels, setVisibleLabels] = useState<NodeLabel[]>(DEFAULT_VISIBLE_LABELS);
   const [visibleEdgeTypes, setVisibleEdgeTypes] = useState<EdgeType[]>(DEFAULT_VISIBLE_EDGES);
   const [depthFilter, setDepthFilter] = useState<number | null>(null);
+  const [hideTestFiles, setHideTestFiles] = useState<boolean>(true);
   const [highlightedNodeIds, setHighlightedNodeIds] = useState<Set<string>>(new Set());
   const [graphViewMode, setGraphViewMode] = useState<'force' | 'tree' | 'circles'>('force');
   const [graphMode, setGraphMode] = useState<GraphMode>('full');
@@ -64,6 +74,8 @@ export const GraphStateProvider = ({ children }: { children: ReactNode }) => {
     );
   }, []);
 
+  const toggleHideTestFiles = useCallback(() => setHideTestFiles((prev) => !prev), []);
+
   const value = useMemo<GraphStateContextValue>(
     () => ({
       graph,
@@ -76,6 +88,8 @@ export const GraphStateProvider = ({ children }: { children: ReactNode }) => {
       toggleEdgeVisibility,
       depthFilter,
       setDepthFilter,
+      hideTestFiles,
+      toggleHideTestFiles,
       highlightedNodeIds,
       setHighlightedNodeIds,
       graphViewMode,
@@ -91,6 +105,7 @@ export const GraphStateProvider = ({ children }: { children: ReactNode }) => {
       visibleLabels,
       visibleEdgeTypes,
       depthFilter,
+      hideTestFiles,
       highlightedNodeIds,
       graphViewMode,
       graphMode,

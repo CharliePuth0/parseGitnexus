@@ -136,6 +136,10 @@ interface AppState {
   depthFilter: number | null;
   setDepthFilter: (depth: number | null) => void;
 
+  // Hide unit-test files from graph, file tree, and reference panel
+  hideTestFiles: boolean;
+  toggleHideTestFiles: () => void;
+
   // Graph view mode
   graphViewMode: 'force' | 'tree' | 'circles';
   setGraphViewMode: (mode: 'force' | 'tree' | 'circles') => void;
@@ -260,6 +264,8 @@ const AppStateProviderInner = ({ children }: { children: ReactNode }) => {
     toggleEdgeVisibility,
     depthFilter,
     setDepthFilter,
+    hideTestFiles,
+    toggleHideTestFiles,
     highlightedNodeIds,
     setHighlightedNodeIds,
     graphViewMode,
@@ -1519,6 +1525,8 @@ const AppStateProviderInner = ({ children }: { children: ReactNode }) => {
     toggleEdgeVisibility,
     depthFilter,
     setDepthFilter,
+    hideTestFiles,
+    toggleHideTestFiles,
     graphViewMode,
     setGraphViewMode,
     graphMode,

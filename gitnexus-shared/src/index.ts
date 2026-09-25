@@ -25,6 +25,10 @@ export {
 } from './language-detection.js';
 export type { MroStrategy } from './mro-strategy.js';
 
+// Test-file path classification (shared by CLI ingestion, MCP includeTests,
+// the web graph filter, and the web LLM impact tool)
+export { isTestFilePath } from './test-file-path.js';
+
 // Impact risk scoring
 export { scoreImpactRisk, unusedAxesForImpactWalk } from './impact-risk.js';
 export type {

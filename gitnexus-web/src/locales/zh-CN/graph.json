@@ -93,7 +93,10 @@
     "focusDepthDesc": "显示所选节点 N 跳内的节点",
     "hops_one": "{{count}} 跳",
     "hops_other": "{{count}} 跳",
-    "colorLegend": "颜色图例"
+    "colorLegend": "颜色图例",
+    "testFiles": "测试文件",
+    "testFilesDesc": "测试目录中的文件和符号",
+    "hideTestFiles": "隐藏单元测试文件"
   },
   "codePanel": {
     "expand": "展开代码面板",

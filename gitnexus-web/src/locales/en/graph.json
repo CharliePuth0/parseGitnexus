@@ -93,7 +93,10 @@
     "focusDepthDesc": "Show nodes within N hops of selection",
     "hops_one": "{{count}} hop",
     "hops_other": "{{count}} hops",
-    "colorLegend": "Color Legend"
+    "colorLegend": "Color Legend",
+    "testFiles": "Test Files",
+    "testFilesDesc": "Files and symbols in test directories",
+    "hideTestFiles": "Hide unit test files"
   },
   "codePanel": {
     "expand": "Expand Code Panel",
