@@ -1,0 +1,1155 @@
+{
+  "meta": {
+    "version": 1,
+    "repo": "GitNexus",
+    "repoPath": "/Users/dev/oss/GitNexus",
+    "baseRef": "v9.7.0",
+    "headRef": "HEAD",
+    "generatedAt": "2026-09-25T15:41:08.000Z",
+    "indexStatus": "current"
+  },
+  "summary": {
+    "changedFiles": 18,
+    "changedSymbols": 26,
+    "analyzedSymbols": 16,
+    "affectedProcesses": 26,
+    "riskLevel": "critical",
+    "truncated": false
+  },
+  "changes": [
+    {
+      "uid": "function:isTestFilePath#1",
+      "name": "isTestFilePath",
+      "kind": "Function",
+      "filePath": "gitnexus-shared/src/test-file-path.ts",
+      "startLine": 88,
+      "endLine": 100,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "CRITICAL",
+        "epistemic": "exact",
+        "boundaries": [
+          "跨仓库消费者(插件 / 下游 npm 包)不在本索引内,影响面按本仓库计。"
+        ],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:isTestFile#1",
+            "name": "isTestFile",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/ingestion/entry-point-scoring.ts",
+            "relationType": "CALLS",
+            "confidence": 0.96
+          },
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.filterImpact#1",
+            "name": "filterImpact",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.94
+          },
+          {
+            "depth": 1,
+            "uid": "function:buildImpactToolResult#1",
+            "name": "buildImpactToolResult",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/tools.ts",
+            "relationType": "CALLS",
+            "confidence": 0.91
+          },
+          {
+            "depth": 2,
+            "uid": "function:impact#1",
+            "name": "impact",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/tools.ts",
+            "relationType": "CALLS",
+            "confidence": 0.83
+          },
+          {
+            "depth": 2,
+            "uid": "function:buildGraphFromReport#1",
+            "name": "buildGraphFromReport",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/lib/graph-adapter.ts",
+            "relationType": "IMPORTS",
+            "confidence": 0.78
+          },
+          {
+            "depth": 2,
+            "uid": "function:buildLlmImpactTool#1",
+            "name": "buildLlmImpactTool",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/core/llm/tools.ts",
+            "relationType": "CALLS",
+            "confidence": 0.72
+          },
+          {
+            "depth": 3,
+            "uid": "function:registerMcpTools#1",
+            "name": "registerMcpTools",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/server.ts",
+            "relationType": "CALLS",
+            "confidence": 0.68
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:normalizePath#1",
+            "name": "normalizePath",
+            "kind": "Function",
+            "filePath": "gitnexus-shared/src/path-utils.ts",
+            "relationType": "CALLS",
+            "confidence": 0.99
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_analyze",
+          "cli_detect_changes",
+          "web_graph_build",
+          "pipeline_entry_points",
+          "mcp_context_lookup",
+          "graph_adapter_test_filter"
+        ],
+        "affectedModules": [
+          "shared/test-classification",
+          "mcp/local-backend",
+          "core/ingestion",
+          "web/graph"
+        ]
+      }
+    },
+    {
+      "uid": "interface:ImpactNode#2",
+      "name": "ImpactNode",
+      "kind": "Interface",
+      "filePath": "gitnexus-shared/src/graph/types.ts",
+      "startLine": 52,
+      "endLine": 61,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "HIGH",
+        "epistemic": "lower-bound",
+        "boundaries": [
+          "接口消费者未追踪:结构类型在 TS 中按形状匹配,索引无法枚举全部实现方。",
+          "外部仓库(MCP 客户端 / 编辑器插件)按此结构取值,不在影响面内。"
+        ],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:buildImpactResult#1",
+            "name": "buildImpactResult",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "IMPORTS",
+            "confidence": 0.93
+          },
+          {
+            "depth": 1,
+            "uid": "function:buildGraphFromReport#1",
+            "name": "buildGraphFromReport",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/lib/graph-adapter.ts",
+            "relationType": "IMPORTS",
+            "confidence": 0.9
+          },
+          {
+            "depth": 1,
+            "uid": "function:renderImpactPanel#1",
+            "name": "renderImpactPanel",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/components/ImpactPanel.tsx",
+            "relationType": "IMPORTS",
+            "confidence": 0.87
+          },
+          {
+            "depth": 2,
+            "uid": "function:impact#1",
+            "name": "impact",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/tools.ts",
+            "relationType": "IMPORTS",
+            "confidence": 0.74
+          },
+          {
+            "depth": 2,
+            "uid": "function:serializeReport#1",
+            "name": "serializeReport",
+            "kind": "Function",
+            "filePath": "release-impact/src/report.ts",
+            "relationType": "CALLS",
+            "confidence": null
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "interface:ChangeEntry#1",
+            "name": "ChangeEntry",
+            "kind": "Interface",
+            "filePath": "gitnexus-shared/src/graph/types.ts",
+            "relationType": "HAS_PROPERTY",
+            "confidence": 0.88
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_analyze",
+          "web_graph_build",
+          "cli_review_local",
+          "cli_impact_target",
+          "changeset_symbol_map"
+        ],
+        "affectedModules": [
+          "shared/graph-types",
+          "mcp/local-backend",
+          "web/graph"
+        ]
+      }
+    },
+    {
+      "uid": "method:LocalBackend.impact#3",
+      "name": "LocalBackend.impact",
+      "kind": "Method",
+      "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+      "startLine": 1712,
+      "endLine": 1810,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "HIGH",
+        "epistemic": "exact",
+        "boundaries": [
+          "Cypher 查询结果分页上限 200,超出部分按 total 计数但未进入上游列表。",
+          "upstream capped at 200 of 1,204 —— 上游列表为下界,超出部分未展开。"
+        ],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:impact#1",
+            "name": "impact",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/tools.ts",
+            "relationType": "CALLS",
+            "confidence": 0.97
+          },
+          {
+            "depth": 1,
+            "uid": "method:McpServer.handleCall#1",
+            "name": "handleCall",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/server.ts",
+            "relationType": "CALLS",
+            "confidence": 0.92
+          },
+          {
+            "depth": 2,
+            "uid": "function:registerMcpTools#1",
+            "name": "registerMcpTools",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/server.ts",
+            "relationType": "CALLS",
+            "confidence": 0.8
+          },
+          {
+            "depth": 2,
+            "uid": "function:runCliImpact#1",
+            "name": "runCliImpact",
+            "kind": "Function",
+            "filePath": "gitnexus/src/cli/impact.ts",
+            "relationType": "CALLS",
+            "confidence": 0.76
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.walkUpstream#1",
+            "name": "walkUpstream",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.95
+          },
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.walkDownstream#1",
+            "name": "walkDownstream",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.94
+          },
+          {
+            "depth": 1,
+            "uid": "function:buildImpactResult#1",
+            "name": "buildImpactResult",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.93
+          },
+          {
+            "depth": 2,
+            "uid": "method:CypherRunner.execute#1",
+            "name": "execute",
+            "kind": "Method",
+            "filePath": "gitnexus/src/core/graph/cypher-runner.ts",
+            "relationType": "CALLS",
+            "confidence": 0.86
+          },
+          {
+            "depth": 3,
+            "uid": "function:withReadTransaction#1",
+            "name": "withReadTransaction",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/graph/db.ts",
+            "relationType": "CALLS",
+            "confidence": 0.71
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_analyze",
+          "cli_review_local",
+          "mcp_trace_flow",
+          "web_symbol_detail",
+          "graph_adapter_edges"
+        ],
+        "affectedModules": [
+          "mcp/local-backend",
+          "core/graph"
+        ]
+      }
+    },
+    {
+      "uid": "function:detectChanges#4",
+      "name": "detectChanges",
+      "kind": "Function",
+      "filePath": "gitnexus/src/core/changes/detect-changes.ts",
+      "startLine": 64,
+      "endLine": 158,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "HIGH",
+        "epistemic": "lower-bound",
+        "boundaries": [
+          "仅比对已索引符号;索引外的文件变更不计入。",
+          "重命名通过符号名匹配推断,同名符号可能误判。"
+        ],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:runDetectChanges#1",
+            "name": "runDetectChanges",
+            "kind": "Function",
+            "filePath": "gitnexus/src/cli/detect-changes.ts",
+            "relationType": "CALLS",
+            "confidence": 0.95
+          },
+          {
+            "depth": 1,
+            "uid": "function:detect_changes#1",
+            "name": "detect_changes",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/tools.ts",
+            "relationType": "CALLS",
+            "confidence": 0.93
+          },
+          {
+            "depth": 2,
+            "uid": "function:collectReleaseImpact#1",
+            "name": "collectReleaseImpact",
+            "kind": "Function",
+            "filePath": "release-impact/src/collect.ts",
+            "relationType": "CALLS",
+            "confidence": null
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:diffCommits#1",
+            "name": "diffCommits",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/changes/git-diff.ts",
+            "relationType": "CALLS",
+            "confidence": 0.97
+          },
+          {
+            "depth": 1,
+            "uid": "function:mapDiffToSymbols#1",
+            "name": "mapDiffToSymbols",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/changes/symbol-mapper.ts",
+            "relationType": "CALLS",
+            "confidence": 0.9
+          },
+          {
+            "depth": 2,
+            "uid": "function:parseUnifiedDiff#1",
+            "name": "parseUnifiedDiff",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/changes/git-diff.ts",
+            "relationType": "CALLS",
+            "confidence": 0.82
+          }
+        ],
+        "affectedProcesses": [
+          "cli_detect_changes",
+          "release_impact_report",
+          "mcp_impact_analyze",
+          "ingestion_scope_pass",
+          "changeset_summary"
+        ],
+        "affectedModules": [
+          "core/changes",
+          "cli/detect-changes",
+          "release-impact"
+        ]
+      }
+    },
+    {
+      "uid": "class:GraphAdapter#5",
+      "name": "GraphAdapter",
+      "kind": "Class",
+      "filePath": "gitnexus-web/src/lib/graph-adapter.ts",
+      "startLine": 22,
+      "endLine": 210,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "MEDIUM",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:useGraphData#1",
+            "name": "useGraphData",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/hooks/useGraphData.ts",
+            "relationType": "IMPORTS",
+            "confidence": 0.94
+          },
+          {
+            "depth": 1,
+            "uid": "function:buildGraphFromReport#1",
+            "name": "buildGraphFromReport",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/lib/graph-adapter.ts",
+            "relationType": "CALLS",
+            "confidence": 0.91
+          },
+          {
+            "depth": 2,
+            "uid": "function:App#1",
+            "name": "App",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/App.tsx",
+            "relationType": "IMPORTS",
+            "confidence": 0.79
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:applyTestFilter#1",
+            "name": "applyTestFilter",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/lib/test-file-path.ts",
+            "relationType": "CALLS",
+            "confidence": 0.89
+          },
+          {
+            "depth": 1,
+            "uid": "function:colorForKind#1",
+            "name": "colorForKind",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/lib/theme.ts",
+            "relationType": "CALLS",
+            "confidence": 0.85
+          }
+        ],
+        "affectedProcesses": [
+          "web_graph_build",
+          "pipeline_embed",
+          "mcp_impact_paginate"
+        ],
+        "affectedModules": [
+          "web/graph",
+          "web/hooks"
+        ]
+      }
+    },
+    {
+      "uid": "method:ScopeResolver.resolve#6",
+      "name": "ScopeResolver.resolve",
+      "kind": "Method",
+      "filePath": "gitnexus/src/core/ingestion/scope-resolution/resolver.ts",
+      "startLine": 140,
+      "endLine": 268,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "MEDIUM",
+        "epistemic": "lower-bound",
+        "boundaries": [
+          "动态分派(接口 / 反射)的调用边无法静态解析。"
+        ],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "method:PipelinePhase.resolveScopes#1",
+            "name": "resolveScopes",
+            "kind": "Method",
+            "filePath": "gitnexus/src/core/ingestion/pipeline-phases/resolve.ts",
+            "relationType": "CALLS",
+            "confidence": 0.92
+          },
+          {
+            "depth": 2,
+            "uid": "function:loadPipelinePhases#1",
+            "name": "loadPipelinePhases",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/ingestion/pipeline.ts",
+            "relationType": "CALLS",
+            "confidence": 0.77
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "method:LanguageProvider.getScopeRules#1",
+            "name": "getScopeRules",
+            "kind": "Method",
+            "filePath": "gitnexus/src/core/ingestion/language-provider.ts",
+            "relationType": "CALLS",
+            "confidence": 0.88
+          },
+          {
+            "depth": 1,
+            "uid": "method:MroStrategy.pick#1",
+            "name": "pick",
+            "kind": "Method",
+            "filePath": "gitnexus-shared/src/mro-strategy.ts",
+            "relationType": "CALLS",
+            "confidence": 0.84
+          }
+        ],
+        "affectedProcesses": [
+          "pipeline_resolve",
+          "cli_analyze",
+          "graph_adapter_test_filter",
+          "web_graph_layout"
+        ],
+        "affectedModules": [
+          "core/ingestion",
+          "shared/mro"
+        ]
+      }
+    },
+    {
+      "uid": "method:CypherRunner.execute#7",
+      "name": "CypherRunner.execute",
+      "kind": "Method",
+      "filePath": "gitnexus/src/core/graph/cypher-runner.ts",
+      "startLine": 88,
+      "endLine": 174,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "MEDIUM",
+        "epistemic": "unknown",
+        "boundaries": [
+          "查询字符串由调用方拼接,静态解析看不到具体的图访问路径。",
+          "LadybugDB 层的执行计划与索引命中情况不参与影响面计算。"
+        ],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.walkUpstream#1",
+            "name": "walkUpstream",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": null
+          },
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.walkDownstream#1",
+            "name": "walkDownstream",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": null
+          },
+          {
+            "depth": 2,
+            "uid": "method:LocalBackend.impact#3",
+            "name": "LocalBackend.impact",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.7
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:withReadTransaction#1",
+            "name": "withReadTransaction",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/graph/db.ts",
+            "relationType": "CALLS",
+            "confidence": 0.93
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_analyze",
+          "mcp_trace_flow",
+          "cli_analyze",
+          "changeset_symbol_map",
+          "diff_parse"
+        ],
+        "affectedModules": [
+          "core/graph",
+          "mcp/local-backend"
+        ]
+      }
+    },
+    {
+      "uid": "function:scoreEntryPoints#8",
+      "name": "scoreEntryPoints",
+      "kind": "Function",
+      "filePath": "gitnexus/src/core/ingestion/entry-point-scoring.ts",
+      "startLine": 32,
+      "endLine": 96,
+      "isTestFile": false,
+      "changeType": "modified",
+      "impact": {
+        "risk": "MEDIUM",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "method:PipelinePhase.detectEntryPoints#1",
+            "name": "detectEntryPoints",
+            "kind": "Method",
+            "filePath": "gitnexus/src/core/ingestion/pipeline-phases/entry-points.ts",
+            "relationType": "CALLS",
+            "confidence": 0.9
+          },
+          {
+            "depth": 2,
+            "uid": "function:loadPipelinePhases#1",
+            "name": "loadPipelinePhases",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/ingestion/pipeline.ts",
+            "relationType": "CALLS",
+            "confidence": 0.75
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:isTestFile#1",
+            "name": "isTestFile",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/ingestion/entry-point-scoring.ts",
+            "relationType": "CALLS",
+            "confidence": 0.96
+          }
+        ],
+        "affectedProcesses": [
+          "pipeline_entry_points",
+          "cli_analyze",
+          "graph_adapter_edges",
+          "entry_point_scan"
+        ],
+        "affectedModules": [
+          "core/ingestion"
+        ]
+      }
+    },
+    {
+      "uid": "function:buildImpactResult#9",
+      "name": "buildImpactResult",
+      "kind": "Function",
+      "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+      "startLine": 4820,
+      "endLine": 4886,
+      "isTestFile": false,
+      "changeType": "added",
+      "impact": {
+        "risk": "MEDIUM",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.impact#3",
+            "name": "LocalBackend.impact",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.93
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:paginate#1",
+            "name": "paginate",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/pagination.ts",
+            "relationType": "CALLS",
+            "confidence": 0.9
+          },
+          {
+            "depth": 2,
+            "uid": "function:estimateTokens#1",
+            "name": "estimateTokens",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/token-budget.ts",
+            "relationType": "CALLS",
+            "confidence": 0.66
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_analyze",
+          "changeset_summary",
+          "review_impact_walk"
+        ],
+        "affectedModules": [
+          "mcp/local-backend",
+          "mcp/pagination"
+        ]
+      }
+    },
+    {
+      "uid": "function:mapDiffToSymbols#10",
+      "name": "mapDiffToSymbols",
+      "kind": "Function",
+      "filePath": "gitnexus/src/core/changes/symbol-mapper.ts",
+      "startLine": 18,
+      "endLine": 92,
+      "isTestFile": false,
+      "changeType": "added",
+      "impact": {
+        "risk": "LOW",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:detectChanges#4",
+            "name": "detectChanges",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/changes/detect-changes.ts",
+            "relationType": "CALLS",
+            "confidence": 0.9
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:findSymbolsInRange#1",
+            "name": "findSymbolsInRange",
+            "kind": "Function",
+            "filePath": "gitnexus/src/core/changes/symbol-lookup.ts",
+            "relationType": "CALLS",
+            "confidence": 0.87
+          }
+        ],
+        "affectedProcesses": [
+          "cli_detect_changes",
+          "mcp_impact_paginate",
+          "cli_analyze_phases"
+        ],
+        "affectedModules": [
+          "core/changes"
+        ]
+      }
+    },
+    {
+      "uid": "function:renderImpactPanel#11",
+      "name": "renderImpactPanel",
+      "kind": "Function",
+      "filePath": "gitnexus-web/src/components/ImpactPanel.tsx",
+      "startLine": 40,
+      "endLine": 190,
+      "isTestFile": false,
+      "changeType": "added",
+      "impact": {
+        "risk": "LOW",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:App#1",
+            "name": "App",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/App.tsx",
+            "relationType": "IMPORTS",
+            "confidence": 0.88
+          }
+        ],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:formatConfidence#13",
+            "name": "formatConfidence",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/lib/format.ts",
+            "relationType": "CALLS",
+            "confidence": 0.82
+          }
+        ],
+        "affectedProcesses": [
+          "web_impact_panel",
+          "web_graph_layout",
+          "mcp_impact_serialize"
+        ],
+        "affectedModules": [
+          "web/components"
+        ]
+      }
+    },
+    {
+      "uid": "function:formatConfidence#13",
+      "name": "formatConfidence",
+      "kind": "Function",
+      "filePath": "gitnexus-web/src/lib/format.ts",
+      "startLine": 44,
+      "endLine": 52,
+      "isTestFile": false,
+      "changeType": "added",
+      "impact": {
+        "risk": "LOW",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [
+          {
+            "depth": 1,
+            "uid": "function:renderImpactPanel#11",
+            "name": "renderImpactPanel",
+            "kind": "Function",
+            "filePath": "gitnexus-web/src/components/ImpactPanel.tsx",
+            "relationType": "IMPORTS",
+            "confidence": 0.82
+          }
+        ],
+        "downstream": [],
+        "affectedProcesses": [
+          "web_impact_panel",
+          "diff_parse",
+          "mcp_context_lookup"
+        ],
+        "affectedModules": [
+          "web/lib"
+        ]
+      }
+    },
+    {
+      "uid": "function:testFilePathSuite#14",
+      "name": "testFilePathSuite",
+      "kind": "Function",
+      "filePath": "gitnexus/test/unit/test-file-path.test.ts",
+      "startLine": 12,
+      "endLine": 88,
+      "isTestFile": true,
+      "changeType": "added",
+      "impact": {
+        "risk": "LOW",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:isTestFilePath#1",
+            "name": "isTestFilePath",
+            "kind": "Function",
+            "filePath": "gitnexus-shared/src/test-file-path.ts",
+            "relationType": "CALLS",
+            "confidence": 0.99
+          }
+        ],
+        "affectedProcesses": [
+          "entry_point_scan",
+          "cli_impact_target"
+        ],
+        "affectedModules": [
+          "test/unit"
+        ]
+      }
+    },
+    {
+      "uid": "function:impactPaginationSuite#15",
+      "name": "impactPaginationSuite",
+      "kind": "Function",
+      "filePath": "gitnexus/test/unit/impact-pagination.test.ts",
+      "startLine": 24,
+      "endLine": 130,
+      "isTestFile": true,
+      "changeType": "added",
+      "impact": {
+        "risk": "LOW",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "function:impact#1",
+            "name": "impact",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/tools.ts",
+            "relationType": "CALLS",
+            "confidence": 0.98
+          },
+          {
+            "depth": 1,
+            "uid": "function:paginate#1",
+            "name": "paginate",
+            "kind": "Function",
+            "filePath": "gitnexus/src/mcp/pagination.ts",
+            "relationType": "CALLS",
+            "confidence": 0.95
+          }
+        ],
+        "affectedProcesses": [
+          "review_impact_walk",
+          "web_symbol_detail"
+        ],
+        "affectedModules": [
+          "test/unit"
+        ]
+      }
+    },
+    {
+      "uid": "method:LocalBackendSuite.runsImpactWithTests#16",
+      "name": "LocalBackendSuite.runsImpactWithTests",
+      "kind": "Method",
+      "filePath": "gitnexus/test/integration/mcp-impact.test.ts",
+      "startLine": 96,
+      "endLine": 188,
+      "isTestFile": true,
+      "changeType": "added",
+      "impact": {
+        "risk": "LOW",
+        "epistemic": "exact",
+        "boundaries": [],
+        "upstream": [],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "method:LocalBackend.impact#3",
+            "name": "LocalBackend.impact",
+            "kind": "Method",
+            "filePath": "gitnexus/src/mcp/local/local-backend.ts",
+            "relationType": "CALLS",
+            "confidence": 0.97
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_analyze",
+          "cli_analyze_phases",
+          "ingestion_scope_pass"
+        ],
+        "affectedModules": [
+          "test/integration"
+        ]
+      }
+    },
+    {
+      "uid": "function:loadPipelinePhases#12",
+      "name": "loadPipelinePhases",
+      "kind": "Function",
+      "filePath": "gitnexus/src/core/ingestion/pipeline.ts",
+      "startLine": 52,
+      "endLine": 118,
+      "isTestFile": false,
+      "changeType": "removed",
+      "impact": {
+        "risk": "UNKNOWN",
+        "epistemic": "unknown",
+        "boundaries": [
+          "未找到上游调用方 —— 空调用集不等于未被使用:入口可能通过动态 import 或字符串注册加载。"
+        ],
+        "upstream": [],
+        "downstream": [
+          {
+            "depth": 1,
+            "uid": "method:PipelinePhase.resolveScopes#1",
+            "name": "resolveScopes",
+            "kind": "Method",
+            "filePath": "gitnexus/src/core/ingestion/pipeline-phases/resolve.ts",
+            "relationType": "CALLS",
+            "confidence": 0.62
+          },
+          {
+            "depth": 1,
+            "uid": "method:PipelinePhase.detectEntryPoints#1",
+            "name": "detectEntryPoints",
+            "kind": "Method",
+            "filePath": "gitnexus/src/core/ingestion/pipeline-phases/entry-points.ts",
+            "relationType": "CALLS",
+            "confidence": 0.6
+          }
+        ],
+        "affectedProcesses": [
+          "mcp_impact_serialize",
+          "pipeline_embed"
+        ],
+        "affectedModules": [
+          "core/ingestion"
+        ]
+      }
+    }
+  ],
+  "processes": [
+    {
+      "id": "mcp_impact_analyze",
+      "summary": "impact → LocalBackend.impact → walkUpstream → CypherRunner.execute → withReadTransaction",
+      "stepCount": 6
+    },
+    {
+      "id": "cli_detect_changes",
+      "summary": "detect-changes → runDetectChanges → detectChanges → diffCommits → parseUnifiedDiff",
+      "stepCount": 5
+    },
+    {
+      "id": "web_graph_build",
+      "summary": "App → useGraphData → buildGraphFromReport → GraphAdapter.applyTestFilter",
+      "stepCount": 4
+    },
+    {
+      "id": "pipeline_entry_points",
+      "summary": "analyze → loadPipelinePhases → detectEntryPoints → scoreEntryPoints → isTestFile",
+      "stepCount": 5
+    },
+    {
+      "id": "cli_review_local",
+      "summary": "review → runReview → LocalBackend.impact → buildImpactResult → paginate",
+      "stepCount": 5
+    },
+    {
+      "id": "mcp_trace_flow",
+      "summary": "trace → LocalBackend.trace → CypherRunner.execute → withReadTransaction",
+      "stepCount": 4
+    },
+    {
+      "id": "release_impact_report",
+      "summary": "collectReleaseImpact → detectChanges → impact → serializeReport",
+      "stepCount": 4
+    },
+    {
+      "id": "pipeline_resolve",
+      "summary": "analyze → resolveScopes → ScopeResolver.resolve → LanguageProvider.getScopeRules",
+      "stepCount": 4
+    },
+    {
+      "id": "cli_analyze",
+      "summary": "analyze → loadPipelinePhases → resolveScopes → persistGraph → EmbeddingPipeline.run",
+      "stepCount": 5
+    },
+    {
+      "id": "web_impact_panel",
+      "summary": "App → renderImpactPanel → formatConfidence",
+      "stepCount": 3
+    },
+    {
+      "id": "mcp_context_lookup",
+      "summary": "context → LocalBackend.context → CypherRunner.execute → withReadTransaction",
+      "stepCount": 4
+    },
+    {
+      "id": "cli_impact_target",
+      "summary": "impact → resolveTarget → LocalBackend.impact → walkDownstream",
+      "stepCount": 4
+    },
+    {
+      "id": "web_symbol_detail",
+      "summary": "App → SymbolDetail → ImpactTable → formatConfidence",
+      "stepCount": 4
+    },
+    {
+      "id": "ingestion_scope_pass",
+      "summary": "analyze → resolveScopes → ScopeResolver.resolve → collectImports",
+      "stepCount": 4
+    },
+    {
+      "id": "pipeline_embed",
+      "summary": "analyze → EmbeddingPipeline.run → chunkSymbols → embedBatch",
+      "stepCount": 4
+    },
+    {
+      "id": "graph_adapter_test_filter",
+      "summary": "buildGraphFromReport → GraphAdapter.applyTestFilter → isTestFilePath",
+      "stepCount": 3
+    },
+    {
+      "id": "changeset_symbol_map",
+      "summary": "detect-changes → detectChanges → mapDiffToSymbols → normalizePath",
+      "stepCount": 4
+    },
+    {
+      "id": "graph_adapter_edges",
+      "summary": "buildGraphFromReport → GraphAdapter.buildEdges → addEdge",
+      "stepCount": 3
+    },
+    {
+      "id": "changeset_summary",
+      "summary": "detect-changes → runDetectChanges → summarizeChanges",
+      "stepCount": 3
+    },
+    {
+      "id": "mcp_impact_paginate",
+      "summary": "impact → paginate → buildImpactResult → serializeImpact",
+      "stepCount": 4
+    },
+    {
+      "id": "web_graph_layout",
+      "summary": "App → useGraphData → layoutModuleColumns",
+      "stepCount": 3
+    },
+    {
+      "id": "diff_parse",
+      "summary": "detect-changes → diffCommits → parseUnifiedDiff → mapDiffToSymbols",
+      "stepCount": 4
+    },
+    {
+      "id": "entry_point_scan",
+      "summary": "analyze → detectEntryPoints → scoreEntryPoints → rankEntryPoints",
+      "stepCount": 4
+    },
+    {
+      "id": "review_impact_walk",
+      "summary": "review → runReview → buildImpactResult → formatFinding",
+      "stepCount": 4
+    },
+    {
+      "id": "cli_analyze_phases",
+      "summary": "analyze → loadPipelinePhases → phaseRunner",
+      "stepCount": 3
+    },
+    {
+      "id": "mcp_impact_serialize",
+      "summary": "impact → buildImpactResult → serializeReport → writeStdout",
+      "stepCount": 4
+    }
+  ],
+  "llm": {
+    "prompt": "你是发布评审助手。下面是一份 pre-release 代码影响评估报告,请在**不执行代码**的前提下,基于给出的图结构证据,给出上线场景评估。\n\n## 约束\n1. 只使用报告中的证据;证据不足时明确写出「无法判断」,不要推测。\n2. risk=UNKNOWN 表示「解析未能回答」,不是「无风险」,请单独列出并给出人工确认建议。\n3. 区分「已解析的调用边」与「工具自报的边界(boundaries)」,后者是风险敞口。\n\n## 报告上下文\n- 仓库:GitNexus,基线 v9.7.0 → HEAD,索引状态 current\n- 变更规模:18 文件 / 26 变更符号 / 已分析 14 / 受影响流程 10\n- 整体风险:critical\n\n### 变更符号(按风险降序)\n1. isTestFilePath (Function, gitnexus-shared/src/test-file-path.ts) risk=CRITICAL epistemic=exact 上游 7 下游 1 涉及模块 shared/test-classification, mcp/local-backend, core/ingestion, web/graph 边界:跨仓库消费者(插件 / 下游 npm 包)不在本索引内\n2. ImpactNode (Interface, gitnexus-shared/src/graph/types.ts) risk=HIGH epistemic=lower-bound 上游 5 下游 1 边界:接口消费者未追踪;外部仓库按此结构取值\n3. LocalBackend.impact (Method, gitnexus/src/mcp/local/local-backend.ts) risk=HIGH epistemic=exact 上游 4 下游 5 边界:Cypher 分页上限 200\n4. detectChanges (Function, gitnexus/src/core/changes/detect-changes.ts) risk=HIGH epistemic=lower-bound 上游 3 下游 3 边界:仅比对已索引符号\n5. GraphAdapter (Class, gitnexus-web/src/lib/graph-adapter.ts) risk=MEDIUM ...\n6. ScopeResolver.resolve (Method) risk=MEDIUM ...\n7. CypherRunner.execute (Method) risk=MEDIUM epistemic=unknown ...\n8. scoreEntryPoints / buildImpactResult / mapDiffToSymbols / renderImpactPanel / formatConfidence risk=MEDIUM-LOW ...\n12. loadPipelinePhases (Function, gitnexus/src/core/ingestion/pipeline.ts) risk=UNKNOWN 上游 0\n\n### 受影响执行流\nmcp_impact_analyze (6 步)、cli_detect_changes (5 步)、web_graph_build (4 步)、pipeline_entry_points (5 步)、cli_review_local (5 步)、mcp_trace_flow (4 步)、release_impact_report (4 步)、pipeline_resolve (4 步)、cli_analyze (5 步)、web_impact_panel (3 步)\n\n## 输出格式\n1. 一句话结论(是否可上线)\n2. 高风险场景(每条:触发条件 / 影响面 / 建议动作)\n3. UNKNOWN 与边界敞口清单\n4. 上线前必做验证项(可执行的命令或测试)",
+    "narrative": "## 结论\n\n**不建议在未完成验证前上线。** 本次变更触及测试文件判定、影响面数据结构与 MCP 影响分析主路径三层,其中 `isTestFilePath` 为 CRITICAL:它同时被 CLI 摄取、MCP `includeTests`、Web 图过滤与 LLM 工具消费。\n\n## 高风险场景\n\n1. **`isTestFilePath` 判定漂移 → 影响面被静默过滤**(CRITICAL,epistemic=exact)\n   - 触发条件:新增语言或新目录约定未覆盖(如 Kotlin `*Test.kt`、Rust `tests/` 之外的 `#[cfg(test)]` 内联模块)。\n   - 影响面:`mcp_impact_analyze`、`cli_detect_changes`、`web_graph_build`、`pipeline_entry_points` 四条执行流;下游消费者会看到「变小」的影响面。\n   - 建议动作:在 `test-file-path.test.ts` 增加新约定的用例,并对 `includeTests: false` 的调用方做一次回归。\n\n2. **`ImpactNode` 结构变更 → 下游取值错位**(HIGH,epistemic=lower-bound)\n   - 该接口按结构类型匹配,索引无法枚举全部实现方;外部仓库(MCP 客户端、编辑器插件)不在影响面内。\n   - 建议:把 schema 版本写进 `report.json`(已有 `meta.version`),下游按版本分支解析。\n\n3. **`CypherRunner.execute` 查询路径不可见**(MEDIUM,epistemic=unknown)\n   - 拼接式查询串使静态解析看不到具体图访问路径,实际影响面可能大于报告值。\n   - 建议:对 `impact` 主路径跑一次带真实仓库的端到端用例。\n\n## 敞口清单\n\n| 项 | 类型 | 说明 |\n| --- | --- | --- |\n| `loadPipelinePhases` | UNKNOWN | 无上游调用方。空调用集不等于未使用,可能经动态 import 注册。 |\n| `isTestFilePath` | 边界 | 跨仓库消费者未追踪。 |\n| `ImpactNode` | 边界 | 接口消费者未追踪。 |\n\n## 上线前必做\n\n1. `npm run build` + `npm test`(shared / cli / web 三个包)。\n2. 对 `isTestFilePath` 变更前后的判定做差分:同一批路径,两个版本结果应一致或差异有明确解释。\n3. 用一个小仓库端到端跑 `release-impact --base-ref v9.7.0`,确认 `report.json` 的 `summary.truncated=false` 且 `analyzedSymbols` 符合预期。\n4. 人工确认 `loadPipelinePhases` 的调用来源(文本搜索 `loadPipelinePhases`、`pipeline-phases` 动态注册)。"
+  }
+}

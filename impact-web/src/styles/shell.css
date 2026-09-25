@@ -1,0 +1,326 @@
+/* 应用外壳:顶栏 + 摘要条 + 三栏工作区 */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--page);
+}
+
+/* ---------------------------------------------------------------- app bar */
+.appbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+}
+
+.appbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.appbar__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.appbar__title {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.appbar__sub {
+  font-size: 11.5px;
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.appbar__spacer {
+  flex: 1 1 auto;
+}
+
+.appbar__lang {
+  min-width: 34px;
+  font-family: var(--font-mono);
+}
+
+/* ---------------------------------------------------------------- summary */
+.summary {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+}
+
+.summary__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.summary__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.summary__repo {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  max-width: 46ch;
+}
+
+.summary__refs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.summary__ref {
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.summary__ref--head {
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+
+.summary__arrow {
+  color: var(--ink-4);
+}
+
+.summary__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.summary__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+
+.summary__index--behind,
+.summary__index--diverged {
+  color: var(--risk-medium);
+}
+
+.summary__index--current {
+  color: var(--ink-3);
+}
+
+.summary__stats {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 96px;
+  padding: 0 18px;
+  border-left: 1px solid var(--border);
+}
+
+.stat__label {
+  font-size: 11px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.stat__value {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.stat__sub {
+  margin-left: 7px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.stat--risk {
+  min-width: 0;
+}
+
+.summary__notices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary__issues {
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.summary__issueIcon {
+  color: var(--ink-4);
+}
+
+.summary__issueList {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--ink-3);
+}
+
+.summary__issueDetail {
+  margin-left: 6px;
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------- workspace */
+.workspace {
+  --left-w: 322px;
+  --right-w: 384px;
+  --rail-w: 36px;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: var(--left-w) minmax(0, 1fr) var(--right-w);
+  min-height: 0;
+  background: var(--page);
+}
+
+@media (max-width: 1180px) {
+  .workspace {
+    --left-w: 286px;
+    --right-w: 330px;
+  }
+}
+
+/* 折叠态必须写在上面的媒体查询之后,同优先级下后者生效 */
+.workspace--left-collapsed {
+  --left-w: var(--rail-w);
+}
+
+.workspace--right-collapsed {
+  --right-w: var(--rail-w);
+}
+
+.ws-col {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ws-col--left {
+  border-right: 1px solid var(--border);
+}
+
+.ws-col--right {
+  border-left: 1px solid var(--border);
+}
+
+.ws-col--center {
+  background: var(--page);
+}
+
+/* 折叠后的竖排导轨(中文竖排是自然写法) */
+.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0;
+  border: 0;
+  background: var(--surface-1);
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.rail:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.rail__label {
+  writing-mode: vertical-rl;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+
+.rail__count {
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail svg {
+  transition: transform 0.12s ease;
+}
+
+.rail--left svg {
+  transform: rotate(-90deg);
+}
+
+.rail--right svg {
+  transform: rotate(90deg);
+}
+
+/* 底部浮起的错误提示(载入失败但不至于丢掉当前报告) */
+.app__toast {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(720px, calc(100% - 32px));
+  padding: 8px 10px;
+  border: 1px solid rgba(208, 59, 59, 0.4);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-pop);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.app__toast .notice__icon {
+  color: var(--risk-critical);
+}

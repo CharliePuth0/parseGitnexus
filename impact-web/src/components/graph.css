@@ -1,0 +1,334 @@
+/* 中栏:影响图。React Flow 只负责视口/连线,节点外观全部自绘。 */
+
+.graph {
+  flex: 1 1 auto;
+  background: var(--page);
+}
+
+.graph__head {
+  height: auto;
+  min-height: var(--panel-head-h);
+  flex-wrap: wrap;
+  row-gap: 6px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background: var(--surface-1);
+}
+
+.graph__anchor {
+  max-width: 22ch;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.graph__canvas {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--page);
+}
+
+.graph__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- controls */
+.toggle--sm {
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.slider__value {
+  min-width: 10px;
+  color: var(--ink);
+}
+
+.slider input[type='range'] {
+  width: 88px;
+  height: 14px;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.slider input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  margin-top: -4px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink-2);
+}
+
+.slider input[type='range']:hover::-webkit-slider-thumb {
+  background: var(--ink);
+}
+
+.slider input[type='range']::-moz-range-track {
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.slider input[type='range']::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------- nodes */
+.sn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
+  padding: 0 8px 0 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-node);
+  overflow: hidden;
+}
+
+/* 边框 = 风险等级;非变更符号(无风险数据)保持中性发丝线 */
+.sn[data-risk='CRITICAL'],
+.sn[data-risk='HIGH'],
+.sn[data-risk='MEDIUM'],
+.sn[data-risk='LOW'],
+.sn[data-risk='UNKNOWN'] {
+  border-color: var(--risk);
+}
+
+.sn[data-risk='none'] {
+  border-color: var(--border-strong);
+}
+
+.sn--anchor {
+  background: var(--surface-3);
+  border-width: 2px;
+  padding-left: 11px;
+}
+
+.sn--change:not(.sn--anchor) {
+  background: var(--surface-3);
+}
+
+.sn--selected {
+  box-shadow:
+    0 0 0 2px var(--accent-ring),
+    var(--shadow-node);
+}
+
+.sn__rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: transparent;
+}
+
+.sn--up .sn__rail {
+  background: var(--dir-up);
+}
+
+.sn--down .sn__rail {
+  background: var(--dir-down);
+}
+
+.sn--up {
+  background: linear-gradient(90deg, var(--dir-up-wash), transparent 42%), var(--surface-2);
+}
+
+.sn--down {
+  background: linear-gradient(90deg, var(--dir-down-wash), transparent 42%), var(--surface-2);
+}
+
+.sn__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.sn--up .sn__label,
+.sn--down .sn__label {
+  color: var(--ink-2);
+}
+
+.sn__risk {
+  flex: 0 0 auto;
+  color: var(--risk);
+}
+
+.sn__risk--none {
+  color: var(--ink-4);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.sn__handle {
+  width: 4px;
+  height: 4px;
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+}
+
+.react-flow__node {
+  font-family: var(--font-sans);
+}
+
+.react-flow__node:focus-visible {
+  outline: none;
+}
+
+/* ---------------------------------------------------------------- edges */
+.react-flow__edge-path {
+  stroke-width: 1.4;
+}
+
+.react-flow__edge.edge-upstream .react-flow__edge-path {
+  stroke: var(--dir-up);
+  stroke-opacity: 0.72;
+}
+
+.react-flow__edge.edge-downstream .react-flow__edge-path {
+  stroke: var(--dir-down);
+  stroke-opacity: 0.72;
+}
+
+.react-flow__edge.edge-neutral .react-flow__edge-path {
+  stroke: rgba(255, 255, 255, 0.3);
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-opacity: 1;
+  stroke-width: 2;
+}
+
+.react-flow__edge-text {
+  font-family: var(--font-mono);
+}
+
+/* React Flow 自带控件:配色已在 tokens.css 里通过 --xy-* 桥接,这里只补容器形态 */
+.react-flow__controls {
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- legend */
+.legend {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: rgba(17, 21, 29, 0.9);
+  backdrop-filter: blur(6px);
+  font-size: 11px;
+  color: var(--ink-3);
+  pointer-events: none;
+  max-width: calc(100% - 24px);
+}
+
+.legend__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.legend__swatch {
+  width: 18px;
+  height: 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  background: var(--surface-2);
+}
+
+.legend__swatch--anchor {
+  border: 2px solid var(--ink-2);
+  background: var(--surface-3);
+}
+
+.legend__swatch--up {
+  border-left: 3px solid var(--dir-up);
+}
+
+.legend__swatch--down {
+  border-left: 3px solid var(--dir-down);
+}
+
+.legend__row--risk {
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-faint);
+}
+
+.legend__caption {
+  color: var(--ink-4);
+}
+
+.legend__risk {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.legend__risk svg {
+  color: var(--risk);
+}
+
+.legend__note {
+  color: var(--ink-4);
+  border-top: 1px solid var(--border-faint);
+  padding-top: 5px;
+}
