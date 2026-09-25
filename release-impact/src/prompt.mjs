@@ -95,8 +95,15 @@ export function buildLlmPrompt(report, options = {}) {
   lines.push('| field | value |');
   lines.push('| --- | --- |');
   lines.push(`| repository | \`${meta.repo}\` (\`${meta.repoPath}\`) |`);
-  lines.push(`| base ref | \`${meta.baseRef}\` |`);
-  lines.push(`| head ref | \`${meta.headRef}\` |`);
+  lines.push(`| base ref | \`${meta.baseRef}\`${meta.baseSha ? ` (\`${meta.baseSha.slice(0, 7)}\`)` : ''} |`);
+  lines.push(`| head ref | \`${meta.headRef}\`${meta.headSha ? ` (\`${meta.headSha.slice(0, 7)}\`)` : ''} |`);
+  if (meta.worktreeDirty) {
+    lines.push(
+      `| worktree | **DIRTY — ${meta.dirtyCount ?? '?'} uncommitted file change(s)**; the assessed range is \`${meta.baseRef}..worktree\`, NOT \`..${meta.headRef}\` |`,
+    );
+  } else if (meta.baseSha) {
+    lines.push(`| worktree | clean — the assessed range is the exact commit range |`);
+  }
   lines.push(`| generated at | ${meta.generatedAt} |`);
   lines.push(`| index status | ${meta.indexStatus} |`);
   lines.push(`| analysis source | ${engine.source ?? 'unknown'} |`);

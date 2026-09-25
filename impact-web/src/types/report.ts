@@ -65,6 +65,14 @@ export interface ReportMeta {
   generatedAt: string;
   /** current | behind | diverged | unknown */
   indexStatus: string;
+  /** v1.2 可选:baseRef 解析出的完整提交 SHA */
+  baseSha?: string;
+  /** v1.2 可选:HEAD 解析出的完整提交 SHA */
+  headSha?: string;
+  /** v1.2 可选:工作区含未提交改动(diff 是对工作区算的) */
+  worktreeDirty?: boolean;
+  /** v1.2 可选:未提交改动文件数 */
+  dirtyCount?: number;
 }
 
 export interface ReportSummary {

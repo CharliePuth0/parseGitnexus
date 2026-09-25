@@ -25,7 +25,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { readChangedFileStatus } from './src/git-status.mjs';
+import { readChangedFileStatus, readRangeInfo } from './src/git-status.mjs';
 import { GitNexusClient } from './src/gitnexus-client.mjs';
 import { buildLlmPrompt } from './src/prompt.mjs';
 import { buildReport, mergedRisk, selectAnalysisTargets, toPublicReport, validateReport } from './src/report.mjs';
@@ -199,6 +199,27 @@ export async function run(config, log = () => {}) {
       );
     }
 
+    // Exact range: resolve both endpoints to commits and flag a dirty worktree. The
+    // tool diffs base ref vs the WORKING TREE, so "HEAD~20..HEAD" is only true when the
+    // tree is clean — the report must say which case applies.
+    const rangeInfo = await readRangeInfo(config.repoPath, config.baseRef);
+    if (rangeInfo.error) {
+      notes.push(`could not resolve the exact commit range (${rangeInfo.error}).`);
+      log(`WARNING commit range unresolvable: ${rangeInfo.error}`);
+    } else if (rangeInfo.worktreeDirty) {
+      const shortBase = rangeInfo.baseSha.slice(0, 7);
+      notes.push(
+        `assessed range is ${config.baseRef} (${shortBase})..worktree, NOT ..HEAD: the working tree has ${rangeInfo.dirtyCount} uncommitted file change(s) inside the diff.`,
+      );
+      log(
+        `range: ${shortBase}..worktree (DIRTY — ${rangeInfo.dirtyCount} uncommitted file change(s) in range)`,
+      );
+    } else {
+      log(
+        `range: ${rangeInfo.baseSha.slice(0, 7)}..${rangeInfo.headSha.slice(0, 7)} (clean worktree — exact commit range)`,
+      );
+    }
+
     const selection = selectAnalysisTargets(detect.changed_symbols, config.limit);
     if (selection.dropped.testFile > 0) {
       notes.push(`${selection.dropped.testFile} changed symbol(s) in test files were excluded from analysis.`);
@@ -263,6 +284,11 @@ export async function run(config, log = () => {}) {
         headRef: config.headRef,
         generatedAt: new Date().toISOString(),
         indexStatus: indexStatus ?? 'unknown',
+        ...(rangeInfo?.baseSha ? { baseSha: rangeInfo.baseSha } : {}),
+        ...(rangeInfo?.headSha ? { headSha: rangeInfo.headSha } : {}),
+        ...(typeof rangeInfo?.worktreeDirty === 'boolean'
+          ? { worktreeDirty: rangeInfo.worktreeDirty, dirtyCount: rangeInfo.dirtyCount ?? 0 }
+          : {}),
       },
       detect,
       analyses,

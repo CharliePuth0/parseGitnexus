@@ -109,6 +109,10 @@
   color: var(--ink-2);
 }
 
+.summary__sha {
+  color: var(--ink-4);
+}
+
 .summary__ref--head {
   border-color: var(--border-strong);
   color: var(--ink);

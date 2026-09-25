@@ -115,6 +115,35 @@ export async function readChangedFileStatus(repoPath, baseRef) {
 }
 
 /**
+ * Resolve the EXACT assessed range to commits.
+ *
+ * `detect_changes` compares the base ref against the WORKING TREE (HEAD plus uncommitted
+ * edits). So the honest range statement is: `<baseSha>..<headSha>` when the worktree is
+ * clean, and `<baseSha>..worktree` when it is not. The dirty flag must be surfaced — a
+ * report that says "HEAD~20..HEAD" over a dirty tree silently includes edits that are in
+ * neither commit.
+ */
+export async function readRangeInfo(repoPath, baseRef) {
+  try {
+    const [baseShaRaw, headShaRaw, porcelainRaw] = await Promise.all([
+      runGit(repoPath, ['rev-parse', '--verify', baseRef]),
+      runGit(repoPath, ['rev-parse', '--verify', 'HEAD']),
+      runGit(repoPath, ['status', '--porcelain']),
+    ]);
+    const dirtyCount = porcelainRaw.split('\n').filter((line) => line.trim() !== '').length;
+    return {
+      baseSha: baseShaRaw.trim(),
+      headSha: headShaRaw.trim(),
+      worktreeDirty: dirtyCount > 0,
+      dirtyCount,
+      error: null,
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+/**
  * Change type for one changed symbol.
  *
  * Precedence: the tool's own `change_type` when it is a real classification (it is

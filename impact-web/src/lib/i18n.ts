@@ -34,6 +34,7 @@ const zh = {
   'index.unknown': '索引状态未知',
   'index.staleHint': '索引与目标提交不一致,影响面可能不完整,建议重新执行 analyze。',
   'summary.truncated': 'detect_changes 结果被截断,变更集可能不完整',
+  'summary.worktreeDirty': '工作区含 {count} 个未提交改动——评估区间是 {base}..工作区,不是 {base}..HEAD',
 
   'risk.CRITICAL': '严重',
   'risk.HIGH': '高',
@@ -185,6 +186,8 @@ const en: Record<TKey, string> = {
   'index.staleHint':
     'The index does not match the head commit — the blast radius may be incomplete; re-run analyze.',
   'summary.truncated': 'detect_changes was truncated — the change set may be incomplete',
+  'summary.worktreeDirty':
+    'Working tree has {count} uncommitted change(s) — assessed range is {base}..worktree, not {base}..HEAD',
 
   'risk.CRITICAL': 'Critical',
   'risk.HIGH': 'High',

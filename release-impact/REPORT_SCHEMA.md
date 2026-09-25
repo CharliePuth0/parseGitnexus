@@ -13,6 +13,11 @@ interface ReleaseImpactReport {
     headRef: string;
     generatedAt: string;       // ISO 时间
     indexStatus: string;       // staleness: current | behind | diverged | unknown
+    // v1.2 可选字段 — 精确区间:
+    baseSha?: string;          // baseRef 解析出的完整提交 SHA
+    headSha?: string;          // HEAD 解析出的完整提交 SHA
+    worktreeDirty?: boolean;   // 工作区是否含未提交改动(工具 diff 是对工作区算的)
+    dirtyCount?: number;       // 未提交改动文件数(worktreeDirty 为 true 时有意义)
   };
   summary: {
     changedFiles: number;

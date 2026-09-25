@@ -64,9 +64,19 @@ export function SummaryBar({
             {orDash(meta.repo)}
           </h1>
           <div className="summary__refs">
-            <span className="summary__ref mono">{orDash(meta.baseRef)}</span>
+            <span className="summary__ref mono">
+              {orDash(meta.baseRef)}
+              {meta.baseSha ? (
+                <span className="summary__sha"> · {meta.baseSha.slice(0, 7)}</span>
+              ) : null}
+            </span>
             <DirectionArrow direction="flat" className="summary__arrow" />
-            <span className="summary__ref summary__ref--head mono">{orDash(meta.headRef)}</span>
+            <span className="summary__ref summary__ref--head mono">
+              {orDash(meta.headRef)}
+              {meta.headSha ? (
+                <span className="summary__sha"> · {meta.headSha.slice(0, 7)}</span>
+              ) : null}
+            </span>
           </div>
           <div className="summary__meta">
             <span>
@@ -102,8 +112,21 @@ export function SummaryBar({
         </div>
       </div>
 
-      {summary.truncated || meta.indexStatus === 'behind' || meta.indexStatus === 'diverged' ? (
+      {summary.truncated ||
+      meta.worktreeDirty ||
+      meta.indexStatus === 'behind' ||
+      meta.indexStatus === 'diverged' ? (
         <div className="summary__notices">
+          {meta.worktreeDirty ? (
+            <div className="notice">
+              <WarningIcon className="notice__icon" />
+              <span>
+                {t('summary.worktreeDirty')
+                  .replace('{count}', String(meta.dirtyCount ?? '?'))
+                  .replace('{base}', orDash(meta.baseRef))}
+              </span>
+            </div>
+          ) : null}
           {summary.truncated ? (
             <div className="notice">
               <WarningIcon className="notice__icon" />

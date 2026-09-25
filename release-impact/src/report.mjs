@@ -410,6 +410,11 @@ export function buildReport({ meta, detect, analyses, options = {}, fileStatus =
       headRef: meta.headRef,
       generatedAt: meta.generatedAt,
       indexStatus: normalizeIndexStatus(meta.indexStatus),
+      ...(meta.baseSha ? { baseSha: meta.baseSha } : {}),
+      ...(meta.headSha ? { headSha: meta.headSha } : {}),
+      ...(typeof meta.worktreeDirty === 'boolean'
+        ? { worktreeDirty: meta.worktreeDirty, dirtyCount: Number(meta.dirtyCount ?? 0) }
+        : {}),
     },
     summary,
     changes,
