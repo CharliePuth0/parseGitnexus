@@ -24,6 +24,7 @@ import path from 'node:path';
 
 import { connectToMcp, startMcpServer } from './mcp-http.mjs';
 import { extractFirstJsonObject } from './util.mjs';
+import { PDG_QUERY_TIMEOUT_MS } from './pdg.mjs';
 
 /** Per-call budgets. `detect_changes` walks a git diff; `impact` walks the graph. */
 const DETECT_TIMEOUT_MS = 180_000;
@@ -332,6 +333,43 @@ export class GitNexusClient {
       const payload = extractFirstJsonObject(stdout);
       if (!payload) throw new Error('CLI impact printed no JSON object');
       return payload;
+    } catch (error) {
+      return { __error: error.message };
+    }
+  }
+
+  /**
+   * Statement-level PDG query (controls = CDG guards, flows = REACHING_DEF).
+   * MCP-only: the CLI has no pdg-query command. Failures come back as `{ __error }`.
+   * See precision/FINDINGS.md — UID targets resolve to silent empty results, so the
+   * caller resolves anchors by name / file path + functionLine.
+   */
+  async pdgQuery({ mode, target, limit }) {
+    try {
+      if (this.mode !== 'mcp') {
+        return { __error: 'pdg_query requires the MCP path (no CLI equivalent)' };
+      }
+      return await this.mcp.callTool(
+        'pdg_query',
+        { mode, target, limit },
+        { timeoutMs: PDG_QUERY_TIMEOUT_MS },
+      );
+    } catch (error) {
+      return { __error: error.message };
+    }
+  }
+
+  /** Taint findings (source→sink) — MCP-only, needs the --pdg index. */
+  async explain({ target, limit }) {
+    try {
+      if (this.mode !== 'mcp') {
+        return { __error: 'explain requires the MCP path (no CLI equivalent)' };
+      }
+      return await this.mcp.callTool(
+        'explain',
+        { target, limit },
+        { timeoutMs: PDG_QUERY_TIMEOUT_MS },
+      );
     } catch (error) {
       return { __error: error.message };
     }

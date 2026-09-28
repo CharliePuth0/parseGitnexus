@@ -174,6 +174,60 @@ function ChangeDetail({
         )}
       </Section>
 
+      {impact.intraProcedural ? (
+        <Section
+          title={t('detail.intraProcedural')}
+          count={impact.intraProcedural.guards.length + impact.intraProcedural.flows.length}
+        >
+          {!impact.intraProcedural.pdgLayer ? (
+            <p className="muted detail__hint">{t('detail.intraNoPdg')}</p>
+          ) : impact.intraProcedural.guards.length === 0 &&
+            impact.intraProcedural.flows.length === 0 ? (
+            <p className="muted detail__hint">{t('detail.none')}</p>
+          ) : (
+            <>
+              {impact.intraProcedural.guards.length > 0 ? (
+                <>
+                  <h4 className="detail__subtitle">{t('detail.intraGuards')}</h4>
+                  <ul className="guardList">
+                    {impact.intraProcedural.guards.map((guard, index) => (
+                      <li key={`${guard.controllerLine}-${guard.line}-${index}`} className="guard">
+                        <span className="guard__badge mono">{guard.label}</span>
+                        <span className="guard__line mono">
+                          L{guard.controllerLine}→L{guard.line}
+                        </span>
+                        <span className="guard__text">{guard.text}</span>
+                        {guard.guard ? <span className="guard__flag">{t('detail.guardFlag')}</span> : null}
+                      </li>
+                    ))}
+                  </ul>
+                  {impact.intraProcedural.truncated?.guards ? (
+                    <p className="muted detail__hint">{t('detail.intraGuardsHint')}</p>
+                  ) : null}
+                </>
+              ) : null}
+              {impact.intraProcedural.flows.length > 0 ? (
+                <>
+                  <h4 className="detail__subtitle">{t('detail.intraFlows')}</h4>
+                  <ul className="flowList">
+                    {impact.intraProcedural.flows.map((flow, index) => (
+                      <li key={`${flow.variable}-${flow.defLine}-${flow.useLine}-${index}`} className="flow">
+                        <span className="flow__var mono">{flow.variable}</span>
+                        <span className="flow__line mono">
+                          L{flow.defLine}→L{flow.useLine}
+                        </span>
+                        <span className="flow__text">{flow.useText}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+              <p className="muted detail__hint">{t('detail.intraGuardsHint')}</p>
+            </>
+          )}
+        </Section>
+      ) : null}
+
       <Section title={t('detail.upstream')} count={impact.upstream.length}>
         <ImpactTable
           nodes={impact.upstream}
@@ -356,6 +410,40 @@ export function DetailPanel({
             onSelect={onSelectProcess}
           />
         </Section>
+
+        {report.taint ? (
+          <Section title={t('detail.taint')} count={report.taint.findings.length}>
+            {report.taint.note ? <p className="muted detail__hint">{report.taint.note}</p> : null}
+            {report.taint.findings.length === 0 && !report.taint.note ? (
+              <p className="muted detail__hint">{t('detail.none')}</p>
+            ) : null}
+            {report.taint.findings.length > 0 ? (
+              <>
+                <p className="muted detail__hint">{t('detail.taintHint')}</p>
+                <ul className="taintList">
+                  {report.taint.findings.map((finding, index) => (
+                    <li
+                      key={`${finding.filePath}-${finding.sourceLine}-${finding.sinkLine}-${index}`}
+                      className="taint"
+                    >
+                      {finding.category ? (
+                        <span className="taint__cat">{finding.category}</span>
+                      ) : null}
+                      <span className="taint__loc mono">
+                        {finding.filePath}
+                        {finding.sourceLine !== null ? `:${finding.sourceLine}` : ''}
+                        {finding.sinkLine !== null ? `→${finding.sinkLine}` : ''}
+                      </span>
+                      {finding.interprocedural ? (
+                        <span className="taint__flag">{t('detail.taintInter')}</span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </Section>
+        ) : null}
 
         <Section title={t('llm.title')}>
           <NarrativeSection llm={report.llm} />

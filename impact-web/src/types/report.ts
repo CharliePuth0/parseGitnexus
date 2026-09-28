@@ -32,6 +32,50 @@ export interface Impact {
   downstream: ImpactNode[];
   affectedProcesses: string[];
   affectedModules: string[];
+  /** v1.3 语句级(guards-first;精度见 release-impact/precision/FINDINGS.md) */
+  intraProcedural?: IntraProcedural;
+}
+
+/** "哪条语句被哪个分支守卫"(CDG 边;行号是块锚,以 text 为准) */
+export interface GuardRow {
+  line: number;
+  text: string;
+  label: 'T' | 'F';
+  controllerLine: number;
+  guard?: true;
+}
+
+/** 变量 def→use(REACHING_DEF;块粒度,参数 defLine 不可信) */
+export interface FlowRow {
+  variable: string;
+  defLine: number;
+  useLine: number;
+  useText: string;
+}
+
+export interface IntraProcedural {
+  /** 索引是否含 --pdg 层;false = 本块为诚实缺省 */
+  pdgLayer: boolean;
+  guards: GuardRow[];
+  flows: FlowRow[];
+  truncated?: { guards?: boolean; flows?: boolean };
+  resolution?: 'name' | 'file+functionLine';
+}
+
+/** v1.3 污点 finding(仅变更文件) */
+export interface TaintFinding {
+  category: string | null;
+  sourceLine: number | null;
+  sinkLine: number | null;
+  filePath: string | null;
+  path: string[];
+  interprocedural: boolean;
+}
+
+export interface TaintSection {
+  findings: TaintFinding[];
+  truncated: boolean;
+  note: string | null;
 }
 
 export interface ChangeEntry {
@@ -96,6 +140,8 @@ export interface ReleaseImpactReport {
   /** 按 risk 降序(CRITICAL > HIGH > MEDIUM > LOW > UNKNOWN) */
   changes: ChangeEntry[];
   processes: ProcessEntry[];
+  /** v1.3 污点风险(可缺省——旧报告无此节) */
+  taint?: TaintSection;
   llm: LlmSection;
 }
 

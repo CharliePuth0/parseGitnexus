@@ -426,7 +426,7 @@ test('changeType defaults to "modified" when git status is unavailable', () => {
 
 test('the engine-only block never reaches the emitted report', () => {
   const report = sampleReport();
-  assert.deepEqual(Object.keys(report), ['meta', 'summary', 'changes', 'processes', 'llm']);
+  assert.deepEqual(Object.keys(report), ['meta', 'summary', 'changes', 'processes', 'taint', 'llm']);
 });
 
 test('validateReport catches enum, type and ordering regressions', () => {
@@ -513,4 +513,35 @@ test('buildLlmRequest honors the same env the Anthropic SDK reads', () => {
 
   // No credentials → an error, never a request.
   assert.ok(buildLlmRequest('x', {}).error);
+});
+
+test('buildChangeEntry carries the v1.3 intraProcedural block and validator accepts it', () => {
+  const entry = buildChangeEntry({
+    symbol: { uid: 'Method:a/b/C.java:C.m#1', name: 'm', kind: 'Method', filePath: 'a/b/C.java', isTestFile: false },
+    upstream: { byDepth: { 1: [] }, byDepthCounts: { 1: 0 } },
+    downstream: { byDepth: { 1: [] }, byDepthCounts: { 1: 0 } },
+    intraProcedural: {
+      pdgLayer: true,
+      resolution: 'name',
+      guards: [{ line: 14, text: 'return x;', label: 'T', controllerLine: 12, guard: true }],
+      flows: [{ variable: 'x', defLine: 12, useLine: 14, useText: 'return x;' }],
+      truncated: { guards: true },
+      note: '1 exception-flow row(s) with empty text dropped',
+    },
+  });
+
+  assert.equal(entry.impact.intraProcedural.pdgLayer, true);
+  assert.equal(entry.impact.intraProcedural.guards.length, 1);
+  assert.ok(entry.impact.boundaries.some((b) => b.includes('statement-level:')));
+
+  const base = buildReport({
+    meta: { repo: 'r', repoPath: '/r', baseRef: 'HEAD~1', headRef: 'HEAD', generatedAt: new Date().toISOString(), indexStatus: 'current' },
+    detect: { summary: { changed_count: 1, changed_files: 1, risk_level: 'low' }, changed_symbols: [], affected_processes: [] },
+    analyses: [],
+    options: { pdgLayer: true },
+  });
+  const validation = validateReport(base);
+  assert.equal(validation.ok, true, validation.errors.join('; '));
+  assert.equal(base.meta.pdgLayer, true);
+  assert.ok(base.taint);
 });

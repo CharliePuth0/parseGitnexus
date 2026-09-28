@@ -29,6 +29,12 @@ interface ReleaseImpactReport {
   };
   changes: ChangeEntry[];      // 按 risk 降序(CRITICAL > HIGH > MEDIUM > LOW > UNKNOWN)
   processes: ProcessEntry[];   // 受影响执行流(去重)
+  // v1.3 污点风险(仅落在变更文件上的 findings):
+  taint: {
+    findings: TaintFinding[];  // {category, sourceLine, sinkLine, filePath, path[], interprocedural}
+    truncated: boolean;
+    note: string | null;       // 无 taint 层/失败时的诚实说明
+  };
   llm: {
     prompt: string;            // 组装提示词(含全部结构化上下文)
     narrative?: string;        // LLM 生成后回填:场景评估叙事(markdown)
@@ -52,7 +58,30 @@ interface ChangeEntry {
     downstream: ImpactNode[];  // 改了会影响谁(被调方)
     affectedProcesses: string[];   // process id 列表
     affectedModules: string[];     // 模块/聚类名
+    // v1.3 语句级(guards-first;精度见 precision/FINDINGS.md):
+    intraProcedural?: {
+      pdgLayer: boolean;       // 索引是否含 --pdg 层;false = 本条为诚实缺省
+      guards: GuardRow[];      // CDG 守卫边,cap 50
+      flows: FlowRow[];        // REACHING_DEF 变量流,cap 50(块粒度,text 为准)
+      truncated?: { guards?: boolean; flows?: boolean };
+      resolution?: 'name' | 'file+functionLine';
+    };
   };
+}
+
+interface GuardRow {           // "哪条语句被哪个分支守卫"
+  line: number;                // 块锚行号
+  text: string;                // 语句原文(多语句用 \n 拼接)——以 text 为准
+  label: 'T' | 'F';            // 分支方向(switch 各臂统一 'T',已知盲区)
+  controllerLine: number;      // 守卫谓词所在行
+  guard?: true;                // dependent 是 return/throw/continue/break
+}
+
+interface FlowRow {
+  variable: string;
+  defLine: number;             // 块锚(参数的定义行不可信,见 FINDINGS.md D2)
+  useLine: number;
+  useText: string;
 }
 
 interface ImpactNode {

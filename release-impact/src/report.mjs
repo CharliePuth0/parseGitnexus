@@ -288,7 +288,14 @@ export function mergedRisk(upstream, downstream) {
  * `fileStatus` is the `Map<path, changeType>` from `readChangedFileStatus`; without it every
  * entry falls back to `modified`.
  */
-export function buildChangeEntry({ symbol, upstream, downstream, processIndex = new Map(), fileStatus = new Map() }) {
+export function buildChangeEntry({
+  symbol,
+  upstream,
+  downstream,
+  intraProcedural,
+  processIndex = new Map(),
+  fileStatus = new Map(),
+}) {
   const up = directionVerdict(upstream, 'upstream');
   const down = directionVerdict(downstream, 'downstream');
 
@@ -315,6 +322,11 @@ export function buildChangeEntry({ symbol, upstream, downstream, processIndex = 
     );
   }
 
+  // Statement-level guards (guards-first per precision/FINDINGS.md): carried verbatim
+  // from the pdg_query walk, or an honest absence when the index has no PDG layer.
+  const ip = intraProcedural && typeof intraProcedural === 'object' ? intraProcedural : {};
+  if (ip.note) boundaries.push(`statement-level: ${ip.note}`);
+
   return {
     uid: symbol.uid,
     name: symbol.name,
@@ -330,6 +342,17 @@ export function buildChangeEntry({ symbol, upstream, downstream, processIndex = 
       downstream: down.nodes,
       affectedProcesses,
       affectedModules: dedupeStrings([...up.modules, ...down.modules]),
+      ...(Object.keys(ip).length > 0
+        ? {
+            intraProcedural: {
+              pdgLayer: ip.pdgLayer === true,
+              guards: Array.isArray(ip.guards) ? ip.guards : [],
+              flows: Array.isArray(ip.flows) ? ip.flows : [],
+              ...(ip.truncated && Object.keys(ip.truncated).length > 0 ? { truncated: ip.truncated } : {}),
+              ...(ip.resolution ? { resolution: ip.resolution } : {}),
+            },
+          }
+        : {}),
     },
   };
 }
@@ -340,11 +363,12 @@ export function buildChangeEntry({ symbol, upstream, downstream, processIndex = 
  * @param {object} input
  * @param {object} input.meta         meta block (already resolved paths/refs/timestamps)
  * @param {object} input.detect       `detect_changes` payload
- * @param {Array}  input.analyses     `[{symbol, upstream, downstream}]`
+ * @param {Array}  input.analyses     `[{symbol, upstream, downstream, intraProcedural?}]`
  * @param {Map}    [input.fileStatus] `Map<path, changeType>` for `ChangeEntry.changeType`
- * @param {object} [input.options]    `{limit, depth, source}`
+ * @param {object} [input.taint]      taint findings (changed files only)
+ * @param {object} [input.options]    `{limit, depth, source, pdgLayer}`
  */
-export function buildReport({ meta, detect, analyses, options = {}, fileStatus = new Map() }) {
+export function buildReport({ meta, detect, analyses, taint, options = {}, fileStatus = new Map() }) {
   const processIndex = buildProcessIndex(detect?.affected_processes);
   const entryByUid = new Map();
 
@@ -353,6 +377,7 @@ export function buildReport({ meta, detect, analyses, options = {}, fileStatus =
       symbol: analysis.symbol,
       upstream: analysis.upstream,
       downstream: analysis.downstream,
+      intraProcedural: analysis.intraProcedural,
       processIndex,
       fileStatus,
     });
@@ -415,10 +440,12 @@ export function buildReport({ meta, detect, analyses, options = {}, fileStatus =
       ...(typeof meta.worktreeDirty === 'boolean'
         ? { worktreeDirty: meta.worktreeDirty, dirtyCount: Number(meta.dirtyCount ?? 0) }
         : {}),
+      ...(typeof options.pdgLayer === 'boolean' ? { pdgLayer: options.pdgLayer } : {}),
     },
     summary,
     changes,
     processes: [...processesById.values()],
+    taint: taint ?? { findings: [], note: null },
     llm: { prompt: '' },
     __engine: {
       source: options.source ?? 'mcp',
@@ -535,6 +562,19 @@ function validateChangeEntry(errors, path, entry) {
     }
     impact[direction].forEach((node, index) => validateImpactNode(errors, `${path}.impact.${direction}[${index}]`, node));
   }
+
+  // v1.3 statement-level block (optional).
+  if (impact.intraProcedural !== undefined) {
+    const ip = impact.intraProcedural;
+    if (!isPlainObject(ip)) {
+      errors.push(`${path}.impact.intraProcedural: expected object`);
+    } else {
+      if (typeof ip.pdgLayer !== 'boolean')
+        errors.push(`${path}.impact.intraProcedural.pdgLayer: expected boolean`);
+      if (!Array.isArray(ip.guards)) errors.push(`${path}.impact.intraProcedural.guards: expected array`);
+      if (!Array.isArray(ip.flows)) errors.push(`${path}.impact.intraProcedural.flows: expected array`);
+    }
+  }
 }
 
 /**
@@ -558,6 +598,9 @@ export function validateReport(report) {
     checkEnum(errors, 'meta.indexStatus', meta.indexStatus, ['current', 'behind', 'diverged', 'unknown']);
     if (typeof meta.generatedAt === 'string' && Number.isNaN(Date.parse(meta.generatedAt))) {
       errors.push(`meta.generatedAt: not a parseable ISO timestamp (${meta.generatedAt})`);
+    }
+    if (meta.pdgLayer !== undefined && typeof meta.pdgLayer !== 'boolean') {
+      errors.push(`meta.pdgLayer: expected boolean, got ${typeof meta.pdgLayer}`);
     }
   }
 

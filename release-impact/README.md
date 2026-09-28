@@ -16,6 +16,14 @@ Node 24.
 
 ## Quick start
 
+**Statement-level guards are on by default — the target repo must be indexed with the PDG
+layer** (`gitnexus analyze --pdg`, or pin `pdg: true` in the repo's `.gitnexusrc` so plain
+`analyze` keeps it). Without the layer the engine still produces the method-level report and
+says so (`meta.pdgLayer: false`). Precision expectations: see
+[precision/FINDINGS.md](precision/FINDINGS.md) — guard edges are trustworthy on Java;
+flows are block-granular (quoted text is the truth), UID targets do not resolve, empty
+results mean UNKNOWN.
+
 ```bash
 # from anywhere — every path is resolved absolutely
 node /path/to/release-impact/release-impact.mjs \
@@ -135,6 +143,9 @@ and its own location, never against a relative assumption.
 | `ChangeEntry.impact.affectedProcesses` | flows whose own steps changed (`detect_changes.affected_processes[].changed_steps`) first, then flows reached through `byDepth[].processes[]`, nearest depth first |
 | `ChangeEntry.impact.affectedModules` | `affected_modules[].name`, unioned over both directions |
 | `ProcessEntry` | `affected_processes[]` → `{id, name→summary, step_count→stepCount}`; flows discovered only through `impact` use the deepest step index as a `stepCount` floor |
+| `ChangeEntry.impact.intraProcedural` | `pdg_query` controls (CDG guard edges) + flows (REACHING_DEF), guards-first per [precision/FINDINGS.md](precision/FINDINGS.md): rows are deduped, empty-text exception rows dropped, `results: []` recorded as UNKNOWN; resolution is name-first, then filePath + `functionLine` (UIDs do not resolve) |
+| `meta.pdgLayer` | index `meta.pdg` stamp — `false` means the per-symbol PDG walk was skipped and the report says so |
+| `taint` | one `explain` call, filtered to the changed files (`category` / source→sink lines / `path` / `interprocedural`) |
 
 ### Risk merge rule (upstream + downstream → one verdict)
 

@@ -70,6 +70,41 @@ function formatChangeSection(entry, index) {
     lines.push('- boundaries reported by the tool:');
     for (const boundary of impact.boundaries) lines.push(`    - ${boundary}`);
   }
+
+  // Statement-level guards (guards-first per precision/FINDINGS.md): line-level CDG
+  // evidence is trustworthy on real Java; flows are block-granular — quote text, not
+  // just line numbers, and never read an empty statement set as "no dependence".
+  const ip = impact.intraProcedural;
+  if (ip && typeof ip === 'object') {
+    if (!ip.pdgLayer) {
+      lines.push('- statement-level (PDG): NOT available for this index (no --pdg layer)');
+    } else if (ip.guards?.length > 0 || ip.flows?.length > 0) {
+      lines.push(
+        `- statement-level guards (${ip.guards.length}${ip.truncated?.guards ? ', truncated' : ''}): ` +
+          ip.guards
+            .slice(0, 20)
+            .map(
+              (g) =>
+                `L${g.controllerLine}→L${g.line}[${g.label}]${g.guard ? '(guard)' : ''} ${JSON.stringify(g.text.slice(0, 40))}`,
+            )
+            .join('; '),
+      );
+      lines.push(
+        `- statement-level flows (${ip.flows.length}${ip.truncated?.flows ? ', truncated' : ''}): ` +
+          ip.flows
+            .slice(0, 10)
+            .map((f) => `${f.variable}: L${f.defLine}→L${f.useLine}`)
+            .join('; '),
+      );
+      if (ip.truncated) {
+        lines.push(
+          '- statement-level rows are capped and block-granular: the line is a block anchor, the quoted text is the true statement; empty results mean UNKNOWN, not "no dependence"',
+        );
+      }
+    } else if (ip.note) {
+      lines.push(`- statement-level (PDG): ${ip.note}`);
+    }
+  }
   lines.push('');
   return lines;
 }
@@ -124,6 +159,9 @@ const INSTRUCTIONS = [
   '- 同一场景下的多个符号要合并叙述,突出"这个场景被改动了什么、',
   '  经由什么路径、最坏情况是什么"',
   '- 跨服务边(如 Feign 调用)要单独点出:影响面穿过服务边界',
+  '- 语句级证据(statement-level guards)可引用到"哪条 return/throw 被哪个分支守卫"',
+  '  的精度,但已知盲区必须标 [盲区]:lambda 与外围的连接、异常流边、',
+  '  三元/值位短路(无语句级分支)、循环出口后语句(CDG 不含)',
   '- 每个场景结束给一句"发布视角"结论',
   '',
   '### 回归建议',

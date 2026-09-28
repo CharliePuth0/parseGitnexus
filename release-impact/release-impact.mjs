@@ -27,6 +27,7 @@ import { fileURLToPath } from 'node:url';
 
 import { readChangedFileStatus, readRangeInfo } from './src/git-status.mjs';
 import { generateNarrative } from './src/llm.mjs';
+import { querySymbolPdg, readPdgStamp } from './src/pdg.mjs';
 import { GitNexusClient } from './src/gitnexus-client.mjs';
 import { buildLlmPrompt } from './src/prompt.mjs';
 import { buildReport, mergedRisk, selectAnalysisTargets, toPublicReport, validateReport } from './src/report.mjs';
@@ -241,6 +242,16 @@ export async function run(config, log = () => {}) {
     const errors = [];
     let indexStatus = null;
 
+    // PDG preflight: the statement-level layer only exists when the index was built
+    // with `analyze --pdg` (pinned by `.gitnexusrc` `pdg: true`). Without it we skip
+    // the per-symbol pdg_query calls and say so in the report — never a silent gap.
+    const pdgStamp = readPdgStamp(config.repoPath);
+    if (pdgStamp.error) {
+      notes.push(`could not read the index PDG stamp (${pdgStamp.error}); statement-level analysis skipped.`);
+    } else if (!pdgStamp.pdgLayer) {
+      notes.push('index has no PDG layer — run `gitnexus analyze --pdg` (or pin `pdg: true` in .gitnexusrc) for statement-level guard analysis.');
+    }
+
     for (let i = 0; i < selection.targets.length; i += 1) {
       const symbol = selection.targets[i];
       // Sequential on purpose: one MCP call at a time keeps the HTTP transport simple and
@@ -266,7 +277,15 @@ export async function run(config, log = () => {}) {
       if (upstream.__error) errors.push(`${symbol.name} upstream: ${upstream.__error}`);
       if (downstream.__error) errors.push(`${symbol.name} downstream: ${downstream.__error}`);
 
-      analyses.push({ symbol, upstream, downstream });
+      // Statement-level guards (guards-first per precision/FINDINGS.md): one name
+      // resolution + at most two pdg_query calls per symbol, with compensations
+      // (dedupe, empty-text exception rows dropped, UNKNOWN on empty results).
+      let intraProcedural = { pdgLayer: false };
+      if (pdgStamp.pdgLayer) {
+        intraProcedural = await querySymbolPdg(client, symbol);
+      }
+
+      analyses.push({ symbol, upstream, downstream, intraProcedural });
 
       // Same merge the report uses, so the progress line never disagrees with report.json.
       log(`[${i + 1}/${selection.targets.length}] ${symbol.name} → ${mergedRisk(upstream, downstream)}`);
@@ -274,6 +293,32 @@ export async function run(config, log = () => {}) {
 
     if (indexStatus === null) notes.push('index staleness could not be read (no impact call succeeded).');
     if (errors.length > 0) notes.push(`${errors.length} impact call(s) failed; those symbols are recorded as UNKNOWN.`);
+
+    // Taint (one call, filtered to changed files): findings carry category + source→sink path.
+    let taint = { findings: [], note: null };
+    if (pdgStamp.pdgLayer) {
+      const changedPaths = new Set((detect.changed_symbols ?? []).map((s) => s.filePath).filter(Boolean));
+      const taintResult = await client.explain({ limit: 200 }).catch(() => ({ __error: 'explain failed' }));
+      if (taintResult?.__error) {
+        taint = { findings: [], note: taintResult.__error };
+      } else if (Array.isArray(taintResult?.findings)) {
+        taint = {
+          findings: taintResult.findings
+            .filter((f) => changedPaths.has(f?.filePath ?? f?.anchor?.file))
+            .slice(0, 50)
+            .map((f) => ({
+              category: f?.category ?? null,
+              sourceLine: f?.source?.line ?? f?.sourceLine ?? null,
+              sinkLine: f?.sink?.line ?? f?.sinkLine ?? null,
+              filePath: f?.filePath ?? f?.anchor?.file ?? null,
+              path: f?.path ?? [],
+              interprocedural: f?.interprocedural === true,
+            })),
+          truncated: taintResult.truncated === true,
+          note: taintResult?.note ?? null,
+        };
+      }
+    }
 
     const report = buildReport({
       meta: {
@@ -292,7 +337,14 @@ export async function run(config, log = () => {}) {
       detect,
       analyses,
       fileStatus,
-      options: { source: client.mode, depth: config.depth, limit: config.limit, notes },
+      taint,
+      options: {
+        source: client.mode,
+        depth: config.depth,
+        limit: config.limit,
+        pdgLayer: pdgStamp.pdgLayer && !pdgStamp.error,
+        notes,
+      },
     });
 
     // No extra notes here: buildReport already carried them into report.__engine.notes.
