@@ -1,0 +1,267 @@
+{
+  "meta": {
+    "purpose": "Hand-annotated ground truth for Java PDG (CDG + REACHING_DEF) precision/recall verification. WRITTEN BEFORE ANY pdg_query WAS RUN (integrity rule). Do not edit to fit results; corrections must be documented as annotation errors in FINDINGS.md.",
+    "lineConvention": "All line numbers are 1-based source lines of the named fixture file.",
+    "granularityCaveat": "GitNexus emits BasicBlock granularity. Expected edges are recorded at SOURCE-STATEMENT granularity (the level a human reads a guard edge at). A tool row that lands on the same source line is a match; a tool row whose BasicBlock merges two adjacent statements onto one line is scored as an extra edge (finer-than-annotation) unless it duplicates an expected line.",
+    "derivationRules": {
+      "CDG": "For each predicate P, an edge (P.line -> line L, label) for every statement L whose reachability is directly gated by the T arm (label 'T') or the F/fall-through arm (label 'F') of P. 'Directly gated' excludes branch-to-branch edges (P1 -> P2, e.g. if/else-if, ternary branch, loop-exit predicate) because the branch-to-branch decision itself is already the target branch node; scoring those would be annotation bias.",
+      "guards": "guard=true is expected when the dependent text is return/throw/continue/break.",
+      "REACHING_DEF": "Defs that are lexically last-before a use, including the implicit initialization def of an unassigned local (Java definite-assignment) and a formal parameter's def at its own declaration line. Defs that are dead (killed before any use) get no row.",
+      "switch": "Per the tool's documented caveat every case dispatch is labelled 'T'. Anchors are ambiguous, so switch fixtures are annotated at ONE arm (documented) and the gate is measured on the other 13 fixtures."
+    },
+    "anchor": "Fixture expectation tables assume the tool is queried with the SYMBOL name (the documented line-range-granular anchor). The file-path anchor has no line window in the implementation (resolveBlockAnchor file branch), so it additionally returns blocks of every other function/method in the file; see FINDINGS.md."
+  },
+  "fixtures": [
+    {
+      "file": "PlainIfElse.java",
+      "construct": "plain if/else",
+      "symbol": "plain",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 8, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "bonus", "defLine": 4, "useLine": 10 },
+        { "variable": "bonus", "defLine": 6, "useLine": 10 },
+        { "variable": "bonus", "defLine": 8, "useLine": 10 }
+      ],
+      "notes": "Two-arm guard. Line 10 reads exactly one of the two line-8/line-6 defs. Line 4's initializer is dead (every path overwrites before the read) and is annotated as NOT expected, but the runner scores extra defs only in the flows detail column."
+    },
+    {
+      "file": "EarlyReturnGuard.java",
+      "construct": "early-return guard",
+      "symbol": "grade",
+      "expectedControls": [
+        { "controllerLine": 4, "dependentLine": 5, "label": "T" },
+        { "controllerLine": 7, "dependentLine": 8, "label": "T" },
+        { "controllerLine": 4, "dependentLine": 10, "label": "F" },
+        { "controllerLine": 7, "dependentLine": 10, "label": "F" }
+      ],
+      "expectedFlows": [],
+      "notes": "Both dependents are `return` statements -> guard=true expected on rows {4->5} and {7->8}. Note the tool description says the branch sense of a guard depends on its predicate, so an implementation that inverted the guard label (e.g. 'T' for `if (score < 0) return;`) is still counted as a match on the line pair here; the variant fixture is NOT needed because label correctness is checked on PlainIfElse/NestedIf. Line 10's value is `score` (a parameter), so no interesting local flow is annotated."
+    },
+    {
+      "file": "NestedIf.java",
+      "construct": "nested if",
+      "symbol": "classify",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 12, "label": "F" },
+        { "controllerLine": 6, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 6, "dependentLine": 9, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "label", "defLine": 4, "useLine": 12 },
+        { "variable": "label", "defLine": 7, "useLine": 12 },
+        { "variable": "label", "defLine": 9, "useLine": 12 }
+      ],
+      "notes": "Outer predicate gates the inner predicate (branch-to-branch, EXCLUDED per derivationRules.CDG) and the fall-through return (INCLUDED). The non-obvious expected edge is {5 -> 12, F}: the false arm of the outer if skips the whole block and lands on the return, so `return label` is control-dependent on line 5 as well as on line 6."
+    },
+    {
+      "file": "ElseIfChain.java",
+      "construct": "if / else-if / else chain",
+      "symbol": "band",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 10, "label": "F" },
+        { "controllerLine": 7, "dependentLine": 8, "label": "T" },
+        { "controllerLine": 7, "dependentLine": 10, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "band", "defLine": 4, "useLine": 12 },
+        { "variable": "band", "defLine": 6, "useLine": 12 },
+        { "variable": "band", "defLine": 8, "useLine": 12 },
+        { "variable": "band", "defLine": 10, "useLine": 12 }
+      ],
+      "notes": "{5 -> 7} and {7 -> 10} (the else-if dispatch chain) are branch-to-branch and excluded. The `else` arm at line 10 is the fall-through of BOTH predicates; a stricter post-dominance argument would attribute it to line 7 only, so the line-5 row is the softest expectation in this file. Def line 4 is NOT dead here (score < 50 takes the else at 10, so 4 reaches 12 on some path)."
+    },
+    {
+      "file": "SwitchColon.java",
+      "construct": "switch, colon form with break",
+      "symbol": "colon",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 10, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 13, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 16, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 16, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "size", "defLine": 4, "useLine": 16 },
+        { "variable": "size", "defLine": 7, "useLine": 16 },
+        { "variable": "size", "defLine": 10, "useLine": 16 },
+        { "variable": "size", "defLine": 13, "useLine": 16 }
+      ],
+      "notes": "ANCHOR IS AMBIGUOUS (3 identical `break`s), so the tool is expected to answer status:'ambiguous' here; this fixture is recorded but EXCLUDED from the gate (see FINDINGS.md). The documented caveat says every case dispatch is 'T' (arm conditions not distinguished), so the six-armed reality collapses to one T edge per arm; two source lines (5 and 6) carry the dispatch predicate, hence the anchor pair is genuinely ambiguous too. `break` is not a CDG target."
+    },
+    {
+      "file": "SwitchArrow.java",
+      "construct": "switch, arrow form + arrow return",
+      "symbol": "arrow",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 8, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 10, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 10, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "size", "defLine": 4, "useLine": 10 },
+        { "variable": "size", "defLine": 6, "useLine": 10 },
+        { "variable": "size", "defLine": 7, "useLine": 10 },
+        { "variable": "size", "defLine": 8, "useLine": 10 }
+      ],
+      "notes": "Arrow form is unambiguous (no break/continue), so this fixture acts as the switch-survives-at-all control for SwitchColon. Documented caveat: all arms labelled 'T'."
+    },
+    {
+      "file": "TryCatchFinally.java",
+      "construct": "try / catch (guarded return in catch) / finally",
+      "symbol": "guards",
+      "expectedControls": [
+        { "controllerLine": 6, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 6, "dependentLine": 9, "label": "F" },
+        { "controllerLine": 11, "dependentLine": 12, "label": "T" },
+        { "controllerLine": 11, "dependentLine": 14, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "len", "defLine": 9, "useLine": 18 },
+        { "variable": "len", "defLine": 14, "useLine": 18 },
+        { "variable": "len", "defLine": 16, "useLine": 18 }
+      ],
+      "notes": "The guarded return is line 12 (`return -2` inside catch) -> guard=true for {11 -> 12}. Line 9 (`text.length()`) is inside try and line 14 inside catch; line 16 (finally) dominates the normal exit, so {16 -> 18} is the edge a real consumer needs. Lines 9/14 are recorded as expected-to-reach-18 for recall purposes; if the tool instead emits a kill-node edge {9 -> 16} / {14 -> 16} they are scored as EXTRA (reported, not gate-fatal). The line-6 throw is the documented 'exception flow over-approximated' area."
+    },
+    {
+      "file": "TryWithResources.java",
+      "construct": "try-with-resources",
+      "symbol": "twr",
+      "expectedControls": [
+        { "controllerLine": 8, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 8, "dependentLine": 11, "label": "F" },
+        { "controllerLine": 8, "dependentLine": 14, "label": "T" },
+        { "controllerLine": 8, "dependentLine": 14, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "got", "defLine": 6, "useLine": 14 },
+        { "variable": "got", "defLine": 9, "useLine": 14 },
+        { "variable": "got", "defLine": 11, "useLine": 14 }
+      ],
+      "notes": "The resource declaration at line 7 introduces an implicit close() path; no guard edge is expected on it. Flows are intra-procedural (REACHING_DEF), so `use` is annotated on line 14 only, not on the implicit close() seen by the tool's own finalizer modelling."
+    },
+    {
+      "file": "WhileBreak.java",
+      "construct": "while loop with break",
+      "symbol": "find",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 6, "dependentLine": 7, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "i", "defLine": 4, "useLine": 9 },
+        { "variable": "i", "defLine": 9, "useLine": 5 },
+        { "variable": "i", "defLine": 4, "useLine": 5 },
+        { "variable": "i", "defLine": 4, "useLine": 11 },
+        { "variable": "i", "defLine": 9, "useLine": 11 }
+      ],
+      "notes": "`break` at line 7 is the loop-exit guard -> guard=true for {6 -> 7}. Line 5 carries BOTH the loop-entry test and the back-edge test; the def at line 9 reaches BOTH, so the def/use pairs are listed in both directions. Def 9 -> use 5 is the loop-carried flow: a real consumer needs it and it is the most likely recall failure in the whole fixture set (a naive CFG with no back-edge test would still have the edge, but a def/use pass that runs pre-header/branch tests first may drop it). Line 11 is the loop exit; i's value there is either 4 (0 iterations) or 9."
+    },
+    {
+      "file": "ForContinue.java",
+      "construct": "for loop with continue",
+      "symbol": "sumEven",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 6, "dependentLine": 7, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "sum", "defLine": 4, "useLine": 9 },
+        { "variable": "sum", "defLine": 9, "useLine": 9 },
+        { "variable": "sum", "defLine": 4, "useLine": 11 },
+        { "variable": "sum", "defLine": 9, "useLine": 11 }
+      ],
+      "notes": "`continue` at line 7 is the loop-run guard -> guard=true for {6 -> 7}. Self-loop def->use on line 9 is annotated because line 9 both reads and writes `sum` (basic-block granularity may or may not split it; an extra row is tolerated as a detail, a missing {4 -> 9} is not). The for-update at line 5 is not in expectedControls because it is not gated by the test."
+    },
+    {
+      "file": "DoWhile.java",
+      "construct": "do/while",
+      "symbol": "poll",
+      "expectedControls": [
+        { "controllerLine": 7, "dependentLine": 8, "label": "T" },
+        { "controllerLine": 7, "dependentLine": 11, "label": "F" },
+        { "controllerLine": 12, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 12, "dependentLine": 13, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "ticks", "defLine": 4, "useLine": 10 },
+        { "variable": "ticks", "defLine": 10, "useLine": 10 },
+        { "variable": "ticks", "defLine": 4, "useLine": 13 },
+        { "variable": "ticks", "defLine": 10, "useLine": 13 },
+        { "variable": "value", "defLine": 5, "useLine": 7 },
+        { "variable": "value", "defLine": 5, "useLine": 11 },
+        { "variable": "value", "defLine": 8, "useLine": 11 },
+        { "variable": "value", "defLine": 11, "useLine": 7 },
+        { "variable": "value", "defLine": 11, "useLine": 12 },
+        { "variable": "value", "defLine": 8, "useLine": 12 }
+      ],
+      "notes": "do/while inverts the usual shape: the body executes once before the line-12 test, so the line-12 test gates {7 -> ... } on the back edge ({12 -> 7, T}) and the exit ({12 -> 13, F}); line 7's F arm falls through to line 11 while line 7's T arm goes to line 8. Lines 10 and 11 both read+write their variable (self-loop pairs annotated). This is the richest and most brittle expectation set in the file; a missing {11 -> 12} or {11 -> 7} is a genuine loop-carried-flow recall failure."
+    },
+    {
+      "file": "Ternary.java",
+      "construct": "ternary expression",
+      "symbol": "pick",
+      "expectedControls": [
+        { "controllerLine": 4, "dependentLine": 5, "label": "T" },
+        { "controllerLine": 4, "dependentLine": 5, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "picked", "defLine": 4, "useLine": 5 }
+      ],
+      "notes": "A conditional expression's arms merge immediately into the assignment on the same source line, so both branch senses gate the single following statement. The T/F rows share the same line pair, so the matcher keys them apart on label; a tool that labels the ternary branch node itself (line 4) as the dependent would MISS both."
+    },
+    {
+      "file": "ShortCircuit.java",
+      "construct": "short-circuit && / ||",
+      "symbol": "shortCircuit",
+      "expectedControls": [
+        { "controllerLine": 4, "dependentLine": 5, "label": "F" },
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 6, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "valid", "defLine": 4, "useLine": 5 },
+        { "variable": "valid", "defLine": 4, "useLine": 6 }
+      ],
+      "notes": "THE INTRA-LINE LIMIT: line 4 contains two predicates (`key != null` and `key.length() > 2`) on one source line, and line 6 likewise (`blocked || !flag`). At basic-block granularity the two predicates of line 4 can share one line, so the block-granular CDG edge for the intra-line short-circuit is expected to land on line 5 rather than on line 4. ONLY the anchors that carry across source lines are annotated: line 4's compound value gates line 5 (labelled 'F' because whenever line 5's `blocked` matters the line-4 conjunction fell through, while a 'T' sense of line 4 leads to line 6 — see the soft row), and line 5 gates line 6 ('T' = the `blocked` short-circuit taken, 'F' = the `||` fell through to `!flag`). A 'T'-labelled {4 -> 5} row is scored EXTRA (reported, not gate-fatal). This fixture is the one where 'no missed guard edge' is measured conservatively because a guard would be declared as `key != null` — a single-line compound guard on one source line a human cannot split either."
+    },
+    {
+      "file": "ThrowAfterGuard.java",
+      "construct": "throw-after-guard",
+      "symbol": "guarded",
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 8, "label": "F" },
+        { "controllerLine": 8, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "F" },
+        { "controllerLine": 5, "dependentLine": 11, "label": "F" },
+        { "controllerLine": 8, "dependentLine": 11, "label": "F" }
+      ],
+      "expectedFlows": [],
+      "notes": "The `throw` at line 6 is a guard dependent -> guard=true for {5 -> 6}. This is the fixture for the documented 'exception flow over-approximated' gap: the throw may add spurious CDG edges out of the exception path, which is scored as extra, not as a miss. Line 9 is gated by both line 5 (F) and line 8 (T): the chain reasoning of ElseIfChain applies again."
+    },
+    {
+      "file": "LambdaCase.java",
+      "construct": "lambda (EXPECTED BLIND SPOT)",
+      "symbol": "viaLambda",
+      "expectedGap": true,
+      "expectedControls": [
+        { "controllerLine": 7, "dependentLine": 8, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "base", "defLine": 5, "useLine": 10 },
+        { "variable": "out", "defLine": 12, "useLine": 13 }
+      ],
+      "notes": "DOCUMENTED GAP: lambda bodies are opaque in both directions, so the only in-lambda edge annotated is the lambda's own early-return guard {7 -> 8}. The body's two returns are NOT annotated against each other (the lambda's blocks are not joined to the outer function at all, so nothing should connect 10 -> 13). `base` is captured from the enclosing method into the lambda body at line 10 and is annotated as an expected INTER-procedural-ish flow, so a missing {5 -> 10} is a REAL miss, not part of the documented gap. `out` at line 12 is the call's return value: line 12 is recorded as its def with a flow to line 13. If the whole lambda is opaque the observable failure mode is a MISS on {5 -> 10} and on {7 -> 8}; a tool that instead leaks the lambda body's blocks into the enclosing function's block set (cross-contamination) shows up as extra edges on 12/13."
+    }
+  ]
+}

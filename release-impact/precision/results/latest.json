@@ -1,0 +1,4240 @@
+{
+  "generatedAt": "2026-09-28T14:45:28.672Z",
+  "cliPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/gitnexus/dist/cli/index.js",
+  "repoRoot": "/var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-pdg-precision-9MB2xZ",
+  "analyzeCounters": {
+    "cdgSkippedFunctions": 0,
+    "reachingDefSkippedFunctions": 0,
+    "unsoundFunctions": 0,
+    "callableValueFlowCaps": 0,
+    "processTruncation": null,
+    "summaryLine": "  Repository indexed successfully (6.7s)"
+  },
+  "analyzeLogPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/logs/fixture-analyze-1790606727387.log",
+  "gate": {
+    "verdict": "FAIL",
+    "controls": {
+      "expected": 49,
+      "matched": 31,
+      "returned": 49,
+      "recall": 0.6326530612244898,
+      "precision": 0.6326530612244898
+    },
+    "flows": {
+      "expected": 44,
+      "matched": 28,
+      "returned": 87,
+      "recall": 0.6363636363636364,
+      "precision": 0.3218390804597701
+    },
+    "missedGuardRows": 14,
+    "labelMismatchRows": 6,
+    "relaxedControlMisses": 20,
+    "withoutDocumentedGaps": {
+      "controlsRecallLabelStrict": 0.625,
+      "controlsRecallEdgeLevel": 0.625,
+      "flowsRecall": 0.6666666666666666
+    }
+  },
+  "table": [
+    {
+      "file": "PlainIfElse.java",
+      "construct": "plain if/else",
+      "symbol": "plain",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 2,
+      "returnedControls": 2,
+      "matchedControls": 2,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 3,
+      "returnedFlows": 3,
+      "matchedFlows": 2,
+      "missedFlows": [
+        {
+          "variable": "bonus",
+          "defLine": 4,
+          "useLine": 10
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "score > 50"
+        }
+      ],
+      "fileAnchorReturned": 2,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 0,
+      "guardMissedCount": 0,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "EarlyReturnGuard.java",
+      "construct": "early-return guard",
+      "symbol": "grade",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 4,
+      "matchedControls": 3,
+      "missedControls": [
+        {
+          "controllerLine": 4,
+          "dependentLine": 10,
+          "label": "F"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 4,
+          "dependentLine": 7,
+          "label": "F",
+          "guard": false,
+          "text": "score > 100"
+        }
+      ],
+      "missedControlsIgnoringLabel": 1,
+      "expectedFlows": 0,
+      "returnedFlows": 3,
+      "matchedFlows": 0,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "score < 0"
+        },
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 7,
+          "text": "score > 100"
+        },
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 10,
+          "text": "return score;"
+        }
+      ],
+      "fileAnchorReturned": 4,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 4,
+      "guardMissedCount": 1,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "NestedIf.java",
+      "construct": "nested if",
+      "symbol": "classify",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 12,
+          "label": "F"
+        }
+      ],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 1,
+      "expectedFlows": 3,
+      "returnedFlows": 5,
+      "matchedFlows": 3,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "score > 50"
+        },
+        {
+          "variable": "active",
+          "defLine": 3,
+          "useLine": 6,
+          "text": "active"
+        }
+      ],
+      "fileAnchorReturned": 3,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 1,
+      "guardMissedCount": 1,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "ElseIfChain.java",
+      "construct": "if / else-if / else chain",
+      "symbol": "band",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 4,
+      "matchedControls": 3,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 10,
+          "label": "F"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 7,
+          "label": "F",
+          "guard": false,
+          "text": "score >= 80"
+        }
+      ],
+      "missedControlsIgnoringLabel": 1,
+      "expectedFlows": 4,
+      "returnedFlows": 5,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "band",
+          "defLine": 4,
+          "useLine": 12
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "score >= 90"
+        },
+        {
+          "variable": "score",
+          "defLine": 3,
+          "useLine": 7,
+          "text": "score >= 80"
+        }
+      ],
+      "fileAnchorReturned": 4,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 0,
+      "guardMissedCount": 0,
+      "labelMismatchCount": 1
+    },
+    {
+      "file": "SwitchColon.java",
+      "construct": "switch, colon form with break",
+      "symbol": "colon",
+      "expectedGap": false,
+      "ambiguousAnchor": true,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 5,
+      "returnedControls": 6,
+      "matchedControls": 3,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 16,
+          "label": "T"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 16,
+          "label": "F"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 8,
+          "label": "T",
+          "guard": true,
+          "text": "break;"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 11,
+          "label": "T",
+          "guard": true,
+          "text": "break;"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 14,
+          "label": "T",
+          "guard": true,
+          "text": "break;"
+        }
+      ],
+      "missedControlsIgnoringLabel": 2,
+      "expectedFlows": 4,
+      "returnedFlows": 4,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "size",
+          "defLine": 4,
+          "useLine": 16
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "code",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "code"
+        }
+      ],
+      "fileAnchorReturned": 6,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 2,
+      "guardMissedCount": 2,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "SwitchArrow.java",
+      "construct": "switch, arrow form + arrow return",
+      "symbol": "arrow",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 5,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 10,
+          "label": "T"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 10,
+          "label": "F"
+        }
+      ],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 2,
+      "expectedFlows": 4,
+      "returnedFlows": 4,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "size",
+          "defLine": 4,
+          "useLine": 10
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "code",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "code"
+        }
+      ],
+      "fileAnchorReturned": 3,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 2,
+      "guardMissedCount": 2,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "TryCatchFinally.java",
+      "construct": "try / catch (guarded return in catch) / finally",
+      "symbol": "guards",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 11,
+      "matchedControls": 4,
+      "missedControls": [],
+      "extraControls": [
+        {
+          "controllerLine": 9,
+          "dependentLine": 10,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "controllerLine": 9,
+          "dependentLine": 11,
+          "label": "F",
+          "guard": false,
+          "text": "e == null"
+        },
+        {
+          "controllerLine": 16,
+          "dependentLine": 18,
+          "label": "F",
+          "guard": true,
+          "text": "return len;"
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 10,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 10,
+          "label": "T",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 11,
+          "label": "F",
+          "guard": false,
+          "text": "e == null"
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 11,
+          "label": "T",
+          "guard": false,
+          "text": "e == null"
+        }
+      ],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 3,
+      "returnedFlows": 8,
+      "matchedFlows": 1,
+      "missedFlows": [
+        {
+          "variable": "len",
+          "defLine": 9,
+          "useLine": 18
+        },
+        {
+          "variable": "len",
+          "defLine": 14,
+          "useLine": 18
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "text",
+          "defLine": 3,
+          "useLine": 6,
+          "text": "text == null"
+        },
+        {
+          "variable": "text",
+          "defLine": 3,
+          "useLine": 9,
+          "text": "len = text.length();"
+        },
+        {
+          "variable": "len",
+          "defLine": 9,
+          "useLine": 16,
+          "text": "len = len + 1;"
+        },
+        {
+          "variable": "len",
+          "defLine": 4,
+          "useLine": 16,
+          "text": "len = len + 1;"
+        },
+        {
+          "variable": "len",
+          "defLine": 16,
+          "useLine": 16,
+          "text": "len = len + 1;"
+        },
+        {
+          "variable": "len",
+          "defLine": 14,
+          "useLine": 16,
+          "text": "len = len + 1;"
+        },
+        {
+          "variable": "e",
+          "defLine": 10,
+          "useLine": 11,
+          "text": "e == null"
+        }
+      ],
+      "fileAnchorReturned": 11,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 2,
+      "guardMissedCount": 0,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "TryWithResources.java",
+      "construct": "try-with-resources",
+      "symbol": "twr",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 3,
+      "matchedControls": 2,
+      "missedControls": [
+        {
+          "controllerLine": 8,
+          "dependentLine": 14,
+          "label": "T"
+        },
+        {
+          "controllerLine": 8,
+          "dependentLine": 14,
+          "label": "F"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 13,
+          "dependentLine": 14,
+          "label": "F",
+          "guard": true,
+          "text": "return got;"
+        }
+      ],
+      "missedControlsIgnoringLabel": 2,
+      "expectedFlows": 3,
+      "returnedFlows": 5,
+      "matchedFlows": 3,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "need",
+          "defLine": 5,
+          "useLine": 8,
+          "text": "need > 0"
+        },
+        {
+          "variable": "need",
+          "defLine": 5,
+          "useLine": 9,
+          "text": "got = need;"
+        }
+      ],
+      "fileAnchorReturned": 3,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 2,
+      "guardMissedCount": 2,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "WhileBreak.java",
+      "construct": "while loop with break",
+      "symbol": "find",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 4,
+      "matchedControls": 2,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 9,
+          "label": "T"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 6,
+          "dependentLine": 5,
+          "label": "F",
+          "guard": false,
+          "text": "i < values.length"
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 9,
+          "label": "F",
+          "guard": false,
+          "text": "i = i + 1;"
+        }
+      ],
+      "missedControlsIgnoringLabel": 1,
+      "expectedFlows": 5,
+      "returnedFlows": 11,
+      "matchedFlows": 5,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "values",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "i < values.length"
+        },
+        {
+          "variable": "values",
+          "defLine": 3,
+          "useLine": 6,
+          "text": "values[i] == wanted"
+        },
+        {
+          "variable": "wanted",
+          "defLine": 3,
+          "useLine": 6,
+          "text": "values[i] == wanted"
+        },
+        {
+          "variable": "i",
+          "defLine": 4,
+          "useLine": 6,
+          "text": "values[i] == wanted"
+        },
+        {
+          "variable": "i",
+          "defLine": 9,
+          "useLine": 6,
+          "text": "values[i] == wanted"
+        },
+        {
+          "variable": "i",
+          "defLine": 9,
+          "useLine": 9,
+          "text": "i = i + 1;"
+        }
+      ],
+      "fileAnchorReturned": 4,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 1,
+      "guardMissedCount": 0,
+      "labelMismatchCount": 1
+    },
+    {
+      "file": "ForContinue.java",
+      "construct": "for loop with continue",
+      "symbol": "sumEven",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 5,
+      "matchedControls": 2,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 9,
+          "label": "T"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 5,
+          "label": "T",
+          "guard": false,
+          "text": "i < values.length"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 5,
+          "label": "T",
+          "guard": false,
+          "text": "i < values.length"
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 9,
+          "label": "F",
+          "guard": false,
+          "text": "sum = sum + values[i];"
+        }
+      ],
+      "missedControlsIgnoringLabel": 1,
+      "expectedFlows": 4,
+      "returnedFlows": 15,
+      "matchedFlows": 4,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "values",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "i < values.length"
+        },
+        {
+          "variable": "values",
+          "defLine": 3,
+          "useLine": 6,
+          "text": "values[i] % 2 != 0"
+        },
+        {
+          "variable": "values",
+          "defLine": 3,
+          "useLine": 9,
+          "text": "sum = sum + values[i];"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 5,
+          "text": "i < values.length"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 5,
+          "text": "i < values.length"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 5,
+          "text": "i < values.length"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 5,
+          "text": "i < values.length"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 6,
+          "text": "values[i] % 2 != 0"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 6,
+          "text": "values[i] % 2 != 0"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 9,
+          "text": "sum = sum + values[i];"
+        },
+        {
+          "variable": "i",
+          "defLine": 5,
+          "useLine": 9,
+          "text": "sum = sum + values[i];"
+        }
+      ],
+      "fileAnchorReturned": 5,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 1,
+      "guardMissedCount": 0,
+      "labelMismatchCount": 1
+    },
+    {
+      "file": "DoWhile.java",
+      "construct": "do/while",
+      "symbol": "poll",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 4,
+      "matchedControls": 2,
+      "missedControls": [
+        {
+          "controllerLine": 7,
+          "dependentLine": 11,
+          "label": "F"
+        },
+        {
+          "controllerLine": 12,
+          "dependentLine": 13,
+          "label": "F"
+        }
+      ],
+      "extraControls": [
+        {
+          "controllerLine": 12,
+          "dependentLine": 10,
+          "label": "T",
+          "guard": false,
+          "text": "ticks = ticks + 1; value = value + 1;"
+        },
+        {
+          "controllerLine": 12,
+          "dependentLine": 12,
+          "label": "T",
+          "guard": false,
+          "text": "value < limit"
+        }
+      ],
+      "missedControlsIgnoringLabel": 2,
+      "expectedFlows": 10,
+      "returnedFlows": 12,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "ticks",
+          "defLine": 4,
+          "useLine": 13
+        },
+        {
+          "variable": "value",
+          "defLine": 5,
+          "useLine": 7
+        },
+        {
+          "variable": "value",
+          "defLine": 5,
+          "useLine": 11
+        },
+        {
+          "variable": "value",
+          "defLine": 8,
+          "useLine": 11
+        },
+        {
+          "variable": "value",
+          "defLine": 11,
+          "useLine": 7
+        },
+        {
+          "variable": "value",
+          "defLine": 11,
+          "useLine": 12
+        },
+        {
+          "variable": "value",
+          "defLine": 8,
+          "useLine": 12
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "seed",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "int ticks = 0; int value = seed;"
+        },
+        {
+          "variable": "limit",
+          "defLine": 3,
+          "useLine": 7,
+          "text": "value > limit"
+        },
+        {
+          "variable": "limit",
+          "defLine": 3,
+          "useLine": 12,
+          "text": "value < limit"
+        },
+        {
+          "variable": "value",
+          "defLine": 4,
+          "useLine": 7,
+          "text": "value > limit"
+        },
+        {
+          "variable": "value",
+          "defLine": 4,
+          "useLine": 10,
+          "text": "ticks = ticks + 1; value = value + 1;"
+        },
+        {
+          "variable": "value",
+          "defLine": 8,
+          "useLine": 10,
+          "text": "ticks = ticks + 1; value = value + 1;"
+        },
+        {
+          "variable": "value",
+          "defLine": 10,
+          "useLine": 7,
+          "text": "value > limit"
+        },
+        {
+          "variable": "value",
+          "defLine": 10,
+          "useLine": 10,
+          "text": "ticks = ticks + 1; value = value + 1;"
+        },
+        {
+          "variable": "value",
+          "defLine": 10,
+          "useLine": 12,
+          "text": "value < limit"
+        }
+      ],
+      "fileAnchorReturned": 4,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 1,
+      "guardMissedCount": 1,
+      "labelMismatchCount": 1
+    },
+    {
+      "file": "Ternary.java",
+      "construct": "ternary expression",
+      "symbol": "pick",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 2,
+      "returnedControls": 0,
+      "matchedControls": 0,
+      "missedControls": [
+        {
+          "controllerLine": 4,
+          "dependentLine": 5,
+          "label": "T"
+        },
+        {
+          "controllerLine": 4,
+          "dependentLine": 5,
+          "label": "F"
+        }
+      ],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 2,
+      "expectedFlows": 1,
+      "returnedFlows": 4,
+      "matchedFlows": 1,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "a",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "int picked = first ? a : b;"
+        },
+        {
+          "variable": "b",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "int picked = first ? a : b;"
+        },
+        {
+          "variable": "first",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "int picked = first ? a : b;"
+        }
+      ],
+      "fileAnchorReturned": 0,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 2,
+      "guardMissedCount": 2,
+      "labelMismatchCount": 0
+    },
+    {
+      "file": "ShortCircuit.java",
+      "construct": "short-circuit && / ||",
+      "symbol": "shortCircuit",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 0,
+      "matchedControls": 0,
+      "missedControls": [
+        {
+          "controllerLine": 4,
+          "dependentLine": 5,
+          "label": "F"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 6,
+          "label": "T"
+        },
+        {
+          "controllerLine": 5,
+          "dependentLine": 6,
+          "label": "F"
+        }
+      ],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 3,
+      "expectedFlows": 2,
+      "returnedFlows": 5,
+      "matchedFlows": 0,
+      "missedFlows": [
+        {
+          "variable": "valid",
+          "defLine": 4,
+          "useLine": 5
+        },
+        {
+          "variable": "valid",
+          "defLine": 4,
+          "useLine": 6
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "flag",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "boolean valid = key != null && key.length() > 2; boolean blocked = flag && valid;"
+        },
+        {
+          "variable": "key",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "boolean valid = key != null && key.length() > 2; boolean blocked = flag && valid;"
+        },
+        {
+          "variable": "flag",
+          "defLine": 3,
+          "useLine": 6,
+          "text": "return blocked || !flag;"
+        },
+        {
+          "variable": "valid",
+          "defLine": 4,
+          "useLine": 4,
+          "text": "boolean valid = key != null && key.length() > 2; boolean blocked = flag && valid;"
+        },
+        {
+          "variable": "blocked",
+          "defLine": 4,
+          "useLine": 6,
+          "text": "return blocked || !flag;"
+        }
+      ],
+      "fileAnchorReturned": 0,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 2,
+      "guardMissedCount": 2,
+      "labelMismatchCount": 1
+    },
+    {
+      "file": "ThrowAfterGuard.java",
+      "construct": "throw-after-guard",
+      "symbol": "guarded",
+      "expectedGap": false,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 6,
+      "returnedControls": 4,
+      "matchedControls": 4,
+      "missedControls": [
+        {
+          "controllerLine": 5,
+          "dependentLine": 9,
+          "label": "F"
+        },
+        {
+          "controllerLine": 8,
+          "dependentLine": 11,
+          "label": "F"
+        }
+      ],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 2,
+      "expectedFlows": 0,
+      "returnedFlows": 4,
+      "matchedFlows": 0,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "variable": "mode",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "mode < 0"
+        },
+        {
+          "variable": "mode",
+          "defLine": 3,
+          "useLine": 8,
+          "text": "mode == 0"
+        },
+        {
+          "variable": "state",
+          "defLine": 4,
+          "useLine": 11,
+          "text": "return state;"
+        },
+        {
+          "variable": "state",
+          "defLine": 9,
+          "useLine": 11,
+          "text": "return state;"
+        }
+      ],
+      "fileAnchorReturned": 4,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 3,
+      "guardMissedCount": 1,
+      "labelMismatchCount": 1
+    },
+    {
+      "file": "LambdaCase.java",
+      "construct": "lambda (EXPECTED BLIND SPOT)",
+      "symbol": "viaLambda",
+      "expectedGap": true,
+      "ambiguousAnchor": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 1,
+      "returnedControls": 2,
+      "matchedControls": 1,
+      "missedControls": [],
+      "extraControls": [
+        {
+          "controllerLine": 7,
+          "dependentLine": 10,
+          "label": "F",
+          "guard": true,
+          "text": "return v + base;"
+        }
+      ],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 2,
+      "returnedFlows": 3,
+      "matchedFlows": 0,
+      "missedFlows": [
+        {
+          "variable": "base",
+          "defLine": 5,
+          "useLine": 10
+        },
+        {
+          "variable": "out",
+          "defLine": 12,
+          "useLine": 13
+        }
+      ],
+      "extraFlows": [
+        {
+          "variable": "base",
+          "defLine": 5,
+          "useLine": 6,
+          "text": "IntUnaryOperator op = v -> { if (v < 0) { return -1; } return v + base; }; int out = op.applyAsInt(base);"
+        },
+        {
+          "variable": "op",
+          "defLine": 6,
+          "useLine": 6,
+          "text": "IntUnaryOperator op = v -> { if (v < 0) { return -1; } return v + base; }; int out = op.applyAsInt(base);"
+        },
+        {
+          "variable": "out",
+          "defLine": 6,
+          "useLine": 13,
+          "text": "return out;"
+        }
+      ],
+      "fileAnchorReturned": 2,
+      "fileAnchorSameAsSymbol": true,
+      "payloadNotes": null,
+      "truncated": false,
+      "guardExpected": 1,
+      "guardMissedCount": 0,
+      "labelMismatchCount": 0
+    }
+  ],
+  "uidProbes": [
+    {
+      "file": "PlainIfElse.java",
+      "symbol": "plain",
+      "uid": "Method:src/main/java/PlainIfElse.java:PlainIfElse.plain#1",
+      "cypherOk": true,
+      "viaUid": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "Method:src/main/java/PlainIfElse.java:PlainIfElse.plain#1"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "viaRelPath": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/PlainIfElse.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "bonus = 1;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "bonus = -1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 2
+        }
+      }
+    },
+    {
+      "file": "WhileBreak.java",
+      "symbol": "find",
+      "uid": "Method:src/main/java/WhileBreak.java:WhileBreak.find#2",
+      "cypherOk": true,
+      "viaUid": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "Method:src/main/java/WhileBreak.java:WhileBreak.find#2"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "viaRelPath": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/WhileBreak.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < values.length"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "i = i + 1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      }
+    }
+  ],
+  "raw": [
+    {
+      "file": "PlainIfElse.java",
+      "symbol": "plain",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/PlainIfElse.java",
+            "symbol": "plain",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "bonus = 1;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "bonus = -1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 2
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/PlainIfElse.java",
+            "symbol": "plain",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "bonus",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 10,
+                "text": "return bonus;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "bonus",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 10,
+                "text": "return bonus;"
+              }
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "PlainIfElse.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "bonus = 1;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "bonus = -1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 2
+        }
+      }
+    },
+    {
+      "file": "EarlyReturnGuard.java",
+      "symbol": "grade",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/EarlyReturnGuard.java",
+            "symbol": "grade",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 5,
+                "text": "return -1;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 7,
+                "text": "score > 100"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return -1;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "return score;"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 4
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/EarlyReturnGuard.java",
+            "symbol": "grade",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "score < 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "score > 100"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 10,
+                "text": "return score;"
+              }
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "EarlyReturnGuard.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 5,
+                "text": "return -1;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 7,
+                "text": "score > 100"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return -1;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "return score;"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "NestedIf.java",
+      "symbol": "classify",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/NestedIf.java",
+            "symbol": "classify",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "active"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "label = \"hot\";"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "label = \"warm\";"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/NestedIf.java",
+            "symbol": "classify",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "active",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "active"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 12,
+                "text": "return label;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 12,
+                "text": "return label;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 12,
+                "text": "return label;"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "NestedIf.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "active"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "label = \"hot\";"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "label = \"warm\";"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 3
+        }
+      }
+    },
+    {
+      "file": "ElseIfChain.java",
+      "symbol": "band",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/ElseIfChain.java",
+            "symbol": "band",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "band = \"A\";"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "score >= 80"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "band = \"B\";"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "band = \"C\";"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/ElseIfChain.java",
+            "symbol": "band",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score >= 90"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "score >= 80"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 12,
+                "text": "return band;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 12,
+                "text": "return band;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 12,
+                "text": "return band;"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "ElseIfChain.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "band = \"A\";"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "score >= 80"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "band = \"B\";"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "band = \"C\";"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "SwitchColon.java",
+      "symbol": "colon",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/SwitchColon.java",
+            "symbol": "colon",
+            "startLine": 3,
+            "endLine": 17
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "size = 10;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 10,
+                "text": "size = 20;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 13,
+                "text": "size = 99;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 14,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            }
+          ],
+          "total": 6
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/SwitchColon.java",
+            "symbol": "colon",
+            "startLine": 3,
+            "endLine": 17
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "code",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "code"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "size",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 16,
+                "text": "return size;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "size",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 16,
+                "text": "return size;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "size",
+              "def": {
+                "line": 13
+              },
+              "use": {
+                "line": 16,
+                "text": "return size;"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "SwitchColon.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "size = 10;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 10,
+                "text": "size = 20;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 13,
+                "text": "size = 99;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 14,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            }
+          ],
+          "total": 6
+        }
+      }
+    },
+    {
+      "file": "SwitchArrow.java",
+      "symbol": "arrow",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/SwitchArrow.java",
+            "symbol": "arrow",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "size = 10;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "size = 20;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "size = 99;"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/SwitchArrow.java",
+            "symbol": "arrow",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "code",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "code"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "size",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 10,
+                "text": "return size;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "size",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 10,
+                "text": "return size;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "size",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 10,
+                "text": "return size;"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "SwitchArrow.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "size = 10;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "size = 20;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "size = 99;"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      }
+    },
+    {
+      "file": "TryCatchFinally.java",
+      "symbol": "guards",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/TryCatchFinally.java",
+            "symbol": "guards",
+            "startLine": 3,
+            "endLine": 19
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 16
+              },
+              "dependent": {
+                "line": 18,
+                "text": "return len;"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 12,
+                "text": "return -2;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 14,
+                "text": "len = -1;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "throw new IllegalArgumentException(\"need text\");"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "len = text.length();"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 11
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/TryCatchFinally.java",
+            "symbol": "guards",
+            "startLine": 3,
+            "endLine": 19
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "text",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "text == null"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "text",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 9,
+                "text": "len = text.length();"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 16,
+                "text": "len = len + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 16,
+                "text": "len = len + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 16
+              },
+              "use": {
+                "line": 16,
+                "text": "len = len + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 16
+              },
+              "use": {
+                "line": 18,
+                "text": "return len;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 14
+              },
+              "use": {
+                "line": 16,
+                "text": "len = len + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "e",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 11,
+                "text": "e == null"
+              }
+            }
+          ],
+          "total": 8
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "TryCatchFinally.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 16
+              },
+              "dependent": {
+                "line": 18,
+                "text": "return len;"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 12,
+                "text": "return -2;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 14,
+                "text": "len = -1;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "throw new IllegalArgumentException(\"need text\");"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "len = text.length();"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 11
+        }
+      }
+    },
+    {
+      "file": "TryWithResources.java",
+      "symbol": "twr",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/TryWithResources.java",
+            "symbol": "twr",
+            "startLine": 5,
+            "endLine": 15
+          },
+          "results": [
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 13
+              },
+              "dependent": {
+                "line": 14,
+                "text": "return got;"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 8
+              },
+              "dependent": {
+                "line": 9,
+                "text": "got = need;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 8
+              },
+              "dependent": {
+                "line": 11,
+                "text": "got = -1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/TryWithResources.java",
+            "symbol": "twr",
+            "startLine": 5,
+            "endLine": 15
+          },
+          "results": [
+            {
+              "functionLine": 5,
+              "variable": "need",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 8,
+                "text": "need > 0"
+              }
+            },
+            {
+              "functionLine": 5,
+              "variable": "need",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "got = need;"
+              }
+            },
+            {
+              "functionLine": 5,
+              "variable": "got",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 14,
+                "text": "return got;"
+              }
+            },
+            {
+              "functionLine": 5,
+              "variable": "got",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 14,
+                "text": "return got;"
+              }
+            },
+            {
+              "functionLine": 5,
+              "variable": "got",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 14,
+                "text": "return got;"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "TryWithResources.java"
+          },
+          "results": [
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 13
+              },
+              "dependent": {
+                "line": 14,
+                "text": "return got;"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 8
+              },
+              "dependent": {
+                "line": 9,
+                "text": "got = need;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 8
+              },
+              "dependent": {
+                "line": 11,
+                "text": "got = -1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 3
+        }
+      }
+    },
+    {
+      "file": "WhileBreak.java",
+      "symbol": "find",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/WhileBreak.java",
+            "symbol": "find",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < values.length"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "i = i + 1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/WhileBreak.java",
+            "symbol": "find",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "values",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "i < values.length"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "values",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "wanted",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "i < values.length"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "i = i + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return i;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 5,
+                "text": "i < values.length"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "i = i + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return i;"
+              }
+            }
+          ],
+          "total": 11
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "WhileBreak.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "values[i] == wanted"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < values.length"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "break;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "i = i + 1;"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "ForContinue.java",
+      "symbol": "sumEven",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/ForContinue.java",
+            "symbol": "sumEven",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < values.length"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i++"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "values[i] % 2 != 0"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "continue;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 5
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/ForContinue.java",
+            "symbol": "sumEven",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "values",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "i < values.length"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "values",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] % 2 != 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "values",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 5,
+                "text": "i < values.length"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 5,
+                "text": "i++"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] % 2 != 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 5,
+                "text": "i < values.length"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 5,
+                "text": "i++"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 6,
+                "text": "values[i] % 2 != 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              }
+            }
+          ],
+          "total": 15
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "ForContinue.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < values.length"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i++"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "values[i] % 2 != 0"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "continue;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 5
+        }
+      }
+    },
+    {
+      "file": "DoWhile.java",
+      "symbol": "poll",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/DoWhile.java",
+            "symbol": "poll",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 12
+              },
+              "dependent": {
+                "line": 7,
+                "text": "value > limit"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 12
+              },
+              "dependent": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 12
+              },
+              "dependent": {
+                "line": 12,
+                "text": "value < limit"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "value = 0;"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/DoWhile.java",
+            "symbol": "poll",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "seed",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "int ticks = 0;\nint value = seed;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "limit",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "value > limit"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "limit",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 12,
+                "text": "value < limit"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "value",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 7,
+                "text": "value > limit"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "ticks",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "value",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "value",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "value",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 7,
+                "text": "value > limit"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "ticks",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "value",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "value",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 12,
+                "text": "value < limit"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "ticks",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 13,
+                "text": "return ticks;"
+              }
+            }
+          ],
+          "total": 12
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "DoWhile.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 12
+              },
+              "dependent": {
+                "line": 7,
+                "text": "value > limit"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 12
+              },
+              "dependent": {
+                "line": 10,
+                "text": "ticks = ticks + 1;\nvalue = value + 1;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 12
+              },
+              "dependent": {
+                "line": 12,
+                "text": "value < limit"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "value = 0;"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "Ternary.java",
+      "symbol": "pick",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/Ternary.java",
+            "symbol": "pick",
+            "startLine": 3,
+            "endLine": 6
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/Ternary.java",
+            "symbol": "pick",
+            "startLine": 3,
+            "endLine": 6
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "a",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "int picked = first ? a : b;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "b",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "int picked = first ? a : b;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "first",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "int picked = first ? a : b;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "picked",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "return picked;"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "Ternary.java"
+          },
+          "results": [],
+          "total": 0
+        }
+      }
+    },
+    {
+      "file": "ShortCircuit.java",
+      "symbol": "shortCircuit",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/ShortCircuit.java",
+            "symbol": "shortCircuit",
+            "startLine": 3,
+            "endLine": 7
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/ShortCircuit.java",
+            "symbol": "shortCircuit",
+            "startLine": 3,
+            "endLine": 7
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "flag",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "boolean valid = key != null && key.length() > 2;\nboolean blocked = flag && valid;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "key",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "boolean valid = key != null && key.length() > 2;\nboolean blocked = flag && valid;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "flag",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "return blocked || !flag;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "valid",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 4,
+                "text": "boolean valid = key != null && key.length() > 2;\nboolean blocked = flag && valid;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "blocked",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return blocked || !flag;"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "ShortCircuit.java"
+          },
+          "results": [],
+          "total": 0
+        }
+      }
+    },
+    {
+      "file": "ThrowAfterGuard.java",
+      "symbol": "guarded",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/ThrowAfterGuard.java",
+            "symbol": "guarded",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "throw new IllegalStateException(\"bad mode\");"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "mode == 0"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "return state;"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 8
+              },
+              "dependent": {
+                "line": 9,
+                "text": "state = 1;"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/ThrowAfterGuard.java",
+            "symbol": "guarded",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "mode",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "mode < 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "mode",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 8,
+                "text": "mode == 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "state",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return state;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "state",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return state;"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "ThrowAfterGuard.java"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "throw new IllegalStateException(\"bad mode\");"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "mode == 0"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "return state;"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 8
+              },
+              "dependent": {
+                "line": 9,
+                "text": "state = 1;"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "LambdaCase.java",
+      "symbol": "viaLambda",
+      "controls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/main/java/LambdaCase.java",
+            "symbol": "viaLambda",
+            "startLine": 5,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 6,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return -1;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 6,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "return v + base;"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 2
+        }
+      },
+      "flows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/main/java/LambdaCase.java",
+            "symbol": "viaLambda",
+            "startLine": 5,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 5,
+              "variable": "base",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 6,
+                "text": "IntUnaryOperator op = v -> {\n            if (v < 0) {\n                return -1;\n            }\n            return v + base;\n        };\nint out = op.applyAsInt(base);"
+              }
+            },
+            {
+              "functionLine": 5,
+              "variable": "op",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 6,
+                "text": "IntUnaryOperator op = v -> {\n            if (v < 0) {\n                return -1;\n            }\n            return v + base;\n        };\nint out = op.applyAsInt(base);"
+              }
+            },
+            {
+              "functionLine": 5,
+              "variable": "out",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 13,
+                "text": "return out;"
+              }
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileAnchor": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "LambdaCase.java"
+          },
+          "results": [
+            {
+              "functionLine": 6,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return -1;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 6,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "return v + base;"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 2
+        }
+      }
+    }
+  ]
+}
