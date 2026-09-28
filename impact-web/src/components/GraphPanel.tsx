@@ -24,6 +24,7 @@ export function GraphPanel({
   mode,
   anchorLabel,
   depth,
+  maxDepth,
   onDepthChange,
   showLabels,
   onToggleLabels,
@@ -36,8 +37,10 @@ export function GraphPanel({
   build: GraphBuild;
   mode: GraphMode;
   anchorLabel: string | null;
-  depth: number;
-  onDepthChange: (depth: number) => void;
+  /** null = 不限深度(全部展开) */
+  depth: number | null;
+  maxDepth: number;
+  onDepthChange: (depth: number | null) => void;
   showLabels: boolean;
   onToggleLabels: (next: boolean) => void;
   includeNeighbors: boolean;
@@ -86,18 +89,27 @@ export function GraphPanel({
         {anchorLabel ? <span className="graph__anchor ellipsis mono">{anchorLabel}</span> : null}
 
         {showDepth ? (
-          <label className="slider" title={t('graph.depth')}>
+          <div className="slider" title={t('graph.depth')}>
             <span className="slider__label">{t('graph.depth')}</span>
             <input
               type="range"
               min={1}
-              max={3}
+              max={maxDepth}
               step={1}
-              value={depth}
+              value={depth ?? maxDepth}
+              disabled={depth === null}
               onChange={(event) => onDepthChange(Number(event.target.value))}
             />
-            <span className="slider__value tnum">{depth}</span>
-          </label>
+            <span className="slider__value tnum">{depth ?? t('graph.depthAll')}</span>
+            <button
+              type="button"
+              className="chip"
+              aria-pressed={depth === null}
+              onClick={() => onDepthChange(depth === null ? maxDepth : null)}
+            >
+              {t('graph.depthAll')}
+            </button>
+          </div>
         ) : (
           <label className="toggle toggle--sm">
             <input

@@ -50,7 +50,8 @@ function Workspace() {
   const [filter, setFilter] = useState<ChangeFilter>({ ...DEFAULT_FILTER });
   const [selection, setSelection] = useState<Selection>(null);
   const [selectedProcessId, setSelectedProcessId] = useState<string | null>(null);
-  const [depth, setDepth] = useState(2);
+  // 默认不限深度(null = 全部展开),滑杆可再限制
+  const [depth, setDepth] = useState<number | null>(null);
   const [showLabels, setShowLabels] = useState(true);
   const [includeNeighbors, setIncludeNeighbors] = useState(false);
   const [leftOpen, setLeftOpen] = useState(true);
@@ -120,6 +121,16 @@ function Workspace() {
 
   const selectedChange = selection?.kind === 'change' ? changeByUid.get(selection.uid) ?? null : null;
   const selectedNode = selection?.kind === 'node' ? selection.node : null;
+
+  // 当前锚点影响面里的最大深度(引擎 --depth 决定上限)——滑杆范围按它算
+  const maxDepth = useMemo(() => {
+    if (!selectedChange) return 1;
+    const depths = [
+      ...selectedChange.impact.upstream.map((n) => n.depth),
+      ...selectedChange.impact.downstream.map((n) => n.depth),
+    ];
+    return Math.max(1, ...depths);
+  }, [selectedChange]);
 
   const graph = useMemo(() => {
     if (!report) return EMPTY_GRAPH;
@@ -225,6 +236,7 @@ function Workspace() {
             mode={mode}
             anchorLabel={anchorLabel}
             depth={depth}
+            maxDepth={maxDepth}
             onDepthChange={setDepth}
             showLabels={showLabels}
             onToggleLabels={setShowLabels}

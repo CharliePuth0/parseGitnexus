@@ -173,15 +173,16 @@ function compareImpactNodes(
 export function buildAnchorGraph(options: {
   change: ChangeEntry;
   riskByUid: ReadonlyMap<string, RiskCode>;
-  depthLimit: number;
+  /** null = 不限深度(全部展开) */
+  depthLimit: number | null;
   showLabels: boolean;
 }): GraphBuild {
   const { change, riskByUid, depthLimit, showLabels } = options;
   const upstreamAll = change.impact?.upstream ?? [];
   const downstreamAll = change.impact?.downstream ?? [];
 
-  const upstreamVisible = upstreamAll.filter((n) => n.depth <= depthLimit);
-  const downstreamVisible = downstreamAll.filter((n) => n.depth <= depthLimit);
+  const upstreamVisible = depthLimit === null ? upstreamAll : upstreamAll.filter((n) => n.depth <= depthLimit);
+  const downstreamVisible = depthLimit === null ? downstreamAll : downstreamAll.filter((n) => n.depth <= depthLimit);
   const hiddenByDepth = upstreamAll.length + downstreamAll.length - upstreamVisible.length - downstreamVisible.length;
 
   const nodes: SymbolFlowNode[] = [];
