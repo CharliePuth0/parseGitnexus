@@ -35,3 +35,14 @@
   ① looksLikeFilePath 先识别 UID 形状;② pdg_query 加分页 offset 或 line/target_uid 参数(数字排序);③ isGuardExit 校验取臂。
 - flows 在 Go 上暂不上(84% + G1/G2/G3 静默欠报)。
 - 前端必须把"0 行结果"当 UNKNOWN 展示,永不显示为"无守卫"。
+
+## 修复后重跑(2026-09-29)
+
+检索层三处修复后(target_uid 参数 + 数字排序 + keyset after_line + guard 仅标 T 臂):
+
+- **Prometheus 抽查:GATE PASS** — 5 个方法 26/26 守卫零漏报、零方向错;此前静默不可达的
+  `labelNames`(web/api/v1/api.go:884)经 target_uid 返回 49 行、7/7 守卫全中
+- Go 样例 gate 保持 PASS(control recall 100%)
+- Java 样例 gate 数值与修复前逐字节一致(标注错误导致的既有 FAIL,无回归)
+- 引擎 Prometheus 端到端:v0.313.3..HEAD(516 文件/3046 符号/325 流程),30/30 符号
+  intraProcedural 全部经 uid 解析;LLM 叙事正常生成

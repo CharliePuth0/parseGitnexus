@@ -149,10 +149,24 @@ async function main() {
       const fileRowsAll = byFile.ok ? controlRows(byFile.payload) : [];
       const fileRowsScoped = fileRowsAll.filter((row) => row.functionLine === spec.functionLine);
 
-      // Which anchor supplied the rows we score: name unless ambiguous/empty.
+      // Fixed retrieval path (target_uid): exact-symbol anchor, zero ambiguity.
+      // UIDs are taken from the ambiguity payload's candidates — the same ids the
+      // engine gets from detect_changes.
+      let byUid = null;
+      if (nameKind === 'ambiguous') {
+        const candidate = (byName.payload?.candidates ?? []).find((c) => c.filePath === spec.file);
+        if (candidate?.uid) {
+          const uidResult = await query('controls', undefined, { target_uid: candidate.uid });
+          if (uidResult.ok && !uidResult.payload?.error) {
+            byUid = { uid: candidate.uid, rows: controlRows(uidResult.payload), raw: uidResult.payload };
+          }
+        }
+      }
+
+      // Which anchor supplied the rows we score: uid unless unavailable/empty.
       const usedName = nameKind === 'results' && nameRows.length > 0;
-      const scored = usedName ? nameRows : fileRowsScoped;
-      const anchorUsed = usedName ? 'name' : 'file+functionLine';
+      const scored = byUid && byUid.rows.length > 0 ? byUid.rows : usedName ? nameRows : fileRowsScoped;
+      const anchorUsed = byUid && byUid.rows.length > 0 ? `uid (${byUid.uid})` : usedName ? 'name' : 'file+functionLine';
 
       const pairKey = (c, d) => `${c}->${d}`;
       const pool = new Map();

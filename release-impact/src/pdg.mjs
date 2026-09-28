@@ -18,6 +18,8 @@ import path from 'node:path';
 
 export const PDG_QUERY_TIMEOUT_MS = 30_000;
 const PDG_ROW_CAP = 50;
+/** Safety cap on file-anchor keyset pages (200 rows/page ⇒ up to 10k rows walked). */
+const MAX_FILE_PAGES = 20;
 
 /** True when the repo's index carries a PDG layer (the `analyze --pdg` stamp). */
 export function readPdgStamp(repoPath) {
@@ -84,7 +86,8 @@ function cleanFlows(rows) {
  * Step 3: still nothing → UNKNOWN note (never "no dependence").
  */
 export async function querySymbolPdg(client, symbol, { pdgQuery } = {}) {
-  const call = pdgQuery ?? ((mode, target, limit) => client.pdgQuery({ mode, target, limit }));
+  const call =
+    pdgQuery ?? ((mode, target, limit, afterLine, targetUid) => client.pdgQuery({ mode, target, afterLine, targetUid, limit }));
   const filePath = symbol.filePath ?? '';
   const name = symbol.name ?? '';
 
@@ -95,29 +98,64 @@ export async function querySymbolPdg(client, symbol, { pdgQuery } = {}) {
     note,
   });
 
-  let controls;
-  try {
-    controls = await call('controls', name, PDG_ROW_CAP);
-  } catch {
-    return unknown(`pdg_query(controls) failed for ${name}`);
+  // Keyset-paged file query: rows are ordered by source line, `after_line` is an
+  // exclusive cursor. Walks pages until the function's rows are found or the set
+  // is exhausted (safety cap), then filters by functionLine.
+  const pagedFileQuery = async (mode, fnLine) => {
+    let afterLine = 0;
+    let pages = 0;
+    const collected = [];
+    while (pages < MAX_FILE_PAGES) {
+      const page = await call(mode, filePath, PDG_ROW_CAP, afterLine).catch(() => null);
+      if (!page || page.__error) return { rows: collected, note: page?.__error ?? 'file query failed' };
+      collected.push(...(page.results ?? []));
+      const lastLine = collected.length > 0 ? Math.max(...collected.map((r) => r?.controller?.line ?? 0)) : 0;
+      if (!page.truncated) break;
+      // Advance past the max source line seen so far (rows include dependents'
+      // lines, which can exceed the source cursor).
+      afterLine = Math.max(afterLine, lastLine);
+      pages += 1;
+    }
+    const rows = collected.filter((row) => row?.functionLine === fnLine);
+    if (rows.length === 0 && pages >= MAX_FILE_PAGES) {
+      return { rows, note: `file paging capped at ${MAX_FILE_PAGES} pages without finding function ${fnLine}` };
+    }
+    return { rows, note: null };
+  };
+
+  // Resolution order: exact UID (zero-ambiguity, function-scoped) → unique name →
+  // file + functionLine keyset paging. UIDs used to resolve to silent empty
+  // results — fixed on the local GitNexus build via target_uid (precision G-findings).
+  let resolution = null;
+  let controls = null;
+  let rows = [];
+  let matchingLine = null;
+
+  if (symbol.uid) {
+    controls = await call('controls', null, PDG_ROW_CAP, undefined, symbol.uid).catch(() => null);
+    const uidRows = controls?.results ?? [];
+    if (!controls?.__error && !controls?.error && uidRows.length > 0) {
+      resolution = 'uid';
+      rows = uidRows;
+    }
+  }
+
+  if (!resolution) {
+    resolution = 'name';
+    controls = await call('controls', name, PDG_ROW_CAP).catch(() => null);
+    rows = controls?.results ?? [];
   }
 
   const matchingCandidate = (controls?.candidates ?? []).find((c) => c?.filePath === filePath);
-  let rows = controls?.results ?? [];
-  let resolution = 'name';
-
-  if (controls?.status === 'ambiguous' || rows.length === 0) {
+  if (rows.length === 0 && (controls?.status === 'ambiguous' || !controls)) {
     if (matchingCandidate && typeof matchingCandidate.line === 'number') {
-      // File anchor is not function-scoped (FINDINGS.md D6): filter by functionLine.
-      const fileResult = await call('controls', filePath, PDG_ROW_CAP).catch(() => null);
-      rows = (fileResult?.results ?? []).filter(
-        (row) => row?.functionLine === matchingCandidate.line,
-      );
+      matchingLine = matchingCandidate.line;
+      const paged = await pagedFileQuery('controls', matchingLine);
+      rows = paged.rows;
       resolution = 'file+functionLine';
-    } else {
-      return unknown(
-        `could not resolve ${name} to a function anchor (ambiguous: ${controls?.totalCandidates ?? '?'} candidates, none matching ${filePath}) — treated as UNKNOWN, never as "no dependence"`,
-      );
+      if (rows.length === 0 && paged.note) {
+        return unknown(paged.note);
+      }
     }
   }
 
@@ -127,15 +165,18 @@ export async function querySymbolPdg(client, symbol, { pdgQuery } = {}) {
     );
   }
 
-  // Flows go through the same two-step when the name was ambiguous.
-  const flowsResult =
-    resolution === 'name'
-      ? await call('flows', name, PDG_ROW_CAP).catch(() => null)
-      : await call('flows', filePath, PDG_ROW_CAP).catch(() => null);
-  const flowsRows =
-    resolution === 'name'
-      ? (flowsResult?.results ?? [])
-      : (flowsResult?.results ?? []).filter((row) => row?.functionLine === matchingCandidate.line);
+  // Flows follow the same resolution path.
+  let flowsRows = [];
+  if (resolution === 'uid' && symbol.uid) {
+    const flowsResult = await call('flows', null, PDG_ROW_CAP, undefined, symbol.uid).catch(() => null);
+    flowsRows = flowsResult?.results ?? [];
+  } else if (resolution === 'name') {
+    const flowsResult = await call('flows', name, PDG_ROW_CAP).catch(() => null);
+    flowsRows = flowsResult?.results ?? [];
+  } else if (matchingLine !== null) {
+    const paged = await pagedFileQuery('flows', matchingLine);
+    flowsRows = paged.rows;
+  }
 
   const cleanedControls = cleanControls(rows);
   const cleanedFlows = cleanFlows(flowsRows);

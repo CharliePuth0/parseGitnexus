@@ -19,13 +19,22 @@ const symbol = {
   isTestFile: false,
 };
 
+/**
+ * Stub matching the client call shape:
+ * (mode, target|null, limit, afterLine?, targetUid?)
+ */
 function stubCall(behavior) {
   const calls = [];
-  const fn = async (mode, target, limit) => {
-    calls.push({ mode, target, limit });
-    return behavior({ mode, target, limit }, calls.length);
+  const fn = async (mode, target, limit, afterLine, targetUid) => {
+    calls.push({ mode, target, limit, afterLine, targetUid });
+    return behavior({ mode, target, limit, afterLine, targetUid }, calls.length);
   };
   return { fn, calls };
+}
+
+/** Fail the UID path so the resolution falls through to name/file. */
+function uidFails() {
+  return { __error: 'symbol not found' };
 }
 
 test('readPdgStamp reports the analyze --pdg stamp presence', () => {
@@ -42,8 +51,9 @@ test('readPdgStamp reports the analyze --pdg stamp presence', () => {
   assert.ok(readPdgStamp('/nonexistent').error);
 });
 
-test('querySymbolPdg uses the unique-name path and cleans rows', async () => {
-  const { fn, calls } = stubCall(({ mode }) => {
+test('querySymbolPdg prefers the UID path and cleans rows', async () => {
+  const { fn, calls } = stubCall(({ mode, targetUid }) => {
+    if (targetUid !== symbol.uid) return uidFails();
     if (mode === 'controls') {
       return {
         results: [
@@ -65,16 +75,38 @@ test('querySymbolPdg uses the unique-name path and cleans rows', async () => {
 
   const result = await querySymbolPdg({}, symbol, { pdgQuery: fn });
 
-  assert.equal(result.resolution, 'name');
+  assert.equal(result.resolution, 'uid');
   assert.equal(result.guards.length, 1);
   assert.equal(result.guards[0].guard, true);
   assert.equal(result.flows.length, 1);
   assert.match(result.note, /1 exception-flow row/);
-  assert.deepEqual(calls.map((c) => c.target), ['m', 'm']);
+  // Both modes queried by UID, never by name.
+  assert.deepEqual(calls.map((c) => c.targetUid), [symbol.uid, symbol.uid]);
+  assert.deepEqual(calls.map((c) => c.target), [null, null]);
 });
 
-test('querySymbolPdg falls back to file+functionLine when the name is ambiguous', async () => {
-  const { fn, calls } = stubCall(({ mode, target }) => {
+test('querySymbolPdg falls back to the unique name when the UID fails', async () => {
+  const { fn, calls } = stubCall(({ mode, target, targetUid }) => {
+    if (targetUid) return uidFails();
+    if (mode === 'controls') {
+      return {
+        results: [{ functionLine: 10, controller: { line: 12 }, dependent: { line: 14, text: 'return x;' }, label: 'T', guard: true }],
+        total: 1,
+      };
+    }
+    return { results: [], total: 0 };
+  });
+
+  const result = await querySymbolPdg({}, symbol, { pdgQuery: fn });
+
+  assert.equal(result.resolution, 'name');
+  assert.equal(result.guards.length, 1);
+  assert.deepEqual(calls.map((c) => c.target), [null, 'm', 'm']);
+});
+
+test('querySymbolPdg falls back to file+functionLine keyset paging when the name is ambiguous', async () => {
+  const { fn, calls } = stubCall(({ mode, target, targetUid, afterLine }) => {
+    if (targetUid) return uidFails();
     if (target === 'm') {
       return {
         status: 'ambiguous',
@@ -85,38 +117,56 @@ test('querySymbolPdg falls back to file+functionLine when the name is ambiguous'
         ],
       };
     }
-    // File-path queries: multiple functions in the file, filter by functionLine 10.
+    // File path paged query: first page truncated with one matching row, second page the rest.
+    if (afterLine === 0) {
+      return {
+        results: [
+          { functionLine: 10, controller: { line: 12 }, dependent: { line: 14, text: 'return x;' }, label: 'T', guard: true },
+          { functionLine: 99, controller: { line: 2 }, dependent: { line: 3, text: 'other();' }, label: 'T' },
+        ],
+        total: 3,
+        truncated: true,
+      };
+    }
     return {
       results: [
-        { functionLine: 10, controller: { line: 12 }, dependent: { line: 14, text: 'return x;' }, label: 'T', guard: true },
-        { functionLine: 99, controller: { line: 2 }, dependent: { line: 3, text: 'other();' }, label: 'T' },
+        { functionLine: 10, controller: { line: 20 }, dependent: { line: 21, text: 'more();' }, label: 'F' },
+        { functionLine: 99, controller: { line: 30 }, dependent: { line: 31, text: 'other2();' }, label: 'T' },
       ],
-      total: 2,
+      total: 3,
     };
   });
 
   const result = await querySymbolPdg({}, symbol, { pdgQuery: fn });
 
   assert.equal(result.resolution, 'file+functionLine');
-  assert.equal(result.guards.length, 1);
+  // Both pages' functionLine-10 rows are present.
+  assert.equal(result.guards.length, 2);
   assert.equal(result.guards[0].controllerLine, 12);
-  assert.deepEqual(
-    calls.map((c) => c.target),
-    ['m', 'a/b/C.java', 'a/b/C.java'],
-  );
+  assert.equal(result.guards[1].controllerLine, 20);
+  // The controls file query paged twice (after_line 0, then >0).
+  const controlsFileCalls = calls.filter((c) => c.target === 'a/b/C.java' && c.mode === 'controls');
+  assert.equal(controlsFileCalls.length, 2);
+  assert.equal(controlsFileCalls[1].afterLine > 0, true);
 });
 
 test('querySymbolPdg treats an unresolvable symbol as UNKNOWN, never empty-dependence', async () => {
-  const { fn } = stubCall(() => ({ status: 'ambiguous', totalCandidates: 4, candidates: [] }));
+  const { fn } = stubCall(({ targetUid, target }) => {
+    if (targetUid) return uidFails();
+    return { status: 'ambiguous', totalCandidates: 4, candidates: [] };
+  });
 
   const result = await querySymbolPdg({}, symbol, { pdgQuery: fn });
 
   assert.equal(result.guards.length, 0);
-  assert.match(result.note, /could not resolve/);
+  assert.match(result.note, /could not resolve|UNKNOWN/);
 });
 
 test('querySymbolPdg treats empty name results as UNKNOWN', async () => {
-  const { fn } = stubCall(() => ({ results: [], total: 0 }));
+  const { fn } = stubCall(({ targetUid }) => {
+    if (targetUid) return uidFails();
+    return { results: [], total: 0 };
+  });
 
   const result = await querySymbolPdg({}, symbol, { pdgQuery: fn });
 

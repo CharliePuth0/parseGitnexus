@@ -5507,12 +5507,63 @@ export class LocalBackend {
     repo: RepoHandle,
     target: string,
     toolName: 'explain' | 'pdg_query' | 'impact',
+    targetUid?: string,
   ): Promise<{
     anchorClause: string;
     queryParams: Record<string, unknown>;
     anchor: { file: string; symbol?: string; startLine?: number; endLine?: number };
     early?: Record<string, unknown>;
   }> {
+    // Exact UID anchor first: UIDs contain '/' and would otherwise be classified
+    // as file paths by `looksLikeFilePath` — a silent empty result (precision
+    // findings D6/D7). `resolveSymbolCandidates` with a uid does id equality.
+    if (targetUid) {
+      const outcome = await this.resolveSymbolCandidates(repo, { uid: targetUid }, {});
+      if (outcome.kind === 'not_found') {
+        return {
+          anchorClause: '',
+          queryParams: {},
+          anchor: { file: '' },
+          early: { error: `Symbol '${targetUid}' not found` },
+        };
+      }
+      if (outcome.kind === 'ambiguous') {
+        return {
+          anchorClause: '',
+          queryParams: {},
+          anchor: { file: '' },
+          early: { status: 'ambiguous', message: `UID '${targetUid}' matched multiple symbols` },
+        };
+      }
+      const sym = outcome.symbol;
+      const idPrefix = `BasicBlock:${sym.filePath}:`;
+      if (
+        typeof sym.startLine === 'number' &&
+        typeof sym.endLine === 'number' &&
+        sym.endLine >= sym.startLine
+      ) {
+        return {
+          anchorClause:
+            'a.id STARTS WITH $idPrefix AND a.startLine >= $symStart AND a.startLine <= $symEnd',
+          queryParams: {
+            idPrefix,
+            symStart: toOneBasedLine(sym.startLine),
+            symEnd: toOneBasedLine(sym.endLine),
+          },
+          anchor: {
+            file: sym.filePath,
+            symbol: sym.name,
+            startLine: toDisplayLine(sym.startLine),
+            endLine: toDisplayLine(sym.endLine),
+          },
+        };
+      }
+      return {
+        anchorClause: 'a.id STARTS WITH $idPrefix',
+        queryParams: { idPrefix },
+        anchor: { file: sym.filePath, symbol: sym.name },
+      };
+    }
     if (looksLikeFilePath(target)) {
       return {
         anchorClause:
@@ -5933,7 +5984,14 @@ export class LocalBackend {
    */
   private async _pdgQueryImpl(
     repo: RepoHandle,
-    params: { mode?: string; target?: string; variable?: string; limit?: number } = {},
+    params: {
+      mode?: string;
+      target?: string;
+      target_uid?: string;
+      after_line?: number;
+      variable?: string;
+      limit?: number;
+    } = {},
   ): Promise<any> {
     await this.ensureInitialized(repo);
 
@@ -5954,13 +6012,27 @@ export class LocalBackend {
     }
     const limit = rawLimit;
 
+    // Keyset paging cursor for file anchors — rows are ordered by source line,
+    // so a page is `[after_line, …)` over the block lines (numeric, stable).
+    let afterLine: number | null = null;
+    if (params.after_line !== undefined) {
+      if (!Number.isInteger(params.after_line) || params.after_line < 0) {
+        return {
+          error: `Invalid "after_line": expected an integer >= 0, got ${JSON.stringify(params.after_line)}.`,
+        };
+      }
+      afterLine = params.after_line;
+    }
+
     // PDG queries are always anchored (no rel-property index ⇒ an unanchored
-    // basic-block path scan is unbounded). `target` is required.
+    // basic-block path scan is unbounded). Either `target` (file path / symbol
+    // name) or `target_uid` (exact symbol) is required.
     const target = typeof params.target === 'string' ? params.target.trim() : '';
-    if (!target) {
+    const targetUid = typeof params.target_uid === 'string' ? params.target_uid.trim() : '';
+    if (!target && !targetUid) {
       return {
         error:
-          'pdg_query requires a "target" (a file path or symbol/function name) — PDG queries are always anchored.',
+          'pdg_query requires a "target" (a file path or symbol/function name) or "target_uid" (an exact symbol UID) — PDG queries are always anchored.',
       };
     }
 
@@ -5991,7 +6063,7 @@ export class LocalBackend {
     // [symStart+1, symEnd+1] window. `target` is required, so the early cases
     // (not-found/ambiguous) return here and `anchor`/`anchorClause` are always
     // set below (anchor stays non-optional — no `| undefined` — #2188 CodeQL).
-    const resolved = await this.resolveBlockAnchor(repo, target, 'pdg_query');
+    const resolved = await this.resolveBlockAnchor(repo, target, 'pdg_query', targetUid || undefined);
     if (resolved.early) return resolved.early;
     const { anchorClause, anchor } = resolved;
     const queryParams = resolved.queryParams;
@@ -6010,17 +6082,25 @@ export class LocalBackend {
       queryParams.variablePrefix = `${variable}|`;
     }
 
+    // Keyset paging over the numeric block line (see after_line) — rows are
+    // ordered by source line, so `after_line` is an exclusive cursor.
+    let afterLineClause = '';
+    if (afterLine !== null) {
+      afterLineClause = ' AND a.startLine > $afterLine';
+      queryParams.afterLine = afterLine;
+    }
+
     // edgeType is a hardcoded per-mode literal (never user input); `target` /
     // `variable` flow only through bind params (no Cypher interpolation).
     const matchClause = `
       MATCH (a:BasicBlock)-[r:CodeRelation]->(b:BasicBlock)
-      WHERE r.type = '${edgeType}' AND ${anchorClause}${reasonClause}`;
+      WHERE r.type = '${edgeType}' AND ${anchorClause}${reasonClause}${afterLineClause}`;
     const [rows, countRows] = await Promise.all([
       executeParameterized(
         repo.lbugPath,
         `${matchClause}
       RETURN a.id AS srcId, a.startLine AS srcLine, b.startLine AS dstLine, b.text AS dstText, r.reason AS reason
-      ORDER BY srcId, dstLine, reason, b.id
+      ORDER BY srcLine, srcId, dstLine, reason, b.id
       LIMIT ${limit}`,
         queryParams,
       ),
@@ -6054,14 +6134,19 @@ export class LocalBackend {
         ? rows.map((r: any) => {
             const fnLine = fnLineOf(String(r.srcId ?? r[0] ?? ''));
             const dstText = String(r.dstText ?? r[3] ?? '');
+            const label = String(r.reason ?? r[4] ?? '');
             // A CDG edge into an early-exit block is a guard clause (subsumes
             // #559): the controller predicate gates the dependent via `label`.
-            const isGuardExit = /^\s*(return|throw|continue|break)\b/.test(dstText);
+            // The flag requires the TAKEN arm ('T'): the F-arm descent into a
+            // function's closing return is a classical CDG edge but not the
+            // early-exit pattern the flag exists for (precision findings G4 —
+            // `return x, nil` epilogues were flagged as guards).
+            const isGuardExit = label === 'T' && /^\s*(return|throw|continue|break)\b/.test(dstText);
             return {
               ...(Number.isInteger(fnLine) ? { functionLine: fnLine } : {}),
               controller: { line: (r.srcLine ?? r[1]) as number | undefined },
               dependent: { line: (r.dstLine ?? r[2]) as number | undefined, text: dstText },
-              label: String(r.reason ?? r[4] ?? ''),
+              label,
               ...(isGuardExit ? { guard: true } : {}),
             };
           })

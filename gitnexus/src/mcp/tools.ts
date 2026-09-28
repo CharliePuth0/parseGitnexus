@@ -814,7 +814,18 @@ CONTRACT CAVEATS:
         target: {
           type: 'string',
           description:
-            'Required anchor: a file path (e.g. "src/handlers/run.ts" — suffix match accepted) or a symbol/function name (resolved like context()).',
+            'Anchor: a file path (e.g. "src/handlers/run.ts" — suffix match accepted) or a symbol/function name (resolved like context()). NOTE: UID strings ("Method:path:name#1") are classified as file paths and resolve to nothing — use target_uid for exact symbol anchoring.',
+        },
+        target_uid: {
+          type: 'string',
+          description:
+            'Exact symbol anchor by graph UID (e.g. "Method:web/api/v1/api.go:API.labelNames#1") — zero-ambiguity, function-scoped results. Takes precedence over target.',
+        },
+        after_line: {
+          type: 'integer',
+          minimum: 0,
+          description:
+            'Optional keyset paging for file-path anchors: only return rows whose source block line is greater than this (rows are ordered by source line). Repeat with after_line = last returned line while truncated is true.',
         },
         variable: {
           type: 'string',
@@ -833,7 +844,7 @@ CONTRACT CAVEATS:
           description: `Repository name or path. ${CWD_AWARE_REPO_OMISSION}`,
         },
       },
-      required: ['mode', 'target'],
+      required: ['mode'],
     },
   },
   {

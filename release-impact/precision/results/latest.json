@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-28T14:45:28.672Z",
+  "generatedAt": "2026-09-28T18:04:36.305Z",
   "cliPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/gitnexus/dist/cli/index.js",
-  "repoRoot": "/var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-pdg-precision-9MB2xZ",
+  "repoRoot": "/var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-pdg-precision-7UXu1y",
   "analyzeCounters": {
     "cdgSkippedFunctions": 0,
     "reachingDefSkippedFunctions": 0,
     "unsoundFunctions": 0,
     "callableValueFlowCaps": 0,
     "processTruncation": null,
-    "summaryLine": "  Repository indexed successfully (6.7s)"
+    "summaryLine": "  Repository indexed successfully (7.0s)"
   },
-  "analyzeLogPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/logs/fixture-analyze-1790606727387.log",
+  "analyzeLogPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/logs/fixture-analyze-1790618674487.log",
   "gate": {
     "verdict": "FAIL",
     "controls": {
@@ -381,6 +381,34 @@
       "missedControls": [],
       "extraControls": [
         {
+          "controllerLine": 6,
+          "dependentLine": 10,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 10,
+          "label": "T",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 11,
+          "label": "F",
+          "guard": false,
+          "text": "e == null"
+        },
+        {
+          "controllerLine": 6,
+          "dependentLine": 11,
+          "label": "T",
+          "guard": false,
+          "text": "e == null"
+        },
+        {
           "controllerLine": 9,
           "dependentLine": 10,
           "label": "F",
@@ -398,36 +426,8 @@
           "controllerLine": 16,
           "dependentLine": 18,
           "label": "F",
-          "guard": true,
+          "guard": false,
           "text": "return len;"
-        },
-        {
-          "controllerLine": 6,
-          "dependentLine": 10,
-          "label": "F",
-          "guard": false,
-          "text": ""
-        },
-        {
-          "controllerLine": 6,
-          "dependentLine": 10,
-          "label": "T",
-          "guard": false,
-          "text": ""
-        },
-        {
-          "controllerLine": 6,
-          "dependentLine": 11,
-          "label": "F",
-          "guard": false,
-          "text": "e == null"
-        },
-        {
-          "controllerLine": 6,
-          "dependentLine": 11,
-          "label": "T",
-          "guard": false,
-          "text": "e == null"
         }
       ],
       "missedControlsIgnoringLabel": 0,
@@ -461,25 +461,13 @@
         },
         {
           "variable": "len",
-          "defLine": 9,
-          "useLine": 16,
-          "text": "len = len + 1;"
-        },
-        {
-          "variable": "len",
           "defLine": 4,
           "useLine": 16,
           "text": "len = len + 1;"
         },
         {
           "variable": "len",
-          "defLine": 16,
-          "useLine": 16,
-          "text": "len = len + 1;"
-        },
-        {
-          "variable": "len",
-          "defLine": 14,
+          "defLine": 9,
           "useLine": 16,
           "text": "len = len + 1;"
         },
@@ -488,6 +476,18 @@
           "defLine": 10,
           "useLine": 11,
           "text": "e == null"
+        },
+        {
+          "variable": "len",
+          "defLine": 14,
+          "useLine": 16,
+          "text": "len = len + 1;"
+        },
+        {
+          "variable": "len",
+          "defLine": 16,
+          "useLine": 16,
+          "text": "len = len + 1;"
         }
       ],
       "fileAnchorReturned": 11,
@@ -526,7 +526,7 @@
           "controllerLine": 13,
           "dependentLine": 14,
           "label": "F",
-          "guard": true,
+          "guard": false,
           "text": "return got;"
         }
       ],
@@ -1130,7 +1130,7 @@
           "controllerLine": 7,
           "dependentLine": 10,
           "label": "F",
-          "guard": true,
+          "guard": false,
           "text": "return v + base;"
         }
       ],
@@ -1488,8 +1488,7 @@
                 "line": 10,
                 "text": "return score;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 4
@@ -1595,8 +1594,7 @@
                 "line": 10,
                 "text": "return score;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 4
@@ -2360,63 +2358,6 @@
             {
               "functionLine": 3,
               "controller": {
-                "line": 9
-              },
-              "dependent": {
-                "line": 10,
-                "text": ""
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 9
-              },
-              "dependent": {
-                "line": 11,
-                "text": "e == null"
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 16
-              },
-              "dependent": {
-                "line": 18,
-                "text": "return len;"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 11
-              },
-              "dependent": {
-                "line": 12,
-                "text": "return -2;"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 11
-              },
-              "dependent": {
-                "line": 14,
-                "text": "len = -1;"
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
                 "line": 6
               },
               "dependent": {
@@ -2480,6 +2421,62 @@
                 "text": "e == null"
               },
               "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 12,
+                "text": "return -2;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 14,
+                "text": "len = -1;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 16
+              },
+              "dependent": {
+                "line": 18,
+                "text": "return len;"
+              },
+              "label": "F"
             }
           ],
           "total": 11
@@ -2522,17 +2519,6 @@
               "functionLine": 3,
               "variable": "len",
               "def": {
-                "line": 9
-              },
-              "use": {
-                "line": 16,
-                "text": "len = len + 1;"
-              }
-            },
-            {
-              "functionLine": 3,
-              "variable": "len",
-              "def": {
                 "line": 4
               },
               "use": {
@@ -2544,29 +2530,7 @@
               "functionLine": 3,
               "variable": "len",
               "def": {
-                "line": 16
-              },
-              "use": {
-                "line": 16,
-                "text": "len = len + 1;"
-              }
-            },
-            {
-              "functionLine": 3,
-              "variable": "len",
-              "def": {
-                "line": 16
-              },
-              "use": {
-                "line": 18,
-                "text": "return len;"
-              }
-            },
-            {
-              "functionLine": 3,
-              "variable": "len",
-              "def": {
-                "line": 14
+                "line": 9
               },
               "use": {
                 "line": 16,
@@ -2583,6 +2547,39 @@
                 "line": 11,
                 "text": "e == null"
               }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 14
+              },
+              "use": {
+                "line": 16,
+                "text": "len = len + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 16
+              },
+              "use": {
+                "line": 16,
+                "text": "len = len + 1;"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "len",
+              "def": {
+                "line": 16
+              },
+              "use": {
+                "line": 18,
+                "text": "return len;"
+              }
             }
           ],
           "total": 8
@@ -2596,63 +2593,6 @@
             "file": "TryCatchFinally.java"
           },
           "results": [
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 9
-              },
-              "dependent": {
-                "line": 10,
-                "text": ""
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 9
-              },
-              "dependent": {
-                "line": 11,
-                "text": "e == null"
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 16
-              },
-              "dependent": {
-                "line": 18,
-                "text": "return len;"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 11
-              },
-              "dependent": {
-                "line": 12,
-                "text": "return -2;"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 11
-              },
-              "dependent": {
-                "line": 14,
-                "text": "len = -1;"
-              },
-              "label": "F"
-            },
             {
               "functionLine": 3,
               "controller": {
@@ -2719,6 +2659,62 @@
                 "text": "e == null"
               },
               "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 10,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 9
+              },
+              "dependent": {
+                "line": 11,
+                "text": "e == null"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 12,
+                "text": "return -2;"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 11
+              },
+              "dependent": {
+                "line": 14,
+                "text": "len = -1;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 16
+              },
+              "dependent": {
+                "line": 18,
+                "text": "return len;"
+              },
+              "label": "F"
             }
           ],
           "total": 11
@@ -2742,18 +2738,6 @@
             {
               "functionLine": 5,
               "controller": {
-                "line": 13
-              },
-              "dependent": {
-                "line": 14,
-                "text": "return got;"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 5,
-              "controller": {
                 "line": 8
               },
               "dependent": {
@@ -2770,6 +2754,17 @@
               "dependent": {
                 "line": 11,
                 "text": "got = -1;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 13
+              },
+              "dependent": {
+                "line": 14,
+                "text": "return got;"
               },
               "label": "F"
             }
@@ -2858,18 +2853,6 @@
             {
               "functionLine": 5,
               "controller": {
-                "line": 13
-              },
-              "dependent": {
-                "line": 14,
-                "text": "return got;"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 5,
-              "controller": {
                 "line": 8
               },
               "dependent": {
@@ -2886,6 +2869,17 @@
               "dependent": {
                 "line": 11,
                 "text": "got = -1;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 5,
+              "controller": {
+                "line": 13
+              },
+              "dependent": {
+                "line": 14,
+                "text": "return got;"
               },
               "label": "F"
             }
@@ -3337,28 +3331,6 @@
             },
             {
               "functionLine": 3,
-              "variable": "sum",
-              "def": {
-                "line": 9
-              },
-              "use": {
-                "line": 9,
-                "text": "sum = sum + values[i];"
-              }
-            },
-            {
-              "functionLine": 3,
-              "variable": "sum",
-              "def": {
-                "line": 9
-              },
-              "use": {
-                "line": 11,
-                "text": "return sum;"
-              }
-            },
-            {
-              "functionLine": 3,
               "variable": "i",
               "def": {
                 "line": 5
@@ -3399,6 +3371,28 @@
               "use": {
                 "line": 9,
                 "text": "sum = sum + values[i];"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "sum = sum + values[i];"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum;"
               }
             }
           ],
@@ -3491,6 +3485,17 @@
             {
               "functionLine": 3,
               "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "value = 0;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
                 "line": 12
               },
               "dependent": {
@@ -3518,17 +3523,6 @@
               "dependent": {
                 "line": 12,
                 "text": "value < limit"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 7
-              },
-              "dependent": {
-                "line": 8,
-                "text": "value = 0;"
               },
               "label": "T"
             }
@@ -3694,6 +3688,17 @@
             {
               "functionLine": 3,
               "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "value = 0;"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
                 "line": 12
               },
               "dependent": {
@@ -3721,17 +3726,6 @@
               "dependent": {
                 "line": 12,
                 "text": "value < limit"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 3,
-              "controller": {
-                "line": 7
-              },
-              "dependent": {
-                "line": 8,
-                "text": "value = 0;"
               },
               "label": "T"
             }
@@ -3973,8 +3967,7 @@
                 "line": 11,
                 "text": "return state;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 3,
@@ -4090,8 +4083,7 @@
                 "line": 11,
                 "text": "return state;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 3,
@@ -4144,8 +4136,7 @@
                 "line": 10,
                 "text": "return v + base;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 2
@@ -4228,8 +4219,7 @@
                 "line": 10,
                 "text": "return v + base;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 2

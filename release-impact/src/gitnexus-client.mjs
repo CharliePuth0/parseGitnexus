@@ -344,14 +344,20 @@ export class GitNexusClient {
    * See precision/FINDINGS.md — UID targets resolve to silent empty results, so the
    * caller resolves anchors by name / file path + functionLine.
    */
-  async pdgQuery({ mode, target, limit }) {
+  async pdgQuery({ mode, target, targetUid, afterLine, limit }) {
     try {
       if (this.mode !== 'mcp') {
         return { __error: 'pdg_query requires the MCP path (no CLI equivalent)' };
       }
       return await this.mcp.callTool(
         'pdg_query',
-        { mode, target, limit },
+        {
+          mode,
+          ...(target ? { target } : {}),
+          ...(targetUid ? { target_uid: targetUid } : {}),
+          ...(afterLine !== undefined && afterLine !== null ? { after_line: afterLine } : {}),
+          limit,
+        },
         { timeoutMs: PDG_QUERY_TIMEOUT_MS },
       );
     } catch (error) {

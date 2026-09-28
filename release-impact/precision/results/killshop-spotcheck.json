@@ -1,6 +1,6 @@
 {
   "repo": "/Users/sugerdaddy/AI/shop/killshop",
-  "generatedAt": "2026-09-28T14:45:45.721Z",
+  "generatedAt": "2026-09-28T18:05:32.882Z",
   "probes": [
     {
       "label": "loginController.sendCode",
@@ -124,76 +124,6 @@
           },
           "results": [
             {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 149,
-                "text": "return \"redirect:http://killshop.com\";"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 154,
-                "text": "return \"redirect:http://auth.killshop.com/login.html\";"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 161,
-              "controller": {
-                "line": 167
-              },
-              "dependent": {
-                "line": 168,
-                "text": "return \"login\";"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 161,
-              "controller": {
-                "line": 167
-              },
-              "dependent": {
-                "line": 170,
-                "text": "return \"redirect:http://killshop.com\";"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
               "functionLine": 52,
               "controller": {
                 "line": 58
@@ -235,8 +165,7 @@
                 "line": 78,
                 "text": "return R.ok();"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 52,
@@ -270,8 +199,7 @@
                 "line": 78,
                 "text": "return R.ok();"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 83,
@@ -349,8 +277,7 @@
                 "line": 135,
                 "text": "return \"redirect:http://auth.killshop.com/reg.html\";"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 83,
@@ -394,8 +321,7 @@
                 "line": 128,
                 "text": "return \"redirect:http://auth.killshop.com/reg.html\";"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 83,
@@ -429,8 +355,75 @@
                 "line": 119,
                 "text": "return \"redirect:http://auth.killshop.com/reg.html\";"
               },
-              "label": "F",
+              "label": "F"
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 149,
+                "text": "return \"redirect:http://killshop.com\";"
+              },
+              "label": "T",
               "guard": true
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 154,
+                "text": "return \"redirect:http://auth.killshop.com/login.html\";"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 161,
+              "controller": {
+                "line": 167
+              },
+              "dependent": {
+                "line": 168,
+                "text": "return \"login\";"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 161,
+              "controller": {
+                "line": 167
+              },
+              "dependent": {
+                "line": 170,
+                "text": "return \"redirect:http://killshop.com\";"
+              },
+              "label": "F"
             }
           ],
           "total": 27
@@ -444,138 +437,6 @@
             "file": "killshop-auth-server/src/main/java/com/wang/killshop/authserver/controller/loginController.java"
           },
           "results": [
-            {
-              "functionLine": 140,
-              "variable": "vo",
-              "def": {
-                "line": 140
-              },
-              "use": {
-                "line": 144,
-                "text": "R login = memberFeignService.login(vo);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "session",
-              "def": {
-                "line": 140
-              },
-              "use": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "attributes",
-              "def": {
-                "line": 140
-              },
-              "use": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 144,
-                "text": "R login = memberFeignService.login(vo);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 146,
-                "text": "login.getCode() == 0"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "data",
-              "def": {
-                "line": 147
-              },
-              "use": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "errors",
-              "def": {
-                "line": 151
-              },
-              "use": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 161,
-              "variable": "session",
-              "def": {
-                "line": 161
-              },
-              "use": {
-                "line": 165,
-                "text": "Object attribute = session.getAttribute(LOGIN_USER);"
-              }
-            },
-            {
-              "functionLine": 161,
-              "variable": "attribute",
-              "def": {
-                "line": 165
-              },
-              "use": {
-                "line": 167,
-                "text": "attribute == null"
-              }
-            },
-            {
-              "functionLine": 182,
-              "variable": "request",
-              "def": {
-                "line": 182
-              },
-              "use": {
-                "line": 184,
-                "text": "request.getSession().removeAttribute(LOGIN_USER);\nrequest.getSession().invalidate();"
-              }
-            },
             {
               "functionLine": 52,
               "variable": "phone",
@@ -756,39 +617,6 @@
               "functionLine": 83,
               "variable": "errors",
               "def": {
-                "line": 116
-              },
-              "use": {
-                "line": 116,
-                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) register.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 83,
-              "variable": "errors",
-              "def": {
-                "line": 125
-              },
-              "use": {
-                "line": 125,
-                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 83,
-              "variable": "errors",
-              "def": {
-                "line": 132
-              },
-              "use": {
-                "line": 132,
-                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 83,
-              "variable": "errors",
-              "def": {
                 "line": 89
               },
               "use": {
@@ -860,6 +688,171 @@
               "use": {
                 "line": 116,
                 "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) register.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 83,
+              "variable": "errors",
+              "def": {
+                "line": 116
+              },
+              "use": {
+                "line": 116,
+                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) register.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 83,
+              "variable": "errors",
+              "def": {
+                "line": 125
+              },
+              "use": {
+                "line": 125,
+                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 83,
+              "variable": "errors",
+              "def": {
+                "line": 132
+              },
+              "use": {
+                "line": 132,
+                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "vo",
+              "def": {
+                "line": 140
+              },
+              "use": {
+                "line": 144,
+                "text": "R login = memberFeignService.login(vo);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "session",
+              "def": {
+                "line": 140
+              },
+              "use": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "attributes",
+              "def": {
+                "line": 140
+              },
+              "use": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 144,
+                "text": "R login = memberFeignService.login(vo);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 146,
+                "text": "login.getCode() == 0"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "data",
+              "def": {
+                "line": 147
+              },
+              "use": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "errors",
+              "def": {
+                "line": 151
+              },
+              "use": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 161,
+              "variable": "session",
+              "def": {
+                "line": 161
+              },
+              "use": {
+                "line": 165,
+                "text": "Object attribute = session.getAttribute(LOGIN_USER);"
+              }
+            },
+            {
+              "functionLine": 161,
+              "variable": "attribute",
+              "def": {
+                "line": 165
+              },
+              "use": {
+                "line": 167,
+                "text": "attribute == null"
+              }
+            },
+            {
+              "functionLine": 182,
+              "variable": "request",
+              "def": {
+                "line": 182
+              },
+              "use": {
+                "line": 184,
+                "text": "request.getSession().removeAttribute(LOGIN_USER);\nrequest.getSession().invalidate();"
               }
             }
           ],
@@ -1005,76 +998,6 @@
           },
           "results": [
             {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 149,
-                "text": "return \"redirect:http://killshop.com\";"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              },
-              "label": "F"
-            },
-            {
-              "functionLine": 140,
-              "controller": {
-                "line": 146
-              },
-              "dependent": {
-                "line": 154,
-                "text": "return \"redirect:http://auth.killshop.com/login.html\";"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 161,
-              "controller": {
-                "line": 167
-              },
-              "dependent": {
-                "line": 168,
-                "text": "return \"login\";"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 161,
-              "controller": {
-                "line": 167
-              },
-              "dependent": {
-                "line": 170,
-                "text": "return \"redirect:http://killshop.com\";"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
               "functionLine": 52,
               "controller": {
                 "line": 58
@@ -1116,8 +1039,7 @@
                 "line": 78,
                 "text": "return R.ok();"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 52,
@@ -1151,8 +1073,7 @@
                 "line": 78,
                 "text": "return R.ok();"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 83,
@@ -1230,8 +1151,7 @@
                 "line": 135,
                 "text": "return \"redirect:http://auth.killshop.com/reg.html\";"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 83,
@@ -1275,8 +1195,7 @@
                 "line": 128,
                 "text": "return \"redirect:http://auth.killshop.com/reg.html\";"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 83,
@@ -1310,8 +1229,75 @@
                 "line": 119,
                 "text": "return \"redirect:http://auth.killshop.com/reg.html\";"
               },
-              "label": "F",
+              "label": "F"
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 149,
+                "text": "return \"redirect:http://killshop.com\";"
+              },
+              "label": "T",
               "guard": true
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 140,
+              "controller": {
+                "line": 146
+              },
+              "dependent": {
+                "line": 154,
+                "text": "return \"redirect:http://auth.killshop.com/login.html\";"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 161,
+              "controller": {
+                "line": 167
+              },
+              "dependent": {
+                "line": 168,
+                "text": "return \"login\";"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 161,
+              "controller": {
+                "line": 167
+              },
+              "dependent": {
+                "line": 170,
+                "text": "return \"redirect:http://killshop.com\";"
+              },
+              "label": "F"
             }
           ],
           "total": 27
@@ -1325,138 +1311,6 @@
             "file": "killshop-auth-server/src/main/java/com/wang/killshop/authserver/controller/loginController.java"
           },
           "results": [
-            {
-              "functionLine": 140,
-              "variable": "vo",
-              "def": {
-                "line": 140
-              },
-              "use": {
-                "line": 144,
-                "text": "R login = memberFeignService.login(vo);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "session",
-              "def": {
-                "line": 140
-              },
-              "use": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "attributes",
-              "def": {
-                "line": 140
-              },
-              "use": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 144,
-                "text": "R login = memberFeignService.login(vo);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 146,
-                "text": "login.getCode() == 0"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "login",
-              "def": {
-                "line": 144
-              },
-              "use": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "data",
-              "def": {
-                "line": 147
-              },
-              "use": {
-                "line": 147,
-                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
-              }
-            },
-            {
-              "functionLine": 140,
-              "variable": "errors",
-              "def": {
-                "line": 151
-              },
-              "use": {
-                "line": 151,
-                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 161,
-              "variable": "session",
-              "def": {
-                "line": 161
-              },
-              "use": {
-                "line": 165,
-                "text": "Object attribute = session.getAttribute(LOGIN_USER);"
-              }
-            },
-            {
-              "functionLine": 161,
-              "variable": "attribute",
-              "def": {
-                "line": 165
-              },
-              "use": {
-                "line": 167,
-                "text": "attribute == null"
-              }
-            },
-            {
-              "functionLine": 182,
-              "variable": "request",
-              "def": {
-                "line": 182
-              },
-              "use": {
-                "line": 184,
-                "text": "request.getSession().removeAttribute(LOGIN_USER);\nrequest.getSession().invalidate();"
-              }
-            },
             {
               "functionLine": 52,
               "variable": "phone",
@@ -1637,39 +1491,6 @@
               "functionLine": 83,
               "variable": "errors",
               "def": {
-                "line": 116
-              },
-              "use": {
-                "line": 116,
-                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) register.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 83,
-              "variable": "errors",
-              "def": {
-                "line": 125
-              },
-              "use": {
-                "line": 125,
-                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 83,
-              "variable": "errors",
-              "def": {
-                "line": 132
-              },
-              "use": {
-                "line": 132,
-                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
-              }
-            },
-            {
-              "functionLine": 83,
-              "variable": "errors",
-              "def": {
                 "line": 89
               },
               "use": {
@@ -1741,6 +1562,171 @@
               "use": {
                 "line": 116,
                 "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) register.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 83,
+              "variable": "errors",
+              "def": {
+                "line": 116
+              },
+              "use": {
+                "line": 116,
+                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) register.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 83,
+              "variable": "errors",
+              "def": {
+                "line": 125
+              },
+              "use": {
+                "line": 125,
+                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 83,
+              "variable": "errors",
+              "def": {
+                "line": 132
+              },
+              "use": {
+                "line": 132,
+                "text": "Map<String, String> errors = new HashMap<>();\nerrors.put(\"code\",\"验证码错误\");\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "vo",
+              "def": {
+                "line": 140
+              },
+              "use": {
+                "line": 144,
+                "text": "R login = memberFeignService.login(vo);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "session",
+              "def": {
+                "line": 140
+              },
+              "use": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "attributes",
+              "def": {
+                "line": 140
+              },
+              "use": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 144,
+                "text": "R login = memberFeignService.login(vo);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 146,
+                "text": "login.getCode() == 0"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "login",
+              "def": {
+                "line": 144
+              },
+              "use": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "data",
+              "def": {
+                "line": 147
+              },
+              "use": {
+                "line": 147,
+                "text": "MemberResponseVo data = (MemberResponseVo) login.getData(\"data\", new TypeReference<MemberResponseVo>() {});\nsession.setAttribute(LOGIN_USER,data);"
+              }
+            },
+            {
+              "functionLine": 140,
+              "variable": "errors",
+              "def": {
+                "line": 151
+              },
+              "use": {
+                "line": 151,
+                "text": "Map<String,String> errors = new HashMap<>();\nerrors.put(\"msg\", (String) login.getData(\"msg\",new TypeReference<String>(){}));\nattributes.addFlashAttribute(\"errors\",errors);"
+              }
+            },
+            {
+              "functionLine": 161,
+              "variable": "session",
+              "def": {
+                "line": 161
+              },
+              "use": {
+                "line": 165,
+                "text": "Object attribute = session.getAttribute(LOGIN_USER);"
+              }
+            },
+            {
+              "functionLine": 161,
+              "variable": "attribute",
+              "def": {
+                "line": 165
+              },
+              "use": {
+                "line": 167,
+                "text": "attribute == null"
+              }
+            },
+            {
+              "functionLine": 182,
+              "variable": "request",
+              "def": {
+                "line": 182
+              },
+              "use": {
+                "line": 184,
+                "text": "request.getSession().removeAttribute(LOGIN_USER);\nrequest.getSession().invalidate();"
               }
             }
           ],
@@ -1838,6 +1824,28 @@
           },
           "results": [
             {
+              "functionLine": 60,
+              "controller": {
+                "line": 65
+              },
+              "dependent": {
+                "line": 67,
+                "text": "List<SeckillSessionWithSkusVo> sessionData = (List<SeckillSessionWithSkusVo>) lates3DaySession.getData(\"data\",\n                    new TypeReference<List<SeckillSessionWithSkusVo>>() {\n                    });\nsaveSessionInfos(sessionData);\nsaveSessionSkuInfo(sessionData);"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 87,
+              "controller": {
+                "line": 99
+              },
+              "dependent": {
+                "line": 101,
+                "text": "List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\nredisTemplate.opsForList().leftPushAll(key, skuIds);"
+              },
+              "label": "T"
+            },
+            {
               "functionLine": 119,
               "controller": {
                 "line": 123
@@ -1923,8 +1931,7 @@
                 "line": 206,
                 "text": "return null;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 167,
@@ -1991,8 +1998,7 @@
                 "line": 201,
                 "text": "break;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 167,
@@ -2014,8 +2020,7 @@
                 "line": 206,
                 "text": "return null;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 216,
@@ -2048,8 +2053,7 @@
                 "line": 248,
                 "text": "return null;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 216,
@@ -2082,8 +2086,7 @@
                 "line": 248,
                 "text": "return null;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 216,
@@ -2150,111 +2153,7 @@
                 "line": 244,
                 "text": "return redisTo;"
               },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 291
-              },
-              "dependent": {
-                "line": 294,
-                "text": "String redisKey = user.getId() + \"-\" + skuId;\nLong ttl = endTime - currentTime;\nBoolean aBoolean = redisTemplate.opsForValue().setIfAbsent(redisKey, num.toString(), ttl, TimeUnit.MILLISECONDS);"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 291
-              },
-              "dependent": {
-                "line": 298,
-                "text": "aBoolean"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 291
-              },
-              "dependent": {
-                "line": 322,
-                "text": "return null;"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 298
-              },
-              "dependent": {
-                "line": 300,
-                "text": "RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + randomCode);\nboolean semaphoreCount = semaphore.tryAcquire(num, 100, TimeUnit.MILLISECONDS);"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 298
-              },
-              "dependent": {
-                "line": 304,
-                "text": "semaphoreCount"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 298
-              },
-              "dependent": {
-                "line": 322,
-                "text": "return null;"
-              },
-              "label": "F",
-              "guard": true
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 304
-              },
-              "dependent": {
-                "line": 307,
-                "text": "String timeId = IdWorker.getTimeId();\nSeckillOrderTo orderTo = new SeckillOrderTo();\norderTo.setOrderSn(timeId);\norderTo.setMemberId(user.getId());\norderTo.setNum(num);\norderTo.setPromotionSessionId(redisTo.getPromotionSessionId());\norderTo.setSkuId(redisTo.getSkuId());\norderTo.setSeckillPrice(redisTo.getSeckillPrice());\nrabbitTemplate.convertAndSend(\"order-event-exchange\", \"order.seckill.order\", orderTo);"
-              },
-              "label": "T"
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 304
-              },
-              "dependent": {
-                "line": 316,
-                "text": "return timeId;"
-              },
-              "label": "T",
-              "guard": true
-            },
-            {
-              "functionLine": 260,
-              "controller": {
-                "line": 304
-              },
-              "dependent": {
-                "line": 322,
-                "text": "return null;"
-              },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 260,
@@ -2321,8 +2220,7 @@
                 "line": 322,
                 "text": "return null;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 260,
@@ -2355,30 +2253,107 @@
                 "line": 322,
                 "text": "return null;"
               },
-              "label": "F",
+              "label": "F"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 291
+              },
+              "dependent": {
+                "line": 294,
+                "text": "String redisKey = user.getId() + \"-\" + skuId;\nLong ttl = endTime - currentTime;\nBoolean aBoolean = redisTemplate.opsForValue().setIfAbsent(redisKey, num.toString(), ttl, TimeUnit.MILLISECONDS);"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 291
+              },
+              "dependent": {
+                "line": 298,
+                "text": "aBoolean"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 291
+              },
+              "dependent": {
+                "line": 322,
+                "text": "return null;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 298
+              },
+              "dependent": {
+                "line": 300,
+                "text": "RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + randomCode);\nboolean semaphoreCount = semaphore.tryAcquire(num, 100, TimeUnit.MILLISECONDS);"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 298
+              },
+              "dependent": {
+                "line": 304,
+                "text": "semaphoreCount"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 298
+              },
+              "dependent": {
+                "line": 322,
+                "text": "return null;"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 304
+              },
+              "dependent": {
+                "line": 307,
+                "text": "String timeId = IdWorker.getTimeId();\nSeckillOrderTo orderTo = new SeckillOrderTo();\norderTo.setOrderSn(timeId);\norderTo.setMemberId(user.getId());\norderTo.setNum(num);\norderTo.setPromotionSessionId(redisTo.getPromotionSessionId());\norderTo.setSkuId(redisTo.getSkuId());\norderTo.setSeckillPrice(redisTo.getSeckillPrice());\nrabbitTemplate.convertAndSend(\"order-event-exchange\", \"order.seckill.order\", orderTo);"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 260,
+              "controller": {
+                "line": 304
+              },
+              "dependent": {
+                "line": 316,
+                "text": "return timeId;"
+              },
+              "label": "T",
               "guard": true
             },
             {
-              "functionLine": 60,
+              "functionLine": 260,
               "controller": {
-                "line": 65
+                "line": 304
               },
               "dependent": {
-                "line": 67,
-                "text": "List<SeckillSessionWithSkusVo> sessionData = (List<SeckillSessionWithSkusVo>) lates3DaySession.getData(\"data\",\n                    new TypeReference<List<SeckillSessionWithSkusVo>>() {\n                    });\nsaveSessionInfos(sessionData);\nsaveSessionSkuInfo(sessionData);"
+                "line": 322,
+                "text": "return null;"
               },
-              "label": "T"
-            },
-            {
-              "functionLine": 87,
-              "controller": {
-                "line": 99
-              },
-              "dependent": {
-                "line": 101,
-                "text": "List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\nredisTemplate.opsForList().leftPushAll(key, skuIds);"
-              },
-              "label": "T"
+              "label": "F"
             }
           ],
           "total": 48
@@ -2392,6 +2367,127 @@
             "file": "killshop-seckill/src/main/java/com/wang/killshop/seckill/service/impl/SeckillServiceImpl.java"
           },
           "results": [
+            {
+              "functionLine": 60,
+              "variable": "lates3DaySession",
+              "def": {
+                "line": 64
+              },
+              "use": {
+                "line": 65,
+                "text": "lates3DaySession.getCode() == 0"
+              }
+            },
+            {
+              "functionLine": 60,
+              "variable": "lates3DaySession",
+              "def": {
+                "line": 64
+              },
+              "use": {
+                "line": 67,
+                "text": "List<SeckillSessionWithSkusVo> sessionData = (List<SeckillSessionWithSkusVo>) lates3DaySession.getData(\"data\",\n                    new TypeReference<List<SeckillSessionWithSkusVo>>() {\n                    });\nsaveSessionInfos(sessionData);\nsaveSessionSkuInfo(sessionData);"
+              }
+            },
+            {
+              "functionLine": 60,
+              "variable": "sessionData",
+              "def": {
+                "line": 67
+              },
+              "use": {
+                "line": 67,
+                "text": "List<SeckillSessionWithSkusVo> sessionData = (List<SeckillSessionWithSkusVo>) lates3DaySession.getData(\"data\",\n                    new TypeReference<List<SeckillSessionWithSkusVo>>() {\n                    });\nsaveSessionInfos(sessionData);\nsaveSessionSkuInfo(sessionData);"
+              }
+            },
+            {
+              "functionLine": 85,
+              "variable": "sessions",
+              "def": {
+                "line": 85
+              },
+              "use": {
+                "line": 87,
+                "text": "sessions.stream().forEach(session -> {\n\n            //获取当前活动的开始和结束时间的时间戳\n            long startTime = session.getStartTime().getTime();\n            long endTime = session.getEndTime().getTime();\n\n            //Redis中的key\n            String key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\n\n            //判断Redis中是否有该信息，如果没有才进行添加\n            Boolean hasKey = redisTemplate.hasKey(key);\n            //缓存活动信息\n            if (!hasKey) {\n                //获取到活动中所有商品的skuId\n                List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\n                redisTemplate.opsForList().leftPushAll(key, skuIds);\n            }\n        });"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "endTime",
+              "def": {
+                "line": 90
+              },
+              "use": {
+                "line": 90,
+                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "hasKey",
+              "def": {
+                "line": 90
+              },
+              "use": {
+                "line": 90,
+                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "key",
+              "def": {
+                "line": 90
+              },
+              "use": {
+                "line": 90,
+                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "startTime",
+              "def": {
+                "line": 90
+              },
+              "use": {
+                "line": 90,
+                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "hasKey",
+              "def": {
+                "line": 90
+              },
+              "use": {
+                "line": 99,
+                "text": "!hasKey"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "key",
+              "def": {
+                "line": 90
+              },
+              "use": {
+                "line": 101,
+                "text": "List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\nredisTemplate.opsForList().leftPushAll(key, skuIds);"
+              }
+            },
+            {
+              "functionLine": 87,
+              "variable": "skuIds",
+              "def": {
+                "line": 101
+              },
+              "use": {
+                "line": 101,
+                "text": "List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\nredisTemplate.opsForList().leftPushAll(key, skuIds);"
+              }
+            },
             {
               "functionLine": 114,
               "variable": "sessions",
@@ -2966,94 +3062,6 @@
             },
             {
               "functionLine": 260,
-              "variable": "redisKey",
-              "def": {
-                "line": 294
-              },
-              "use": {
-                "line": 294,
-                "text": "String redisKey = user.getId() + \"-\" + skuId;\nLong ttl = endTime - currentTime;\nBoolean aBoolean = redisTemplate.opsForValue().setIfAbsent(redisKey, num.toString(), ttl, TimeUnit.MILLISECONDS);"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "ttl",
-              "def": {
-                "line": 294
-              },
-              "use": {
-                "line": 294,
-                "text": "String redisKey = user.getId() + \"-\" + skuId;\nLong ttl = endTime - currentTime;\nBoolean aBoolean = redisTemplate.opsForValue().setIfAbsent(redisKey, num.toString(), ttl, TimeUnit.MILLISECONDS);"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "aBoolean",
-              "def": {
-                "line": 294
-              },
-              "use": {
-                "line": 298,
-                "text": "aBoolean"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "semaphore",
-              "def": {
-                "line": 300
-              },
-              "use": {
-                "line": 300,
-                "text": "RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + randomCode);\nboolean semaphoreCount = semaphore.tryAcquire(num, 100, TimeUnit.MILLISECONDS);"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "semaphoreCount",
-              "def": {
-                "line": 300
-              },
-              "use": {
-                "line": 304,
-                "text": "semaphoreCount"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "orderTo",
-              "def": {
-                "line": 307
-              },
-              "use": {
-                "line": 307,
-                "text": "String timeId = IdWorker.getTimeId();\nSeckillOrderTo orderTo = new SeckillOrderTo();\norderTo.setOrderSn(timeId);\norderTo.setMemberId(user.getId());\norderTo.setNum(num);\norderTo.setPromotionSessionId(redisTo.getPromotionSessionId());\norderTo.setSkuId(redisTo.getSkuId());\norderTo.setSeckillPrice(redisTo.getSeckillPrice());\nrabbitTemplate.convertAndSend(\"order-event-exchange\", \"order.seckill.order\", orderTo);"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "timeId",
-              "def": {
-                "line": 307
-              },
-              "use": {
-                "line": 307,
-                "text": "String timeId = IdWorker.getTimeId();\nSeckillOrderTo orderTo = new SeckillOrderTo();\norderTo.setOrderSn(timeId);\norderTo.setMemberId(user.getId());\norderTo.setNum(num);\norderTo.setPromotionSessionId(redisTo.getPromotionSessionId());\norderTo.setSkuId(redisTo.getSkuId());\norderTo.setSeckillPrice(redisTo.getSeckillPrice());\nrabbitTemplate.convertAndSend(\"order-event-exchange\", \"order.seckill.order\", orderTo);"
-              }
-            },
-            {
-              "functionLine": 260,
-              "variable": "timeId",
-              "def": {
-                "line": 307
-              },
-              "use": {
-                "line": 316,
-                "text": "return timeId;"
-              }
-            },
-            {
-              "functionLine": 260,
               "variable": "hashOps",
               "def": {
                 "line": 264
@@ -3295,124 +3303,91 @@
               }
             },
             {
-              "functionLine": 60,
-              "variable": "lates3DaySession",
+              "functionLine": 260,
+              "variable": "redisKey",
               "def": {
-                "line": 64
+                "line": 294
               },
               "use": {
-                "line": 65,
-                "text": "lates3DaySession.getCode() == 0"
+                "line": 294,
+                "text": "String redisKey = user.getId() + \"-\" + skuId;\nLong ttl = endTime - currentTime;\nBoolean aBoolean = redisTemplate.opsForValue().setIfAbsent(redisKey, num.toString(), ttl, TimeUnit.MILLISECONDS);"
               }
             },
             {
-              "functionLine": 60,
-              "variable": "lates3DaySession",
+              "functionLine": 260,
+              "variable": "ttl",
               "def": {
-                "line": 64
+                "line": 294
               },
               "use": {
-                "line": 67,
-                "text": "List<SeckillSessionWithSkusVo> sessionData = (List<SeckillSessionWithSkusVo>) lates3DaySession.getData(\"data\",\n                    new TypeReference<List<SeckillSessionWithSkusVo>>() {\n                    });\nsaveSessionInfos(sessionData);\nsaveSessionSkuInfo(sessionData);"
+                "line": 294,
+                "text": "String redisKey = user.getId() + \"-\" + skuId;\nLong ttl = endTime - currentTime;\nBoolean aBoolean = redisTemplate.opsForValue().setIfAbsent(redisKey, num.toString(), ttl, TimeUnit.MILLISECONDS);"
               }
             },
             {
-              "functionLine": 60,
-              "variable": "sessionData",
+              "functionLine": 260,
+              "variable": "aBoolean",
               "def": {
-                "line": 67
+                "line": 294
               },
               "use": {
-                "line": 67,
-                "text": "List<SeckillSessionWithSkusVo> sessionData = (List<SeckillSessionWithSkusVo>) lates3DaySession.getData(\"data\",\n                    new TypeReference<List<SeckillSessionWithSkusVo>>() {\n                    });\nsaveSessionInfos(sessionData);\nsaveSessionSkuInfo(sessionData);"
+                "line": 298,
+                "text": "aBoolean"
               }
             },
             {
-              "functionLine": 85,
-              "variable": "sessions",
+              "functionLine": 260,
+              "variable": "semaphore",
               "def": {
-                "line": 85
+                "line": 300
               },
               "use": {
-                "line": 87,
-                "text": "sessions.stream().forEach(session -> {\n\n            //获取当前活动的开始和结束时间的时间戳\n            long startTime = session.getStartTime().getTime();\n            long endTime = session.getEndTime().getTime();\n\n            //Redis中的key\n            String key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\n\n            //判断Redis中是否有该信息，如果没有才进行添加\n            Boolean hasKey = redisTemplate.hasKey(key);\n            //缓存活动信息\n            if (!hasKey) {\n                //获取到活动中所有商品的skuId\n                List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\n                redisTemplate.opsForList().leftPushAll(key, skuIds);\n            }\n        });"
+                "line": 300,
+                "text": "RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + randomCode);\nboolean semaphoreCount = semaphore.tryAcquire(num, 100, TimeUnit.MILLISECONDS);"
               }
             },
             {
-              "functionLine": 87,
-              "variable": "endTime",
+              "functionLine": 260,
+              "variable": "semaphoreCount",
               "def": {
-                "line": 90
+                "line": 300
               },
               "use": {
-                "line": 90,
-                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+                "line": 304,
+                "text": "semaphoreCount"
               }
             },
             {
-              "functionLine": 87,
-              "variable": "hasKey",
+              "functionLine": 260,
+              "variable": "orderTo",
               "def": {
-                "line": 90
+                "line": 307
               },
               "use": {
-                "line": 90,
-                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+                "line": 307,
+                "text": "String timeId = IdWorker.getTimeId();\nSeckillOrderTo orderTo = new SeckillOrderTo();\norderTo.setOrderSn(timeId);\norderTo.setMemberId(user.getId());\norderTo.setNum(num);\norderTo.setPromotionSessionId(redisTo.getPromotionSessionId());\norderTo.setSkuId(redisTo.getSkuId());\norderTo.setSeckillPrice(redisTo.getSeckillPrice());\nrabbitTemplate.convertAndSend(\"order-event-exchange\", \"order.seckill.order\", orderTo);"
               }
             },
             {
-              "functionLine": 87,
-              "variable": "key",
+              "functionLine": 260,
+              "variable": "timeId",
               "def": {
-                "line": 90
+                "line": 307
               },
               "use": {
-                "line": 90,
-                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
+                "line": 307,
+                "text": "String timeId = IdWorker.getTimeId();\nSeckillOrderTo orderTo = new SeckillOrderTo();\norderTo.setOrderSn(timeId);\norderTo.setMemberId(user.getId());\norderTo.setNum(num);\norderTo.setPromotionSessionId(redisTo.getPromotionSessionId());\norderTo.setSkuId(redisTo.getSkuId());\norderTo.setSeckillPrice(redisTo.getSeckillPrice());\nrabbitTemplate.convertAndSend(\"order-event-exchange\", \"order.seckill.order\", orderTo);"
               }
             },
             {
-              "functionLine": 87,
-              "variable": "startTime",
+              "functionLine": 260,
+              "variable": "timeId",
               "def": {
-                "line": 90
+                "line": 307
               },
               "use": {
-                "line": 90,
-                "text": "long startTime = session.getStartTime().getTime();\nlong endTime = session.getEndTime().getTime();\nString key = SESSION__CACHE_PREFIX + startTime + \"_\" + endTime;\nBoolean hasKey = redisTemplate.hasKey(key);"
-              }
-            },
-            {
-              "functionLine": 87,
-              "variable": "hasKey",
-              "def": {
-                "line": 90
-              },
-              "use": {
-                "line": 99,
-                "text": "!hasKey"
-              }
-            },
-            {
-              "functionLine": 87,
-              "variable": "key",
-              "def": {
-                "line": 90
-              },
-              "use": {
-                "line": 101,
-                "text": "List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\nredisTemplate.opsForList().leftPushAll(key, skuIds);"
-              }
-            },
-            {
-              "functionLine": 87,
-              "variable": "skuIds",
-              "def": {
-                "line": 101
-              },
-              "use": {
-                "line": 101,
-                "text": "List<String> skuIds = session.getRelationSkus().stream()\n                        .map(item -> item.getPromotionSessionId() + \"-\" + item.getSkuId().toString()).collect(Collectors.toList());\nredisTemplate.opsForList().leftPushAll(key, skuIds);"
+                "line": 316,
+                "text": "return timeId;"
               }
             }
           ],
@@ -3596,8 +3571,7 @@
                 "line": 253,
                 "text": "return responseVo;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 175,
@@ -3642,8 +3616,7 @@
                 "line": 248,
                 "text": "throw new NoStockException(msg);"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 277,
@@ -3745,6 +3718,39 @@
             "file": "killshop-order/src/main/java/com/wang/killshop/order/service/impl/OrderServiceImpl.java"
           },
           "results": [
+            {
+              "functionLine": 92,
+              "variable": "params",
+              "def": {
+                "line": 92
+              },
+              "use": {
+                "line": 94,
+                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
+              }
+            },
+            {
+              "functionLine": 92,
+              "variable": "page",
+              "def": {
+                "line": 94
+              },
+              "use": {
+                "line": 94,
+                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
+              }
+            },
+            {
+              "functionLine": 92,
+              "variable": "page",
+              "def": {
+                "line": 94
+              },
+              "use": {
+                "line": 99,
+                "text": "return new PageUtils(page);"
+              }
+            },
             {
               "functionLine": 103,
               "variable": "addressFuture",
@@ -3864,17 +3870,6 @@
               "use": {
                 "line": 204,
                 "text": "OrderCreateTo order = createOrder();\nBigDecimal payAmount = order.getOrder().getPayAmount();\nBigDecimal payPrice = vo.getPayPrice();"
-              }
-            },
-            {
-              "functionLine": 175,
-              "variable": "msg",
-              "def": {
-                "line": 247
-              },
-              "use": {
-                "line": 248,
-                "text": "throw new NoStockException(msg);"
               }
             },
             {
@@ -4128,6 +4123,17 @@
               "use": {
                 "line": 226,
                 "text": "return orderItemVo;"
+              }
+            },
+            {
+              "functionLine": 175,
+              "variable": "msg",
+              "def": {
+                "line": 247
+              },
+              "use": {
+                "line": 248,
+                "text": "throw new NoStockException(msg);"
               }
             },
             {
@@ -5173,39 +5179,6 @@
               "use": {
                 "line": 745,
                 "text": "String orderSn = IdWorker.getTimeId().substring(0, 16);\nSystem.out.println(orderSn);"
-              }
-            },
-            {
-              "functionLine": 92,
-              "variable": "params",
-              "def": {
-                "line": 92
-              },
-              "use": {
-                "line": 94,
-                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
-              }
-            },
-            {
-              "functionLine": 92,
-              "variable": "page",
-              "def": {
-                "line": 94
-              },
-              "use": {
-                "line": 94,
-                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
-              }
-            },
-            {
-              "functionLine": 92,
-              "variable": "page",
-              "def": {
-                "line": 94
-              },
-              "use": {
-                "line": 99,
-                "text": "return new PageUtils(page);"
               }
             }
           ],
@@ -5444,8 +5417,7 @@
                 "line": 253,
                 "text": "return responseVo;"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 175,
@@ -5490,8 +5462,7 @@
                 "line": 248,
                 "text": "throw new NoStockException(msg);"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             },
             {
               "functionLine": 277,
@@ -5593,6 +5564,39 @@
             "file": "killshop-order/src/main/java/com/wang/killshop/order/service/impl/OrderServiceImpl.java"
           },
           "results": [
+            {
+              "functionLine": 92,
+              "variable": "params",
+              "def": {
+                "line": 92
+              },
+              "use": {
+                "line": 94,
+                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
+              }
+            },
+            {
+              "functionLine": 92,
+              "variable": "page",
+              "def": {
+                "line": 94
+              },
+              "use": {
+                "line": 94,
+                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
+              }
+            },
+            {
+              "functionLine": 92,
+              "variable": "page",
+              "def": {
+                "line": 94
+              },
+              "use": {
+                "line": 99,
+                "text": "return new PageUtils(page);"
+              }
+            },
             {
               "functionLine": 103,
               "variable": "addressFuture",
@@ -5712,17 +5716,6 @@
               "use": {
                 "line": 204,
                 "text": "OrderCreateTo order = createOrder();\nBigDecimal payAmount = order.getOrder().getPayAmount();\nBigDecimal payPrice = vo.getPayPrice();"
-              }
-            },
-            {
-              "functionLine": 175,
-              "variable": "msg",
-              "def": {
-                "line": 247
-              },
-              "use": {
-                "line": 248,
-                "text": "throw new NoStockException(msg);"
               }
             },
             {
@@ -5976,6 +5969,17 @@
               "use": {
                 "line": 226,
                 "text": "return orderItemVo;"
+              }
+            },
+            {
+              "functionLine": 175,
+              "variable": "msg",
+              "def": {
+                "line": 247
+              },
+              "use": {
+                "line": 248,
+                "text": "throw new NoStockException(msg);"
               }
             },
             {
@@ -7021,39 +7025,6 @@
               "use": {
                 "line": 745,
                 "text": "String orderSn = IdWorker.getTimeId().substring(0, 16);\nSystem.out.println(orderSn);"
-              }
-            },
-            {
-              "functionLine": 92,
-              "variable": "params",
-              "def": {
-                "line": 92
-              },
-              "use": {
-                "line": 94,
-                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
-              }
-            },
-            {
-              "functionLine": 92,
-              "variable": "page",
-              "def": {
-                "line": 94
-              },
-              "use": {
-                "line": 94,
-                "text": "IPage<OrderEntity> page = this.page(\n                new Query<OrderEntity>().getPage(params),\n                new QueryWrapper<OrderEntity>()\n        );"
-              }
-            },
-            {
-              "functionLine": 92,
-              "variable": "page",
-              "def": {
-                "line": 94
-              },
-              "use": {
-                "line": 99,
-                "text": "return new PageUtils(page);"
               }
             }
           ],

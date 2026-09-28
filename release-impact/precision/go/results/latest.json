@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-09-28T17:43:03.061Z",
+  "generatedAt": "2026-09-28T18:02:15.524Z",
   "language": "go",
   "cliPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/gitnexus/dist/cli/index.js",
-  "repoRoot": "/var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-go-pdg-precision-3BDBtq",
+  "repoRoot": "/var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-go-pdg-precision-oCM1pF",
   "analyzeCounters": {
     "cdgSkippedFunctions": 0,
     "reachingDefSkippedFunctions": 0,
     "unsoundFunctions": 0,
     "callableValueFlowCaps": 0,
-    "summaryLine": "  Repository indexed successfully (6.5s)",
+    "summaryLine": "  Repository indexed successfully (6.9s)",
     "warnLines": 0
   },
-  "analyzeLogPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/go/logs/fixture-analyze-1790617381321.log",
+  "analyzeLogPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/go/logs/fixture-analyze-1790618533181.log",
   "gate": {
     "verdict": "PASS",
     "basis": "control recall on the symbol-name anchor over non-expectedGap fixtures",
@@ -31,7 +31,7 @@
     },
     "missedGuardEdges": 0,
     "guardEdgesExpected": 5,
-    "falseGuardEdges": 3,
+    "falseGuardEdges": 0,
     "relaxedControlMisses": 0,
     "duplicateControlRows": 0,
     "emptyTextControlRows": 0
@@ -69,30 +69,9 @@
       "guardExpected": 1,
       "guardFound": 1,
       "guardMissing": 0,
-      "guardRowsReturned": 2,
-      "falseGuardRows": [
-        {
-          "functionLine": 3,
-          "controllerLine": 4,
-          "dependentLine": 8,
-          "label": "F",
-          "guard": true,
-          "text": "return total, nil",
-          "raw": {
-            "functionLine": 3,
-            "controller": {
-              "line": 4
-            },
-            "dependent": {
-              "line": 8,
-              "text": "return total, nil"
-            },
-            "label": "F",
-            "guard": true
-          }
-        }
-      ],
-      "falseGuardCount": 1,
+      "guardRowsReturned": 1,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
       "payloadNote": null,
       "truncated": false
     },
@@ -632,30 +611,9 @@
       "guardExpected": 1,
       "guardFound": 1,
       "guardMissing": 0,
-      "guardRowsReturned": 2,
-      "falseGuardRows": [
-        {
-          "functionLine": 3,
-          "controllerLine": 6,
-          "dependentLine": 10,
-          "label": "F",
-          "guard": true,
-          "text": "return total",
-          "raw": {
-            "functionLine": 3,
-            "controller": {
-              "line": 6
-            },
-            "dependent": {
-              "line": 10,
-              "text": "return total"
-            },
-            "label": "F",
-            "guard": true
-          }
-        }
-      ],
-      "falseGuardCount": 1,
+      "guardRowsReturned": 1,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
       "payloadNote": null,
       "truncated": false
     },
@@ -840,30 +798,9 @@
       "guardExpected": 1,
       "guardFound": 1,
       "guardMissing": 0,
-      "guardRowsReturned": 2,
-      "falseGuardRows": [
-        {
-          "functionLine": 3,
-          "controllerLine": 5,
-          "dependentLine": 9,
-          "label": "F",
-          "guard": true,
-          "text": "return val, nil",
-          "raw": {
-            "functionLine": 3,
-            "controller": {
-              "line": 5
-            },
-            "dependent": {
-              "line": 9,
-              "text": "return val, nil"
-            },
-            "label": "F",
-            "guard": true
-          }
-        }
-      ],
-      "falseGuardCount": 1,
+      "guardRowsReturned": 1,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
       "payloadNote": null,
       "truncated": false
     },
@@ -1080,8 +1017,7 @@
                 "line": 8,
                 "text": "return total, nil"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -1210,8 +1146,7 @@
                 "line": 8,
                 "text": "return total, nil"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -1316,8 +1251,7 @@
                 "line": 8,
                 "text": "return total, nil"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -3646,8 +3580,7 @@
                 "line": 10,
                 "text": "return total"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -3763,8 +3696,7 @@
                 "line": 10,
                 "text": "return total"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -4072,8 +4004,7 @@
                 "line": 9,
                 "text": "return val, nil"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -4200,8 +4131,7 @@
                 "line": 9,
                 "text": "return val, nil"
               },
-              "label": "F",
-              "guard": true
+              "label": "F"
             }
           ],
           "total": 3
@@ -4215,17 +4145,6 @@
             "file": "src/multireturn.go"
           },
           "results": [
-            {
-              "functionLine": 12,
-              "variable": "n",
-              "def": {
-                "line": 12
-              },
-              "use": {
-                "line": 13,
-                "text": "return n, nil"
-              }
-            },
             {
               "functionLine": 3,
               "variable": "n",
@@ -4290,6 +4209,17 @@
               "use": {
                 "line": 9,
                 "text": "return val, nil"
+              }
+            },
+            {
+              "functionLine": 12,
+              "variable": "n",
+              "def": {
+                "line": 12
+              },
+              "use": {
+                "line": 13,
+                "text": "return n, nil"
               }
             }
           ],
