@@ -128,6 +128,7 @@ import {
   QUERY_MAX_LIMIT,
   QUERY_MAX_MAX_SYMBOLS,
   CONTEXT_CHAIN_MAX_DEPTH,
+  DETECT_CHANGES_MAX_LISTED_SYMBOLS,
 } from '../tools.js';
 import { foldNumericToolArgumentAliases } from '../tool-arguments.js';
 import { findImportCycles, IMPORT_CYCLE_LIMIT } from '../../core/graph/import-cycles.js';
@@ -1188,8 +1189,12 @@ export function resolveWorktreeCwd(repoPath: string, launchCwd: string): string 
  * `affected_processes` and each entry's `changed_steps` are driven by the full
  * symbol set, not by this cap, so a repo-wide diff can still return a large
  * result.
+ *
+ * Since the engineering-facing pagination upgrade, this constant lives in
+ * `mcp/tools.ts` (exported) so the schema's `maximum`/`default` and this
+ * slice stay a single source of truth; it is both the default AND the maximum
+ * page size.
  */
-const DETECT_CHANGES_MAX_LISTED_SYMBOLS = 1000;
 
 /** One row of the `detect_changes` hunk→symbol query (see `detectChanges`). */
 interface ChangedSymbolRow {
@@ -1219,7 +1224,7 @@ interface ProcessRow {
   step: number;
 }
 
-export function buildDetectChangesDiffArgs(scope: string, baseRef?: string): string[] | null {
+export function buildDetectChangesDiffArgs(scope: string, baseRef?: string, headRef?: string): string[] | null {
   // The prefix flags pin the `a/` + `b/` forms `parseDiffHunks` matches on.
   // Without them git honours the user's config: `diff.noprefix` emits
   // `+++ f.py` and `diff.mnemonicPrefix` emits `+++ w/f.py`, either of which
@@ -1249,11 +1254,53 @@ export function buildDetectChangesDiffArgs(scope: string, baseRef?: string): str
     case 'all':
       return [...args, 'HEAD', '-U0'];
     case 'compare':
-      return baseRef ? [...args, baseRef, '-U0'] : null;
+      // baseRef..headRef is an exclusive commit-to-commit range (worktree
+      // edits EXCLUDED); baseRef alone keeps the legacy base-vs-worktree diff.
+      return baseRef ? [...args, baseRef, ...(headRef ? [headRef] : []), '-U0'] : null;
     case 'unstaged':
     default:
       return [...args, '-U0'];
   }
+}
+
+/**
+ * Validate the `detect_changes` listing pagination. Reject-not-clamp, mirroring
+ * `parseListReposPagination`: a client never receives a smaller page than it
+ * asked for without knowing. Returns an error payload (detectChanges' own
+ * error style) or the resolved `{limit, offset}`.
+ */
+function validateDetectChangesPagination(params: { limit?: number; offset?: number }):
+  | { limit: number; offset: number }
+  | { error: string } {
+  const requireInt = (value: unknown, field: string, min: number, max?: number): number | null => {
+    const valid =
+      typeof value === 'number' &&
+      Number.isInteger(value) &&
+      value >= min &&
+      (max === undefined || value <= max);
+    return valid ? value : null;
+  };
+  let limit = DETECT_CHANGES_MAX_LISTED_SYMBOLS;
+  if (params.limit !== undefined) {
+    const parsed = requireInt(params.limit, 'limit', 1, DETECT_CHANGES_MAX_LISTED_SYMBOLS);
+    if (parsed === null) {
+      return {
+        error: `detect_changes: "limit" must be an integer between 1 and ${DETECT_CHANGES_MAX_LISTED_SYMBOLS} (received ${JSON.stringify(params.limit)})`,
+      };
+    }
+    limit = parsed;
+  }
+  let offset = 0;
+  if (params.offset !== undefined) {
+    const parsed = requireInt(params.offset, 'offset', 0);
+    if (parsed === null) {
+      return {
+        error: `detect_changes: "offset" must be an integer >= 0 (received ${JSON.stringify(params.offset)})`,
+      };
+    }
+    offset = parsed;
+  }
+  return { limit, offset };
 }
 
 /**
@@ -6171,6 +6218,9 @@ export class LocalBackend {
     params: {
       scope?: string;
       base_ref?: string;
+      head_ref?: string;
+      limit?: number;
+      offset?: number;
       worktree?: string;
     },
   ): Promise<any> {
@@ -6179,9 +6229,18 @@ export class LocalBackend {
     const scope = params.scope || 'unstaged';
     const { execFileSync } = await import('child_process');
 
+    // Fail closed: silently ignoring head_ref would make the caller believe a
+    // different range was assessed than the one the tool walked.
+    if (params.head_ref !== undefined && scope !== 'compare') {
+      return { error: 'head_ref is only supported with "compare" scope' };
+    }
+    const pagination = validateDetectChangesPagination(params);
+    if ('error' in pagination) return pagination;
+    const { limit, offset } = pagination;
+
     // Ignore CR-only EOL differences, while preserving meaningful whitespace changes.
     // execFileSync receives an argv array, so refs never pass through a shell.
-    const diffArgs = buildDetectChangesDiffArgs(scope, params.base_ref);
+    const diffArgs = buildDetectChangesDiffArgs(scope, params.base_ref, params.head_ref);
     if (!diffArgs) return { error: 'base_ref is required for "compare" scope' };
 
     let diffOutput: string;
@@ -6502,11 +6561,9 @@ export class LocalBackend {
     // level, the CLI's "... and N more" line and any client comparing the two
     // still see that number rather than 1000. `truncated` is the key
     // `explain`/`pdg_query`/`trace` already use for a capped window. The map was
-    // filled in sorted order, so WHICH 1000 are listed is stable across runs.
-    const listedSymbols = Array.from(changedSymbols.values()).slice(
-      0,
-      DETECT_CHANGES_MAX_LISTED_SYMBOLS,
-    );
+    // filled in sorted order, so WHICH slice is listed is stable across runs —
+    // pagination (limit/offset) walks the same stable order.
+    const listedSymbols = Array.from(changedSymbols.values()).slice(offset, offset + limit);
 
     return {
       summary: {
@@ -6528,7 +6585,10 @@ export class LocalBackend {
       // A swallowed query failure makes the counts/risk above incomplete — tell
       // the caller so the safety gate isn't trusted as a clean result (#2283).
       ...(queryDegraded && { partial: true }),
-      ...(listedSymbols.length < changedSymbols.size && { truncated: true }),
+      // "More symbols exist beyond this page" — for offset 0 this reduces to
+      // the legacy value (listed.length < size). truncated:true implies
+      // listed.length === limit, so the next page is offset + limit.
+      ...(offset + listedSymbols.length < changedSymbols.size && { truncated: true }),
     };
   }
 

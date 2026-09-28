@@ -1,7 +1,7 @@
 /**
  * Unit tests for the pure core of the engine.
  *
- *   node --test release-impact/test/          (or: node --test from this folder)
+ *   node --test 'release-impact/test/*.test.mjs'   (or: cd release-impact && node --test)
  *
  * No test framework, no fixtures on disk: every case builds its own minimal
  * `detect_changes` / `impact` payload.

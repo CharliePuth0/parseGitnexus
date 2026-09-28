@@ -133,12 +133,13 @@ interface DetectChangesResult {
   partial?: boolean;
 }
 
-async function runDetectChanges(): Promise<DetectChangesResult> {
+async function runDetectChanges(extra: Record<string, unknown> = {}): Promise<DetectChangesResult> {
   const backend = new LocalBackend();
   await backend.init();
   return (await backend.callTool('detect_changes', {
     scope: 'unstaged',
     repo: 'hunk-scale-repo',
+    ...extra,
   })) as DetectChangesResult;
 }
 
@@ -224,12 +225,13 @@ async function detectChangesForCodePy(
   edited: string,
   rows: SymbolRow[] = [],
   originalLines = edited.trimEnd().split('\n').length,
+  extra: Record<string, unknown> = {},
 ): Promise<DetectChangesResult> {
   const repoDir = makeRepo(['code.py'], originalLines);
   writeFileSync(path.join(repoDir, 'code.py'), edited);
   registerRepo(repoDir);
   mockSymbolRows(rows);
-  return runDetectChanges();
+  return runDetectChanges(extra);
 }
 
 beforeEach(() => {
@@ -347,6 +349,122 @@ describe('#2915 detect_changes hunk scaling', () => {
     // client comparing list length against the count still see 1,200.
     expect(result.summary.changed_count).toBe(1200);
     expect(result.truncated).toBe(true);
+  });
+
+  const manySymbolRows = Array.from({ length: 1200 }, (_, i) => ({
+    name: `fn${i}`,
+    startLine: 0,
+    endLine: 1,
+  }));
+
+  it('pages the listing with offset while keeping the counts whole', async () => {
+    const result = await detectChangesForCodePy(
+      'line 1 changed\nline 2\n',
+      manySymbolRows,
+      2,
+      { offset: 1000 },
+    );
+
+    expect(result.changed_symbols).toHaveLength(200);
+    // The gate's own numbers never shrink: counts cover the FULL diff.
+    expect(result.summary.changed_count).toBe(1200);
+    // 1000 + 200 === 1200 — nothing left behind this page (the flag is absent,
+    // matching today's conditional-spread contract).
+    expect(result.truncated).toBeFalsy();
+  });
+
+  it('pages are disjoint and concatenate to the full sorted set', async () => {
+    const page1 = await detectChangesForCodePy('line 1 changed\nline 2\n', manySymbolRows, 2, {
+      limit: 500,
+    });
+    const page2 = await detectChangesForCodePy('line 1 changed\nline 2\n', manySymbolRows, 2, {
+      limit: 500,
+      offset: 500,
+    });
+    const page3 = await detectChangesForCodePy('line 1 changed\nline 2\n', manySymbolRows, 2, {
+      offset: 1000,
+    });
+
+    expect(page1.changed_symbols).toHaveLength(500);
+    expect(page1.truncated).toBe(true);
+    expect(page2.changed_symbols).toHaveLength(500);
+    expect(page2.truncated).toBe(true);
+    expect(page3.changed_symbols).toHaveLength(200);
+    expect(page3.truncated).toBeFalsy();
+
+    const concatenated = [...page1.changed_symbols, ...page2.changed_symbols, ...page3.changed_symbols];
+    const defaultCall = await detectChangesForCodePy('line 1 changed\nline 2\n', manySymbolRows, 2);
+
+    // No skips, no dups: the first 1000 concatenated entries equal the
+    // default call's (offset 0 / limit 1000) listing exactly.
+    expect(concatenated.slice(0, 1000).map((s) => s.name)).toEqual(
+      defaultCall.changed_symbols.map((s) => s.name),
+    );
+    expect(new Set(concatenated.map((s) => s.name)).size).toBe(1200);
+  });
+
+  it('offset beyond the total returns an empty page with truncated false', async () => {
+    const result = await detectChangesForCodePy(
+      'line 1 changed\nline 2\n',
+      manySymbolRows,
+      2,
+      { offset: 1500 },
+    );
+
+    expect(result.changed_symbols).toHaveLength(0);
+    expect(result.truncated).toBeFalsy();
+  });
+
+  it('rejects invalid limit and offset values before touching git', async () => {
+    for (const extra of [{ limit: 0 }, { limit: 1001 }, { limit: 1.5 }, { offset: -1 }]) {
+      const result = await detectChangesForCodePy('line 1 changed\nline 2\n', manySymbolRows, 2, extra);
+      expect((result as any).error).toMatch(/detect_changes: "(limit|offset)"/);
+    }
+    expect(lbugMocks.executeParameterized).not.toHaveBeenCalled();
+  });
+
+  it('head_ref with a non-compare scope errors before running git', async () => {
+    const result = await runDetectChanges({ head_ref: 'HEAD' });
+
+    expect((result as any).error).toBe('head_ref is only supported with "compare" scope');
+    expect(lbugMocks.executeParameterized).not.toHaveBeenCalled();
+  });
+
+  it('scope compare with head_ref diffs exactly the two commits, excluding the dirty worktree', async () => {
+    const repoDir = makeRepo(['code.py'], 6);
+    const v1Sha = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: repoDir,
+      encoding: 'utf-8',
+    }).trim();
+
+    // Commit v2 touching line 2, then dirty the worktree on line 4 (uncommitted).
+    writeFileSync(
+      path.join(repoDir, 'code.py'),
+      'line 1\nline 2 changed\nline 3\nline 4\nline 5\nline 6\n',
+    );
+    commitAll(repoDir, 'v2');
+    const v2Sha = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: repoDir,
+      encoding: 'utf-8',
+    }).trim();
+    writeFileSync(
+      path.join(repoDir, 'code.py'),
+      'line 1\nline 2 changed\nline 3\nline 4 changed\nline 5\nline 6\n',
+    );
+
+    registerRepo(repoDir);
+    mockSymbolRows([
+      { name: 'fnLine2', startLine: 1, endLine: 2 },
+      { name: 'fnLine4', startLine: 3, endLine: 4 },
+    ]);
+
+    // Exact range: only the v2 symbol; the uncommitted worktree edit is excluded.
+    const exact = await runDetectChanges({ scope: 'compare', base_ref: v1Sha, head_ref: v2Sha });
+    expect(exact.changed_symbols.map((s) => s.name)).toEqual(['fnLine2']);
+
+    // Legacy (no head_ref): base vs WORKTREE — the uncommitted symbol appears.
+    const legacy = await runDetectChanges({ scope: 'compare', base_ref: v1Sha });
+    expect(legacy.changed_symbols.map((s) => s.name)).toEqual(['fnLine2', 'fnLine4']);
   });
 
   it('counts a path the diff reports twice as one changed file', async () => {

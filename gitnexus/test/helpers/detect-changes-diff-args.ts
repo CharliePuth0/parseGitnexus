@@ -15,8 +15,8 @@
 import { buildDetectChangesDiffArgs } from '../../src/mcp/local/local-backend.js';
 
 /** `buildDetectChangesDiffArgs`, refusing the null instead of passing it on. */
-export function diffArgsFor(scope: string, baseRef?: string): string[] {
-  const args = buildDetectChangesDiffArgs(scope, baseRef);
+export function diffArgsFor(scope: string, baseRef?: string, headRef?: string): string[] {
+  const args = buildDetectChangesDiffArgs(scope, baseRef, headRef);
   if (!args) throw new Error(`scope "${scope}" must produce git diff arguments`);
   return args;
 }

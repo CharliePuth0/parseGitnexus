@@ -140,16 +140,6 @@ function writeOutput(filePath, contents) {
   writeFileSync(filePath, contents, 'utf8');
 }
 
-/**
- * `head-ref` is accepted for CLI symmetry, but the underlying tool compares the base ref
- * against the WORKING TREE (`git diff <base_ref> -U0`), so a head ref other than HEAD
- * cannot be honored. Say so instead of silently assessing a different range.
- */
-function headRefCaveat(headRef) {
-  if (headRef === 'HEAD') return null;
-  return `--head-ref "${headRef}" cannot be honored: detect_changes compares the base ref against the working tree, so the assessed range is <base-ref>..worktree (HEAD plus uncommitted edits).`;
-}
-
 function formatBytes(text) {
   return `${(Buffer.byteLength(text, 'utf8') / 1024).toFixed(1)} KiB`;
 }
@@ -158,11 +148,6 @@ function formatBytes(text) {
 export async function run(config, log = () => {}) {
   const started = Date.now();
   const notes = [];
-  const headCaveat = headRefCaveat(config.headRef);
-  if (headCaveat) {
-    notes.push(headCaveat);
-    log(`WARNING ${headCaveat}`);
-  }
   if (!existsSync(config.cliPath)) {
     notes.push(`GitNexus CLI not found at ${config.cliPath}; set --cli or GITNEXUS_CLI.`);
   }
@@ -173,8 +158,10 @@ export async function run(config, log = () => {}) {
     const mode = await client.connect({ mcpUrl: config.mcpUrl });
     log(`analysis source: ${mode}`);
 
-    log(`detect-changes scope=compare base-ref=${config.baseRef} (this walks the git diff)`);
-    detect = await client.detectChanges({ baseRef: config.baseRef });
+    log(
+      `detect-changes scope=compare base-ref=${config.baseRef} head-ref=${config.headRef} (exact commit range, worktree edits excluded)`,
+    );
+    detect = await client.detectChanges({ baseRef: config.baseRef, headRef: config.headRef });
     log(
       `detect-changes: ${detect.summary?.changed_files ?? 0} files, ${detect.summary?.changed_count ?? 0} symbols, ` +
         `${detect.summary?.affected_count ?? 0} affected processes, risk ${detect.summary?.risk_level ?? 'unknown'}` +
@@ -190,8 +177,12 @@ export async function run(config, log = () => {}) {
 
     // File-level change classification for `changeType`. The tool hardcodes
     // `change_type: 'touched'`, so the added/modified/removed split comes from git itself,
-    // with the same range semantics detect_changes uses (base ref vs the working tree).
-    const { status: fileStatus, error: gitStatusError } = await readChangedFileStatus(config.repoPath, config.baseRef);
+    // over the SAME range the tool walks (base_ref..head_ref, worktree edits excluded).
+    const { status: fileStatus, error: gitStatusError } = await readChangedFileStatus(
+      config.repoPath,
+      config.baseRef,
+      config.headRef,
+    );
     if (gitStatusError) {
       notes.push(
         `could not read file change status from git (${gitStatusError}); every changeType falls back to "modified".`,
@@ -205,20 +196,22 @@ export async function run(config, log = () => {}) {
       );
     }
 
-    // Exact range: resolve both endpoints to commits and flag a dirty worktree. The
-    // tool diffs base ref vs the WORKING TREE, so "HEAD~20..HEAD" is only true when the
-    // tree is clean — the report must say which case applies.
-    const rangeInfo = await readRangeInfo(config.repoPath, config.baseRef);
+    // Exact range: resolve both endpoints to commits. The tool now diffs
+    // base..headRef (worktree edits EXCLUDED), so a dirty tree no longer leaks
+    // into the symbol set — but the INDEX may have been built from uncommitted
+    // work, which can shift line mapping. Say so.
+    const rangeInfo = await readRangeInfo(config.repoPath, config.baseRef, config.headRef);
     if (rangeInfo.error) {
       notes.push(`could not resolve the exact commit range (${rangeInfo.error}).`);
       log(`WARNING commit range unresolvable: ${rangeInfo.error}`);
     } else if (rangeInfo.worktreeDirty) {
       const shortBase = rangeInfo.baseSha.slice(0, 7);
+      const shortHead = rangeInfo.headSha.slice(0, 7);
       notes.push(
-        `assessed range is ${config.baseRef} (${shortBase})..worktree, NOT ..HEAD: the working tree has ${rangeInfo.dirtyCount} uncommitted file change(s) inside the diff.`,
+        `working tree has ${rangeInfo.dirtyCount} uncommitted file change(s), EXCLUDED from the assessed ${config.baseRef} (${shortBase})..${config.headRef} (${shortHead}) range — if the index was built from uncommitted work, symbol line mapping may shift.`,
       );
       log(
-        `range: ${shortBase}..worktree (DIRTY — ${rangeInfo.dirtyCount} uncommitted file change(s) in range)`,
+        `range: ${shortBase}..${shortHead} (worktree DIRTY — ${rangeInfo.dirtyCount} uncommitted file change(s) EXCLUDED from the range)`,
       );
     } else {
       log(

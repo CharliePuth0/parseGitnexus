@@ -344,6 +344,8 @@ export async function cypherCommand(
 export async function detectChangesCommand(options?: {
   scope?: string;
   baseRef?: string;
+  headRef?: string;
+  offset?: string;
   repo?: string;
   branch?: string;
   limit?: string;
@@ -353,6 +355,8 @@ export async function detectChangesCommand(options?: {
   const result = await backend.callTool('detect_changes', {
     scope: options?.scope || 'unstaged',
     base_ref: options?.baseRef,
+    head_ref: options?.headRef,
+    offset: parseOffset(options?.offset),
     repo: options?.repo,
     branch: options?.branch,
   });

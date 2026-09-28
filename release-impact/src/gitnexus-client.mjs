@@ -33,8 +33,15 @@ const CLI_TIMEOUT_MS = 240_000;
 /** ~2 MB of response text, well above any real blast-radius payload. */
 const IMPACT_MAX_TOKENS = 500_000;
 
-/** `git diff base_ref` maps to the indexed symbol listing this many entries. */
+/**
+ * Page size passed as `limit` when walking the `detect_changes` listing. The
+ * server caps one page at 1000 (its own `DETECT_CHANGES_MAX_LISTED_SYMBOLS`);
+ * the walk continues with `offset += page length` while `truncated` is true.
+ */
 export const CHANGED_SYMBOL_CAP = 1000;
+
+/** Hard ceiling on detect_changes pages — a pathological diff must terminate the loop. */
+const MAX_DETECT_PAGES = 50;
 
 /** Locale-tolerant regexes for the CLI's human-formatted `detect-changes` banner. */
 const CLI_SUMMARY_PATTERNS = {
@@ -98,6 +105,29 @@ export function parseDetectChangesCliOutput(stdout) {
     partial: CLI_SUMMARY_PATTERNS.partial.some((pattern) => pattern.test(stdout)) || undefined,
     __source: 'cli',
   };
+}
+
+/**
+ * Merge consecutive `detect_changes` pages into one payload.
+ *
+ * The server computes `summary`, `affected_processes` and `risk_level` from the
+ * FULL symbol set on every page, so page 1 carries the true totals; only the
+ * `changed_symbols` listing is a window (stable order, disjoint offsets). A
+ * page that failed mid-loop carries `__error` — tolerated so the merged set
+ * keeps everything before the failure.
+ */
+export function mergeDetectChangesPages(pages) {
+  const first = pages[0] ?? {};
+  const merged = { ...first };
+  merged.changed_symbols = pages.flatMap((page) =>
+    Array.isArray(page.changed_symbols) ? page.changed_symbols : [],
+  );
+  merged.affected_processes = Array.isArray(first.affected_processes) ? first.affected_processes : [];
+  merged.truncated = pages.at(-1)?.truncated === true;
+  merged.partial = first.partial || pages.some((page) => page?.partial);
+  const failed = pages.find((page) => page?.__error);
+  if (failed) merged.__error = failed.__error;
+  return merged;
 }
 
 export class GitNexusClient {
@@ -198,25 +228,56 @@ export class GitNexusClient {
   }
 
   /**
-   * Changed symbols between `baseRef` and the working tree.
-   * See README § Deviations: the tool compares against the working tree, not `HEAD`.
+   * Changed symbols between `baseRef` and `headRef` (exclusive commit-to-commit
+   * range; worktree edits EXCLUDED). The MCP path walks the paginated listing
+   * until the server's `truncated` says the set is complete; the CLI fallback
+   * gets one banner call (at most 15 symbols — pagination can't help a banner).
    */
-  async detectChanges({ baseRef }) {
+  async detectChanges({ baseRef, headRef }) {
     if (this.mode === 'mcp') {
-      const payload = await this.mcp.callTool(
-        'detect_changes',
-        { scope: 'compare', base_ref: baseRef, repo: this.repoPath },
-        { timeoutMs: DETECT_TIMEOUT_MS },
-      );
+      const call = (offset) =>
+        this.mcp.callTool(
+          'detect_changes',
+          {
+            scope: 'compare',
+            base_ref: baseRef,
+            head_ref: headRef,
+            limit: CHANGED_SYMBOL_CAP,
+            offset,
+            repo: this.repoPath,
+          },
+          { timeoutMs: DETECT_TIMEOUT_MS },
+        );
+
+      const pages = [];
+      let offset = 0;
+      let page = await call(offset);
+      pages.push(page);
+      // `truncated` is server-authoritative now. Guarded on a non-empty page so
+      // a mid-run failure or an empty page terminates instead of looping.
+      while (page.truncated === true && Array.isArray(page.changed_symbols) && page.changed_symbols.length > 0) {
+        if (pages.length >= MAX_DETECT_PAGES) break;
+        offset += page.changed_symbols.length;
+        page = await call(offset);
+        pages.push(page);
+      }
+
+      const payload = mergeDetectChangesPages(pages);
       payload.__source = 'mcp';
-      payload.changed_symbols = Array.isArray(payload.changed_symbols) ? payload.changed_symbols : [];
-      payload.affected_processes = Array.isArray(payload.affected_processes) ? payload.affected_processes : [];
-      // The server caps the listing (verified: 1000 entries for a 1240-symbol diff).
-      if (payload.changed_symbols.length >= CHANGED_SYMBOL_CAP) payload.truncated = true;
       return payload;
     }
 
-    const stdout = await this.#runCli(['detect-changes', '--scope', 'compare', '--base-ref', baseRef, '--repo', this.repoPath]);
+    const stdout = await this.#runCli([
+      'detect-changes',
+      '--scope',
+      'compare',
+      '--base-ref',
+      baseRef,
+      '--head-ref',
+      headRef,
+      '--repo',
+      this.repoPath,
+    ]);
     return parseDetectChangesCliOutput(stdout);
   }
 

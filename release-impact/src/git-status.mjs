@@ -93,10 +93,12 @@ export function parseNameStatusZ(stdout) {
  *
  * @returns {Promise<{status: Map<string, string>, error: string|null}>}
  */
-export async function readChangedFileStatus(repoPath, baseRef) {
+export async function readChangedFileStatus(repoPath, baseRef, headRef) {
   try {
     const [raw, topLevelRaw] = await Promise.all([
-      runGit(repoPath, ['diff', '--name-status', '-z', '--no-ext-diff', baseRef]),
+      // Same range the tool walks: baseRef..headRef (exclusive end, worktree
+      // edits excluded) — keeps the changeType view aligned with the symbol set.
+      runGit(repoPath, ['diff', '--name-status', '-z', '--no-ext-diff', baseRef, headRef]),
       runGit(repoPath, ['rev-parse', '--show-toplevel']).catch(() => ''),
     ]);
 
@@ -117,17 +119,16 @@ export async function readChangedFileStatus(repoPath, baseRef) {
 /**
  * Resolve the EXACT assessed range to commits.
  *
- * `detect_changes` compares the base ref against the WORKING TREE (HEAD plus uncommitted
- * edits). So the honest range statement is: `<baseSha>..<headSha>` when the worktree is
- * clean, and `<baseSha>..worktree` when it is not. The dirty flag must be surfaced — a
- * report that says "HEAD~20..HEAD" over a dirty tree silently includes edits that are in
- * neither commit.
+ * The tool now diffs `baseRef..headRef` (exclusive commit-to-commit range; worktree
+ * edits EXCLUDED). The dirty flag is still surfaced: dirty files are outside the
+ * assessed range, but the INDEX may have been built from uncommitted work, which
+ * can shift the symbol line mapping.
  */
-export async function readRangeInfo(repoPath, baseRef) {
+export async function readRangeInfo(repoPath, baseRef, headRef) {
   try {
     const [baseShaRaw, headShaRaw, porcelainRaw] = await Promise.all([
       runGit(repoPath, ['rev-parse', '--verify', baseRef]),
-      runGit(repoPath, ['rev-parse', '--verify', 'HEAD']),
+      runGit(repoPath, ['rev-parse', '--verify', headRef]),
       runGit(repoPath, ['status', '--porcelain']),
     ]);
     const dirtyCount = porcelainRaw.split('\n').filter((line) => line.trim() !== '').length;

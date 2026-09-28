@@ -50,6 +50,12 @@ describe('detect_changes worktree support — structural', () => {
     expect(backendSrc).toMatch(/worktree\?:\s*string/);
   });
 
+  it('detectChanges() signature includes head_ref/limit/offset in its params type', () => {
+    expect(backendSrc).toMatch(/head_ref\?:\s*string/);
+    expect(backendSrc).toMatch(/limit\?:\s*number/);
+    expect(backendSrc).toMatch(/offset\?:\s*number/);
+  });
+
   it('uses diffCwd as the cwd for execFileSync (not hard-coded repo.repoPath)', () => {
     expect(backendSrc).toMatch(/cwd:\s*diffCwd/);
   });

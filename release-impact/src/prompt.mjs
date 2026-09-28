@@ -203,7 +203,7 @@ export function buildLlmPrompt(report, options = {}) {
   lines.push(`| head ref | \`${meta.headRef}\`${meta.headSha ? ` (\`${meta.headSha.slice(0, 7)}\`)` : ''} |`);
   if (meta.worktreeDirty) {
     lines.push(
-      `| worktree | **DIRTY — ${meta.dirtyCount ?? '?'} uncommitted file change(s)**; the assessed range is \`${meta.baseRef}..worktree\`, NOT \`..${meta.headRef}\` |`,
+      `| worktree | **DIRTY — ${meta.dirtyCount ?? '?'} uncommitted file change(s)**, EXCLUDED from the assessed \`${meta.baseRef}..${meta.headRef}\` range; if the index was built from uncommitted work, symbol line mapping may shift |`,
     );
   } else if (meta.baseSha) {
     lines.push(`| worktree | clean — the assessed range is the exact commit range |`);

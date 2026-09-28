@@ -65,6 +65,21 @@ export const LIST_REPOS_DEFAULT_LIMIT = 50;
 export const LIST_REPOS_MAX_LIMIT = 200;
 
 /**
+ * Page size for the `detect_changes` `changed_symbols` listing. The cap applies
+ * to the `changed_symbols` ARRAY only: `summary.changed_count` still reports
+ * every symbol the run observed, and a capped result says so in `truncated`.
+ * It bounds that one array, not the whole payload — `affected_processes` and
+ * each entry's `changed_steps` are driven by the full symbol set, not by this
+ * cap, so a repo-wide diff can still return a large result.
+ *
+ * This is BOTH the default and the maximum page size: callers enumerate the
+ * full set by repeating with `offset = offset + limit` while `truncated` is
+ * true. Exported so the backend slice (`local-backend.ts`) and the schema
+ * below stay a single source of truth.
+ */
+export const DETECT_CHANGES_MAX_LISTED_SYMBOLS = 1000;
+
+/**
  * Pagination bounds for the `explain` tool (#2083 M3 U6). Findings are sparse
  * and capped per function at analyze time, but a large repo can still
  * accumulate enough TAINTED rows to blow MCP/LLM token limits — the response
@@ -398,7 +413,9 @@ GIT WORKTREE SUPPORT: GitNexus automatically detects when the MCP server was lau
 
 Returns: changed symbols, affected processes, and a risk summary.
 - partial: true — a step failed and was swallowed, so the result is incomplete and risk_level is "unknown" instead of a ranked level. Two causes, with different blast radii: the symbol query (or an unparseable diff) degrades everything — changed_symbols, both counts, and the processes derived from them — while a failed process lookup degrades only affected_processes and the risk read off it, leaving the changed-symbol counts sound. changed_count:0 with partial:true is NOT a clean pre-commit check; re-run before treating the diff as safe.
-- truncated: true — the changed_symbols LISTING was capped for this response. summary.changed_count counts every symbol the run observed: the true total normally, a LOWER BOUND when partial:true. Compare it with the array length rather than trusting the array.`,
+- truncated: true — the changed_symbols listing does not cover the full changed set from this offset. To enumerate everything, repeat with offset = offset + limit while truncated is true. summary.changed_count counts every symbol the run observed: the true total normally, a LOWER BOUND when partial:true. Compare it with the array length rather than trusting the array.
+
+EXACT RANGES: with scope "compare", pass head_ref to diff exactly base_ref..head_ref (the exclusive end) — uncommitted worktree edits are EXCLUDED from the range. Set head_ref to the commit the index was built at (usually HEAD); symbol positions come from the index, so any other head risks mis-mapped lines. head_ref errors when used with any other scope.`,
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: 'object',
@@ -412,6 +429,26 @@ Returns: changed symbols, affected processes, and a risk summary.
         base_ref: {
           type: 'string',
           description: 'Branch/commit for "compare" scope (e.g., "main")',
+        },
+        head_ref: {
+          type: 'string',
+          description:
+            'Only with scope "compare": makes the diff base_ref..head_ref (exclusive end), so UNCOMMITTED worktree edits are EXCLUDED. Set it to the commit the index was built at (usually HEAD); any other ref risks mis-mapped lines because symbol positions come from the index. Errors when used with other scopes.',
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: DETECT_CHANGES_MAX_LISTED_SYMBOLS,
+          default: DETECT_CHANGES_MAX_LISTED_SYMBOLS,
+          description:
+            'Max changed_symbols entries to list in this response (default and maximum 1000). summary.changed_count, affected_processes and risk_level always cover the full diff. Values outside [1, 1000] are rejected.',
+        },
+        offset: {
+          type: 'integer',
+          minimum: 0,
+          default: 0,
+          description:
+            'Skip this many changed symbols (stable order) before listing. To enumerate everything: while truncated is true, call again with offset = offset + limit.',
         },
         worktree: {
           type: 'string',

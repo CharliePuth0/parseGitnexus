@@ -12,6 +12,7 @@ import {
   GITNEXUS_TOOLS,
   LIST_REPOS_DEFAULT_LIMIT,
   LIST_REPOS_MAX_LIMIT,
+  DETECT_CHANGES_MAX_LISTED_SYMBOLS,
 } from '../../src/mcp/tools.js';
 import { getResourceTemplates, type ResourceTemplate } from '../../src/mcp/resources.js';
 import { GROUP_IMPACT_TRUNCATION_REASONS } from '../../src/core/group/types.js';
@@ -262,6 +263,33 @@ describe('GITNEXUS_TOOLS', () => {
   it('detect_changes tool has no required parameters', () => {
     const detectTool = GITNEXUS_TOOLS.find((t) => t.name === 'detect_changes')!;
     expect(detectTool.inputSchema.required).toEqual([]);
+  });
+
+  it('detect_changes tool advertises head_ref/limit/offset for engineering pagination', () => {
+    const detectTool = GITNEXUS_TOOLS.find((t) => t.name === 'detect_changes')!;
+    const props = detectTool.inputSchema.properties;
+    expect(props.head_ref).toBeDefined();
+    expect(props.head_ref.type).toBe('string');
+    expect(props.limit).toBeDefined();
+    expect(props.limit.type).toBe('integer');
+    expect(props.offset).toBeDefined();
+    expect(props.offset.type).toBe('integer');
+    // Pagination and the exact range are opt-in: zero-arg callers stay valid.
+    expect(detectTool.inputSchema.required).toEqual([]);
+    // Description teaches the head_ref scope rule and the offset page loop.
+    expect(detectTool.description).toContain('head_ref');
+    expect(detectTool.description).toContain('offset');
+  });
+
+  it('detect_changes schema bounds match the exported page-size constant', () => {
+    const detectTool = GITNEXUS_TOOLS.find((t) => t.name === 'detect_changes')!;
+    const { limit, offset, head_ref } = detectTool.inputSchema.properties;
+    expect(limit.minimum).toBe(1);
+    expect(limit.maximum).toBe(DETECT_CHANGES_MAX_LISTED_SYMBOLS);
+    expect(limit.default).toBe(DETECT_CHANGES_MAX_LISTED_SYMBOLS);
+    expect(offset.minimum).toBe(0);
+    expect(offset.default).toBe(0);
+    expect(head_ref.default).toBeUndefined();
   });
 
   it('list_repos tool exposes optional limit/offset pagination params', () => {

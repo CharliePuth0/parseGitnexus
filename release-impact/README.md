@@ -47,7 +47,7 @@ Progress goes to **stderr** one line per symbol (`name → merged risk`); stdout
 | --- | --- | --- |
 | `--repo <path>` | *required* | path to the **indexed** git repository |
 | `--base-ref <ref>` | *required* | release baseline (`HEAD~20`, `v9.7.0`, `main`, a commit) |
-| `--head-ref <ref>` | `HEAD` | see [Deviations](#deviations-from-the-tool-contract) — values other than `HEAD` are reported, not honored |
+| `--head-ref <ref>` | `HEAD` | exclusive end of the assessed commit range (`base..head`, worktree edits excluded); honored on the local GitNexus build — see [Deviations](#deviations-from-the-tool-contract) #4 |
 | `--limit <n>` | `30` | how many changed symbols get `impact` walks |
 | `--depth <n>` | `3` | impact traversal depth, per direction |
 | `--impact-limit <n>` | `50` | nodes requested per depth level per direction |
@@ -276,14 +276,18 @@ description assumed, and what the engine does about it:
    `process.exit()`, so Node's asynchronous pipe write is cut off — the same command emits
    100_413 bytes to a file and 65_296 unparseable bytes through `execFile`. The CLI fallback
    therefore captures stdout through a **file descriptor**, not a pipe.
-3. **MCP `detect_changes` has no `limit` parameter** and caps the `changed_symbols` listing at
-   1000 entries. The engine records `summary.changedSymbols` from `summary.changed_count`
-   (the true observed total) and `summary.truncated` faithfully.
-4. **`--head-ref` cannot be honored.** `detect_changes` runs `git diff <base_ref> -U0`, which
-   compares against the **working tree** (HEAD plus uncommitted edits), not against a head
-   ref. Any `--head-ref` other than `HEAD` is reported as a caveat in the log and in the
-   prompt rather than silently assessing a different range. For the killshop demo this means
-   uncommitted work in that checkout is inside the assessed range.
+3. **`detect_changes` paginates its listing at 1000 entries per page** (the page size is both
+   the default and the maximum). The engine walks the pages (`offset += page length` while
+   `truncated` is true, capped at 50 pages) and merges them, so `summary.changedSymbols`
+   covers the full observed set; `summary.truncated` stays faithful to the last page.
+   (Requires the local GitNexus build with `head_ref`/`limit`/`offset`; against an upstream
+   1.6.12 server the first page is all that exists.)
+4. **`--head-ref` is honored** on the local GitNexus build: `detect_changes` diffs
+   `git diff <base_ref> <head_ref> -U0` — an exclusive commit-to-commit range, **worktree
+   edits excluded**. A dirty working tree is therefore outside the assessed range (it is
+   still detected and warned: the index may have been built from uncommitted work, which
+   can shift symbol line mapping). The CLI fallback passes `--head-ref` too; against an
+   upstream server that rejects the argument the run degrades instead of mis-assessing.
 5. **`impact` returns no `startLine`/`endLine`**, and `detect_changes` does not report line
    ranges either, so the schema's optional `ChangeEntry.startLine/endLine` are omitted.
    `impact`'s `candidates[]` carry a `line`, but only on the ambiguous path.
@@ -304,9 +308,8 @@ description assumed, and what the engine does about it:
 10. **`change_type` is hardcoded to `'touched'`.** Every `changed_symbols[]` entry carries that
     literal (`local-backend.ts`: `change_type: 'touched'`), so the tool reports *that* a symbol
     changed but never *how*. `ChangeEntry.changeType` is therefore derived by the engine from
-    `git diff --name-status -z <baseRef>` — the same range and the same "base ref vs working
-    tree" semantics the tool's own diff uses, so the two views cannot disagree about which
-    files changed. Consequences: the granularity is **file**-level (a symbol added inside a
+    `git diff --name-status -z <baseRef> <headRef>` — the same exact range the tool's own diff
+    walks, so the two views cannot disagree about which files changed. Consequences: the granularity is **file**-level (a symbol added inside a
     modified file reads `modified`; `detect_changes` reports no line ranges for changed
     symbols, so nothing finer exists), and a rename is reported as `modified` at both endpoints
     while a copy's destination is `added`. If `git diff` fails, every entry falls back to
