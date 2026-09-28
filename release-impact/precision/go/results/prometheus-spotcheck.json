@@ -1,0 +1,2233 @@
+{
+  "generatedAt": "2026-09-28T17:45:30.619Z",
+  "repo": "/Users/sugerdaddy/AI/shop/prometheus",
+  "head": "063606dbcfdf580f80449bb998d717b74a554388",
+  "indexedAt": "2026-09-28T17:37:38.826Z",
+  "verdict": "FAIL",
+  "totals": {
+    "guardsExpected": 26,
+    "found": 19,
+    "missed": 7,
+    "wrongSense": 0,
+    "toolGuardFlagged": 19
+  },
+  "methods": [
+    {
+      "id": "readHistogramChunkLayout",
+      "name": "readHistogramChunkLayout",
+      "file": "tsdb/chunkenc/histogram_meta.go",
+      "functionLine": 35,
+      "shape": "straight-line chain of 5 `if err != nil { return … }` guards + a nested guarded if",
+      "notes": "Line 47/48 and 53/54 and 58/59 are identical guard shapes; line 62 nested if is itself a dependent of the outer if at 58 (branch-to-branch, classical) and line 64 is a dependent of 62.",
+      "anchorUsed": "name",
+      "byName": {
+        "kind": "results",
+        "rows": 16,
+        "raw": {
+          "mode": "controls",
+          "anchor": {
+            "file": "tsdb/chunkenc/histogram_meta.go",
+            "symbol": "readHistogramChunkLayout",
+            "startLine": 35,
+            "endLine": 70
+          },
+          "results": [
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 58
+              },
+              "dependent": {
+                "line": 59,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 58
+              },
+              "dependent": {
+                "line": 62,
+                "text": "histogram.IsCustomBucketsSchema(schema)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 62
+              },
+              "dependent": {
+                "line": 63,
+                "text": "customValues, err = readHistogramChunkLayoutCustomBounds(b)"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 62
+              },
+              "dependent": {
+                "line": 64,
+                "text": "err != nil"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 62
+              },
+              "dependent": {
+                "line": 69,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 64
+              },
+              "dependent": {
+                "line": 65,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 64
+              },
+              "dependent": {
+                "line": 69,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 42
+              },
+              "dependent": {
+                "line": 43,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 42
+              },
+              "dependent": {
+                "line": 46,
+                "text": "v, err := readVarbitInt(b)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 42
+              },
+              "dependent": {
+                "line": 47,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 47
+              },
+              "dependent": {
+                "line": 48,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 47
+              },
+              "dependent": {
+                "line": 50,
+                "text": "schema = int32(v)\npositiveSpans, err = readHistogramChunkLayoutSpans(b)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 47
+              },
+              "dependent": {
+                "line": 53,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 53
+              },
+              "dependent": {
+                "line": 54,
+                "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 53
+              },
+              "dependent": {
+                "line": 57,
+                "text": "negativeSpans, err = readHistogramChunkLayoutSpans(b)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 35,
+              "controller": {
+                "line": 53
+              },
+              "dependent": {
+                "line": 58,
+                "text": "err != nil"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 16
+        }
+      },
+      "byFile": {
+        "rowsAll": 175,
+        "rowsScoped": 16,
+        "distinctFunctionLines": [
+          105,
+          112,
+          143,
+          158,
+          200,
+          213,
+          22,
+          237,
+          250,
+          293,
+          299,
+          35,
+          395,
+          471,
+          495,
+          509,
+          525,
+          72,
+          80
+        ]
+      },
+      "guards": {
+        "expected": 5,
+        "found": 5,
+        "missed": [],
+        "wrongSense": [],
+        "guardFlagged": 5
+      },
+      "other": {
+        "expected": 8,
+        "found": 8,
+        "missed": []
+      },
+      "returnedRows": 16,
+      "extras": [
+        {
+          "functionLine": 35,
+          "controllerLine": 42,
+          "dependentLine": 47,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 47,
+          "dependentLine": 53,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 53,
+          "dependentLine": 58,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        }
+      ],
+      "scoredRows": [
+        {
+          "functionLine": 35,
+          "controllerLine": 58,
+          "dependentLine": 59,
+          "label": "T",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 58,
+          "dependentLine": 62,
+          "label": "F",
+          "guard": false,
+          "text": "histogram.IsCustomBucketsSchema(schema)"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 62,
+          "dependentLine": 63,
+          "label": "T",
+          "guard": false,
+          "text": "customValues, err = readHistogramChunkLayoutCustomBounds(b)"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 62,
+          "dependentLine": 64,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 62,
+          "dependentLine": 69,
+          "label": "F",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 64,
+          "dependentLine": 65,
+          "label": "T",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 64,
+          "dependentLine": 69,
+          "label": "F",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 42,
+          "dependentLine": 43,
+          "label": "T",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 42,
+          "dependentLine": 46,
+          "label": "F",
+          "guard": false,
+          "text": "v, err := readVarbitInt(b)"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 42,
+          "dependentLine": 47,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 47,
+          "dependentLine": 48,
+          "label": "T",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 47,
+          "dependentLine": 50,
+          "label": "F",
+          "guard": false,
+          "text": "schema = int32(v) positiveSpans, err = readHistogramChunkLayoutSpans(b)"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 47,
+          "dependentLine": 53,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 53,
+          "dependentLine": 54,
+          "label": "T",
+          "guard": true,
+          "text": "return schema, zeroThreshold, positiveSpans, negativeSpans, customValues, err"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 53,
+          "dependentLine": 57,
+          "label": "F",
+          "guard": false,
+          "text": "negativeSpans, err = readHistogramChunkLayoutSpans(b)"
+        },
+        {
+          "functionLine": 35,
+          "controllerLine": 53,
+          "dependentLine": 58,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        }
+      ]
+    },
+    {
+      "id": "readCheckpoint",
+      "name": "readCheckpoint",
+      "file": "tsdb/wlog/watcher.go",
+      "functionLine": 715,
+      "shape": "guard chain with a for-range loop whose body returns, plus a compound `err != nil && !errors.Is(err, io.EOF)` predicate",
+      "notes": "The loop body returns, so the post-loop code does NOT post-dominate the loop header — unlike the Java loop fixtures, a loop-exit dependence {727 -> 750/751} is therefore a genuine classical edge and is annotated as informational rather than as a gate clause. Line 741 is a COMPOUND && predicate and must be ONE predicate. Line 746 is a return on the F arm of 741, so {741 -> 746 : F} is a real guard-class edge.",
+      "anchorUsed": "name",
+      "byName": {
+        "kind": "results",
+        "rows": 20,
+        "raw": {
+          "mode": "controls",
+          "anchor": {
+            "file": "tsdb/wlog/watcher.go",
+            "symbol": "readCheckpoint",
+            "startLine": 715,
+            "endLine": 752
+          },
+          "results": [
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 729
+              },
+              "dependent": {
+                "line": 730,
+                "text": "return fmt.Errorf(\"getSegmentSize: %w\", err)"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 729
+              },
+              "dependent": {
+                "line": 733,
+                "text": "sr, err := OpenReadSegment(SegmentName(checkpointDir, segRef.index))"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 729
+              },
+              "dependent": {
+                "line": 734,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 734
+              },
+              "dependent": {
+                "line": 735,
+                "text": "return fmt.Errorf(\"unable to open segment: %w\", err)"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 734
+              },
+              "dependent": {
+                "line": 738,
+                "text": "r := NewLiveReader(w.logger, w.readerMetrics, sr)\nerr = readFn(w, r, index, true)\nsr.Close()"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 734
+              },
+              "dependent": {
+                "line": 741,
+                "text": "err != nil && !errors.Is(err, io.EOF)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 741
+              },
+              "dependent": {
+                "line": 742,
+                "text": "return fmt.Errorf(\"readSegment %d: %w\", index, err)"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 741
+              },
+              "dependent": {
+                "line": 745,
+                "text": "r.Offset() != size"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 745
+              },
+              "dependent": {
+                "line": 727,
+                "text": "_, segRef := range segs"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 745
+              },
+              "dependent": {
+                "line": 746,
+                "text": "return fmt.Errorf(\"readCheckpoint wasn't able to read all data from the checkpoint %s/%08d, size: %d, totalRead: %d\", checkpointDir, segRef.index, size, r.Offset())"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 718
+              },
+              "dependent": {
+                "line": 719,
+                "text": "return fmt.Errorf(\"checkpointNum: %w\", err)"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 718
+              },
+              "dependent": {
+                "line": 723,
+                "text": "segs, err := listSegments(checkpointDir)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 718
+              },
+              "dependent": {
+                "line": 724,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 724
+              },
+              "dependent": {
+                "line": 725,
+                "text": "return fmt.Errorf(\"unable to get segments checkpoint dir: %w\", err)"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 724
+              },
+              "dependent": {
+                "line": 727,
+                "text": "_, segRef := range segs"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 727
+              },
+              "dependent": {
+                "line": 728,
+                "text": "size, err := getSegmentSize(checkpointDir, segRef.index)"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 727
+              },
+              "dependent": {
+                "line": 729,
+                "text": "err != nil"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 727
+              },
+              "dependent": {
+                "line": 748,
+                "text": ""
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 727
+              },
+              "dependent": {
+                "line": 750,
+                "text": "w.logger.Debug(\"Read series references from checkpoint\", \"checkpoint\", checkpointDir)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 715,
+              "controller": {
+                "line": 727
+              },
+              "dependent": {
+                "line": 751,
+                "text": "return nil"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 20
+        }
+      },
+      "byFile": {
+        "rowsAll": 200,
+        "rowsScoped": 0,
+        "distinctFunctionLines": [
+          121,
+          183,
+          196,
+          232,
+          243,
+          265,
+          281,
+          301,
+          354,
+          369,
+          392,
+          435,
+          480,
+          514
+        ]
+      },
+      "guards": {
+        "expected": 6,
+        "found": 6,
+        "missed": [],
+        "wrongSense": [],
+        "guardFlagged": 6
+      },
+      "other": {
+        "expected": 5,
+        "found": 5,
+        "missed": []
+      },
+      "returnedRows": 20,
+      "extras": [
+        {
+          "functionLine": 715,
+          "controllerLine": 729,
+          "dependentLine": 734,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 734,
+          "dependentLine": 741,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil && !errors.Is(err, io.EOF)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 745,
+          "dependentLine": 727,
+          "label": "F",
+          "guard": false,
+          "text": "_, segRef := range segs"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 718,
+          "dependentLine": 724,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 728,
+          "label": "T",
+          "guard": false,
+          "text": "size, err := getSegmentSize(checkpointDir, segRef.index)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 729,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 748,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 750,
+          "label": "F",
+          "guard": false,
+          "text": "w.logger.Debug(\"Read series references from checkpoint\", \"checkpoint\", checkpointDir)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 751,
+          "label": "F",
+          "guard": true,
+          "text": "return nil"
+        }
+      ],
+      "scoredRows": [
+        {
+          "functionLine": 715,
+          "controllerLine": 729,
+          "dependentLine": 730,
+          "label": "T",
+          "guard": true,
+          "text": "return fmt.Errorf(\"getSegmentSize: %w\", err)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 729,
+          "dependentLine": 733,
+          "label": "F",
+          "guard": false,
+          "text": "sr, err := OpenReadSegment(SegmentName(checkpointDir, segRef.index))"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 729,
+          "dependentLine": 734,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 734,
+          "dependentLine": 735,
+          "label": "T",
+          "guard": true,
+          "text": "return fmt.Errorf(\"unable to open segment: %w\", err)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 734,
+          "dependentLine": 738,
+          "label": "F",
+          "guard": false,
+          "text": "r := NewLiveReader(w.logger, w.readerMetrics, sr) err = readFn(w, r, index, true) sr.Close()"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 734,
+          "dependentLine": 741,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil && !errors.Is(err, io.EOF)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 741,
+          "dependentLine": 742,
+          "label": "T",
+          "guard": true,
+          "text": "return fmt.Errorf(\"readSegment %d: %w\", index, err)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 741,
+          "dependentLine": 745,
+          "label": "F",
+          "guard": false,
+          "text": "r.Offset() != size"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 745,
+          "dependentLine": 727,
+          "label": "F",
+          "guard": false,
+          "text": "_, segRef := range segs"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 745,
+          "dependentLine": 746,
+          "label": "T",
+          "guard": true,
+          "text": "return fmt.Errorf(\"readCheckpoint wasn't able to read all data from the checkpoint %s/%08d, size: %d, totalRead: %d\", checkpointDir, segRef.index, size, r.Offset())"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 718,
+          "dependentLine": 719,
+          "label": "T",
+          "guard": true,
+          "text": "return fmt.Errorf(\"checkpointNum: %w\", err)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 718,
+          "dependentLine": 723,
+          "label": "F",
+          "guard": false,
+          "text": "segs, err := listSegments(checkpointDir)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 718,
+          "dependentLine": 724,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 724,
+          "dependentLine": 725,
+          "label": "T",
+          "guard": true,
+          "text": "return fmt.Errorf(\"unable to get segments checkpoint dir: %w\", err)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 724,
+          "dependentLine": 727,
+          "label": "F",
+          "guard": false,
+          "text": "_, segRef := range segs"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 728,
+          "label": "T",
+          "guard": false,
+          "text": "size, err := getSegmentSize(checkpointDir, segRef.index)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 729,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 748,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 750,
+          "label": "F",
+          "guard": false,
+          "text": "w.logger.Debug(\"Read series references from checkpoint\", \"checkpoint\", checkpointDir)"
+        },
+        {
+          "functionLine": 715,
+          "controllerLine": 727,
+          "dependentLine": 751,
+          "label": "F",
+          "guard": true,
+          "text": "return nil"
+        }
+      ]
+    },
+    {
+      "id": "Visit (durationVisitor)",
+      "name": "Visit",
+      "file": "promql/durations.go",
+      "functionLine": 39,
+      "shape": "TYPE SWITCH with a guarded return in each of the five arms; the method name `Visit` is almost certainly ambiguous repo-wide",
+      "notes": "Go-only construct: a type switch. Every case arm is a guarded return; the annotated F arms are the next statement inside the same case body. Case dispatch is expected to be labelled T for every arm.",
+      "anchorUsed": "file+functionLine",
+      "byName": {
+        "kind": "ambiguous",
+        "rows": 0,
+        "raw": {
+          "status": "ambiguous",
+          "message": "Found 3 symbols matching 'Visit'. Re-call pdg_query with the file path, or disambiguate via context() first.",
+          "totalCandidates": 3,
+          "candidates": [
+            {
+              "uid": "Method:promql/durations.go:durationVisitor.Visit#2",
+              "name": "Visit",
+              "kind": "Method",
+              "filePath": "promql/durations.go",
+              "line": 39,
+              "score": 0.54
+            },
+            {
+              "uid": "Method:promql/parser/ast.go:Visitor.Visit#2",
+              "name": "Visit",
+              "kind": "Method",
+              "filePath": "promql/parser/ast.go",
+              "line": 341,
+              "score": 0.54
+            },
+            {
+              "uid": "Method:promql/parser/ast.go:inspector.Visit#2",
+              "name": "Visit",
+              "kind": "Method",
+              "filePath": "promql/parser/ast.go",
+              "line": 384,
+              "score": 0.54
+            }
+          ]
+        }
+      },
+      "byFile": {
+        "rowsAll": 82,
+        "rowsScoped": 41,
+        "distinctFunctionLines": [
+          111,
+          39,
+          85
+        ]
+      },
+      "guards": {
+        "expected": 5,
+        "found": 5,
+        "missed": [],
+        "wrongSense": [],
+        "guardFlagged": 5
+      },
+      "other": {
+        "expected": 8,
+        "found": 8,
+        "missed": []
+      },
+      "returnedRows": 41,
+      "extras": [
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 55,
+          "label": "F",
+          "guard": false,
+          "text": "n.Range = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 58,
+          "dependentLine": 60,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 58,
+          "dependentLine": 65,
+          "label": "F",
+          "guard": false,
+          "text": "n.StepExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 60,
+          "dependentLine": 63,
+          "label": "F",
+          "guard": false,
+          "text": "n.OriginalOffset = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 60,
+          "dependentLine": 65,
+          "label": "F",
+          "guard": false,
+          "text": "n.StepExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 65,
+          "dependentLine": 67,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 65,
+          "dependentLine": 72,
+          "label": "F",
+          "guard": false,
+          "text": "n.RangeExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 79,
+          "label": "T",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 80,
+          "label": "T",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 67,
+          "dependentLine": 70,
+          "label": "F",
+          "guard": false,
+          "text": "n.Step = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 67,
+          "dependentLine": 72,
+          "label": "F",
+          "guard": false,
+          "text": "n.RangeExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 74,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 77,
+          "label": "F",
+          "guard": false,
+          "text": "n.Range = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 44,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 47,
+          "label": "F",
+          "guard": false,
+          "text": "n.OriginalOffset = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 52,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        }
+      ],
+      "scoredRows": [
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 53,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 55,
+          "label": "F",
+          "guard": false,
+          "text": "n.Range = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 52,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 58,
+          "dependentLine": 59,
+          "label": "T",
+          "guard": false,
+          "text": "duration, err := v.calculateDuration(n.OriginalOffsetExpr, true)"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 58,
+          "dependentLine": 60,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 58,
+          "dependentLine": 65,
+          "label": "F",
+          "guard": false,
+          "text": "n.StepExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 60,
+          "dependentLine": 61,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 60,
+          "dependentLine": 63,
+          "label": "F",
+          "guard": false,
+          "text": "n.OriginalOffset = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 60,
+          "dependentLine": 65,
+          "label": "F",
+          "guard": false,
+          "text": "n.StepExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 65,
+          "dependentLine": 66,
+          "label": "T",
+          "guard": false,
+          "text": "duration, err := v.calculateDuration(n.StepExpr, false)"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 65,
+          "dependentLine": 67,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 65,
+          "dependentLine": 72,
+          "label": "F",
+          "guard": false,
+          "text": "n.RangeExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 42,
+          "label": "T",
+          "guard": false,
+          "text": "n.OriginalOffsetExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 50,
+          "label": "T",
+          "guard": false,
+          "text": "n.RangeExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 58,
+          "label": "T",
+          "guard": false,
+          "text": "n.OriginalOffsetExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 79,
+          "label": "T",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 40,
+          "dependentLine": 80,
+          "label": "T",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 67,
+          "dependentLine": 68,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 67,
+          "dependentLine": 70,
+          "label": "F",
+          "guard": false,
+          "text": "n.Step = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 67,
+          "dependentLine": 72,
+          "label": "F",
+          "guard": false,
+          "text": "n.RangeExpr != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 73,
+          "label": "T",
+          "guard": false,
+          "text": "duration, err := v.calculateDuration(n.RangeExpr, false)"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 74,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 72,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 75,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 77,
+          "label": "F",
+          "guard": false,
+          "text": "n.Range = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 74,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 43,
+          "label": "T",
+          "guard": false,
+          "text": "duration, err := v.calculateDuration(n.OriginalOffsetExpr, true)"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 44,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 42,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 45,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 47,
+          "label": "F",
+          "guard": false,
+          "text": "n.OriginalOffset = duration"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 44,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 51,
+          "label": "T",
+          "guard": false,
+          "text": "duration, err := v.calculateDuration(n.RangeExpr, false)"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 52,
+          "label": "T",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 79,
+          "label": "F",
+          "guard": false,
+          "text": ""
+        },
+        {
+          "functionLine": 39,
+          "controllerLine": 50,
+          "dependentLine": 80,
+          "label": "F",
+          "guard": true,
+          "text": "return v, nil"
+        }
+      ]
+    },
+    {
+      "id": "OpenBlock",
+      "name": "OpenBlock",
+      "file": "tsdb/block.go",
+      "functionLine": 355,
+      "shape": "guard chain in a function with a NAMED return `err` and a `defer func(){ if err != nil {…} }()` that both READS and WRITES the named return",
+      "notes": "The `postingsDecoderFactory != nil` predicate at 377 is NOT a guard (its T arm is an assignment). THE DEFER PROBE: the deferred closure is a func_literal with its own unit keyed to line 360; if its blocks leak into the enclosing unit the enclosing CDG gains spurious rows, and if the tool follows the named-return write at 362 the closing `return pb, nil` at 405 may acquire false dependences.",
+      "anchorUsed": "name",
+      "byName": {
+        "kind": "results",
+        "rows": 17,
+        "raw": {
+          "mode": "controls",
+          "anchor": {
+            "file": "tsdb/block.go",
+            "symbol": "OpenBlock",
+            "startLine": 355,
+            "endLine": 406
+          },
+          "results": [
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 371
+              },
+              "dependent": {
+                "line": 372,
+                "text": "return nil, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 371
+              },
+              "dependent": {
+                "line": 374,
+                "text": "closers = append(closers, cr)\ndecoder := index.DecodePostingsRaw"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 371
+              },
+              "dependent": {
+                "line": 377,
+                "text": "postingsDecoderFactory != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 371
+              },
+              "dependent": {
+                "line": 380,
+                "text": "ir, err := index.NewFileReader(filepath.Join(dir, indexFilename), decoder)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 371
+              },
+              "dependent": {
+                "line": 381,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 377
+              },
+              "dependent": {
+                "line": 378,
+                "text": "decoder = postingsDecoderFactory(meta)"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 381
+              },
+              "dependent": {
+                "line": 382,
+                "text": "return nil, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 381
+              },
+              "dependent": {
+                "line": 384,
+                "text": "closers = append(closers, ir)\ntr, sizeTomb, err := tombstones.ReadTombstones(dir)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 381
+              },
+              "dependent": {
+                "line": 387,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 356
+              },
+              "dependent": {
+                "line": 357,
+                "text": "logger = promslog.NewNopLogger()"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 387
+              },
+              "dependent": {
+                "line": 388,
+                "text": "return nil, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 387
+              },
+              "dependent": {
+                "line": 390,
+                "text": "closers = append(closers, tr)\npb = &Block{\n\t\tdir:               dir,\n\t\tmeta:              *meta,\n\t\tchunkr:            cr,\n\t\tindexr:            ir,\n\t\ttombstones:        tr,\n\t\tsymbolTableSize:   ir.SymbolTableSize(),\n\t\tlogger:            logger,\n\t\tnumBytesChunks:    cr.Size(),\n\t\tnumBytesIndex:     ir.Size(),\n\t\tnumBytesTombstone: sizeTomb,\n\t\tnumBytesMeta:      sizeMeta,\n\t}"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 387
+              },
+              "dependent": {
+                "line": 405,
+                "text": "return pb, nil"
+              },
+              "label": "F",
+              "guard": true
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 366
+              },
+              "dependent": {
+                "line": 367,
+                "text": "return nil, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 366
+              },
+              "dependent": {
+                "line": 370,
+                "text": "cr, err := chunks.NewDirReader(chunkDir(dir), pool)"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 355,
+              "controller": {
+                "line": 366
+              },
+              "dependent": {
+                "line": 371,
+                "text": "err != nil"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 360,
+              "controller": {
+                "line": 361
+              },
+              "dependent": {
+                "line": 362,
+                "text": "err = errors.Join(err, closeAll(closers))"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 17
+        }
+      },
+      "byFile": {
+        "rowsAll": 133,
+        "rowsScoped": 16,
+        "distinctFunctionLines": [
+          218,
+          230,
+          242,
+          274,
+          291,
+          297,
+          355,
+          360,
+          424,
+          455,
+          467,
+          475,
+          483,
+          495,
+          514,
+          532,
+          544,
+          552,
+          576,
+          615,
+          657,
+          686,
+          710,
+          761
+        ]
+      },
+      "guards": {
+        "expected": 3,
+        "found": 3,
+        "missed": [],
+        "wrongSense": [],
+        "guardFlagged": 3
+      },
+      "other": {
+        "expected": 5,
+        "found": 4,
+        "missed": [
+          [
+            377,
+            380,
+            "F"
+          ]
+        ]
+      },
+      "returnedRows": 17,
+      "extras": [
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 372,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 374,
+          "label": "F",
+          "guard": false,
+          "text": "closers = append(closers, cr) decoder := index.DecodePostingsRaw"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 377,
+          "label": "F",
+          "guard": false,
+          "text": "postingsDecoderFactory != nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 380,
+          "label": "F",
+          "guard": false,
+          "text": "ir, err := index.NewFileReader(filepath.Join(dir, indexFilename), decoder)"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 381,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 381,
+          "dependentLine": 387,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 356,
+          "dependentLine": 357,
+          "label": "T",
+          "guard": false,
+          "text": "logger = promslog.NewNopLogger()"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 387,
+          "dependentLine": 405,
+          "label": "F",
+          "guard": true,
+          "text": "return pb, nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 366,
+          "dependentLine": 371,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 360,
+          "controllerLine": 361,
+          "dependentLine": 362,
+          "label": "T",
+          "guard": false,
+          "text": "err = errors.Join(err, closeAll(closers))"
+        }
+      ],
+      "scoredRows": [
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 372,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 374,
+          "label": "F",
+          "guard": false,
+          "text": "closers = append(closers, cr) decoder := index.DecodePostingsRaw"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 377,
+          "label": "F",
+          "guard": false,
+          "text": "postingsDecoderFactory != nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 380,
+          "label": "F",
+          "guard": false,
+          "text": "ir, err := index.NewFileReader(filepath.Join(dir, indexFilename), decoder)"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 371,
+          "dependentLine": 381,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 377,
+          "dependentLine": 378,
+          "label": "T",
+          "guard": false,
+          "text": "decoder = postingsDecoderFactory(meta)"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 381,
+          "dependentLine": 382,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 381,
+          "dependentLine": 384,
+          "label": "F",
+          "guard": false,
+          "text": "closers = append(closers, ir) tr, sizeTomb, err := tombstones.ReadTombstones(dir)"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 381,
+          "dependentLine": 387,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 356,
+          "dependentLine": 357,
+          "label": "T",
+          "guard": false,
+          "text": "logger = promslog.NewNopLogger()"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 387,
+          "dependentLine": 388,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 387,
+          "dependentLine": 390,
+          "label": "F",
+          "guard": false,
+          "text": "closers = append(closers, tr) pb = &Block{ dir: dir, meta: *meta, chunkr: cr, indexr: ir, tombstones: tr, symbolTableSize: ir.SymbolTableSize(), logger: logger, numBytesChunks: cr.Size(), numBytesIndex: ir.Size(), numBytesTombstone: sizeTomb, numBytesMeta: sizeMeta, }"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 387,
+          "dependentLine": 405,
+          "label": "F",
+          "guard": true,
+          "text": "return pb, nil"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 366,
+          "dependentLine": 367,
+          "label": "T",
+          "guard": true,
+          "text": "return nil, err"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 366,
+          "dependentLine": 370,
+          "label": "F",
+          "guard": false,
+          "text": "cr, err := chunks.NewDirReader(chunkDir(dir), pool)"
+        },
+        {
+          "functionLine": 355,
+          "controllerLine": 366,
+          "dependentLine": 371,
+          "label": "F",
+          "guard": false,
+          "text": "err != nil"
+        },
+        {
+          "functionLine": 360,
+          "controllerLine": 361,
+          "dependentLine": 362,
+          "label": "T",
+          "guard": false,
+          "text": "err = errors.Join(err, closeAll(closers))"
+        }
+      ]
+    },
+    {
+      "id": "labelNames",
+      "name": "labelNames",
+      "file": "web/api/v1/api.go",
+      "functionLine": 884,
+      "shape": "seven guarded returns, a `defer q.Close()` (the defer probe on real code), a nested if/else and two loops",
+      "notes": "Annotated `apiFuncResult` is a STRUCT literal return, not a named return, so no return-value write-back path exists — the defer at 912 must NOT create a dependence into the closing return at 958. Line 923 guard sits inside a for-range loop; line 945 guard is inside the else arm.",
+      "anchorUsed": "file+functionLine",
+      "byName": {
+        "kind": "ambiguous",
+        "rows": 0,
+        "raw": {
+          "status": "ambiguous",
+          "message": "Found 8 symbols matching 'labelNames'. Re-call pdg_query with the file path, or disambiguate via context() first.",
+          "totalCandidates": 8,
+          "candidates": [
+            {
+              "uid": "Function:web/ui/module/codemirror-promql/src/client/prometheus.test.ts:fn@53:43.fn@80:64.labelNames@83:6",
+              "name": "labelNames",
+              "kind": "Function",
+              "filePath": "web/ui/module/codemirror-promql/src/client/prometheus.test.ts",
+              "line": 84,
+              "score": 0.56
+            },
+            {
+              "uid": "Method:web/api/v1/api.go:API.labelNames#1",
+              "name": "labelNames",
+              "kind": "Method",
+              "filePath": "web/api/v1/api.go",
+              "line": 884,
+              "score": 0.54
+            },
+            {
+              "uid": "Method:web/ui/module/codemirror-promql/src/client/prometheus.ts:CachedPrometheusClient.labelNames#1",
+              "name": "labelNames",
+              "kind": "Method",
+              "filePath": "web/ui/module/codemirror-promql/src/client/prometheus.ts",
+              "line": 413,
+              "score": 0.54
+            },
+            {
+              "uid": "Method:web/ui/module/codemirror-promql/src/client/prometheus.ts:HTTPPrometheusClient.labelNames#1",
+              "name": "labelNames",
+              "kind": "Method",
+              "filePath": "web/ui/module/codemirror-promql/src/client/prometheus.ts",
+              "line": 114,
+              "score": 0.54
+            },
+            {
+              "uid": "Method:web/ui/module/codemirror-promql/src/client/prometheus.ts:PrometheusClient.labelNames#1",
+              "name": "labelNames",
+              "kind": "Method",
+              "filePath": "web/ui/module/codemirror-promql/src/client/prometheus.ts",
+              "line": 25,
+              "score": 0.54
+            },
+            {
+              "uid": "Property:tsdb/index/index.go:Writer.labelNames",
+              "name": "labelNames",
+              "kind": "",
+              "filePath": "tsdb/index/index.go",
+              "line": 154,
+              "score": 0.5
+            },
+            {
+              "uid": "Property:tsdb/ooo_head_read_test.go:mockSearchQuerier.labelNames",
+              "name": "labelNames",
+              "kind": "",
+              "filePath": "tsdb/ooo_head_read_test.go",
+              "line": 1123,
+              "score": 0.5
+            },
+            {
+              "uid": "Property:web/ui/module/codemirror-promql/src/client/prometheus.ts:Cache.labelNames",
+              "name": "labelNames",
+              "kind": "",
+              "filePath": "web/ui/module/codemirror-promql/src/client/prometheus.ts",
+              "line": 282,
+              "score": 0.5
+            }
+          ]
+        }
+      },
+      "byFile": {
+        "rowsAll": 200,
+        "rowsScoped": 0,
+        "distinctFunctionLines": [
+          1003,
+          1082,
+          1118,
+          1225,
+          1237,
+          1288,
+          1307,
+          1308,
+          1350,
+          1394,
+          1403,
+          1481,
+          1531,
+          1559,
+          1575,
+          1593
+        ]
+      },
+      "guards": {
+        "expected": 7,
+        "found": 0,
+        "missed": [
+          [
+            886,
+            887
+          ],
+          [
+            891,
+            892
+          ],
+          [
+            895,
+            896
+          ],
+          [
+            900,
+            901
+          ],
+          [
+            909,
+            910
+          ],
+          [
+            923,
+            924
+          ],
+          [
+            945,
+            946
+          ]
+        ],
+        "wrongSense": [],
+        "guardFlagged": 0
+      },
+      "other": {
+        "expected": 7,
+        "found": 0,
+        "missed": [
+          [
+            918,
+            919,
+            "T"
+          ],
+          [
+            918,
+            940,
+            "F"
+          ],
+          [
+            921,
+            922,
+            "T"
+          ],
+          [
+            923,
+            927,
+            "F"
+          ],
+          [
+            941,
+            942,
+            "T"
+          ],
+          [
+            950,
+            951,
+            "T"
+          ],
+          [
+            954,
+            955,
+            "T"
+          ]
+        ]
+      },
+      "returnedRows": 0,
+      "extras": [],
+      "scoredRows": []
+    }
+  ]
+}

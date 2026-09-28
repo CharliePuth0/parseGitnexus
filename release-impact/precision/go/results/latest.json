@@ -1,0 +1,4545 @@
+{
+  "generatedAt": "2026-09-28T17:43:03.061Z",
+  "language": "go",
+  "cliPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/gitnexus/dist/cli/index.js",
+  "repoRoot": "/var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-go-pdg-precision-3BDBtq",
+  "analyzeCounters": {
+    "cdgSkippedFunctions": 0,
+    "reachingDefSkippedFunctions": 0,
+    "unsoundFunctions": 0,
+    "callableValueFlowCaps": 0,
+    "summaryLine": "  Repository indexed successfully (6.5s)",
+    "warnLines": 0
+  },
+  "analyzeLogPath": "/Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/go/logs/fixture-analyze-1790617381321.log",
+  "gate": {
+    "verdict": "PASS",
+    "basis": "control recall on the symbol-name anchor over non-expectedGap fixtures",
+    "controls": {
+      "expected": 35,
+      "matched": 35,
+      "returned": 37,
+      "recall": 1,
+      "precision": 0.9459459459459459
+    },
+    "flows": {
+      "expected": 75,
+      "matched": 63,
+      "returned": 74,
+      "recall": 0.84,
+      "precision": 0.8513513513513513
+    },
+    "missedGuardEdges": 0,
+    "guardEdgesExpected": 5,
+    "falseGuardEdges": 3,
+    "relaxedControlMisses": 0,
+    "duplicateControlRows": 0,
+    "emptyTextControlRows": 0
+  },
+  "table": [
+    {
+      "file": "earlyguard.go",
+      "construct": "if err != nil { return err } early guard",
+      "symbol": "earlyGuard",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 4,
+      "returnedFlows": 4,
+      "matchedFlows": 4,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 1,
+      "guardFound": 1,
+      "guardMissing": 0,
+      "guardRowsReturned": 2,
+      "falseGuardRows": [
+        {
+          "functionLine": 3,
+          "controllerLine": 4,
+          "dependentLine": 8,
+          "label": "F",
+          "guard": true,
+          "text": "return total, nil",
+          "raw": {
+            "functionLine": 3,
+            "controller": {
+              "line": 4
+            },
+            "dependent": {
+              "line": 8,
+              "text": "return total, nil"
+            },
+            "label": "F",
+            "guard": true
+          }
+        }
+      ],
+      "falseGuardCount": 1,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "plainifelse.go",
+      "construct": "plain if/else (also the Go ternary-equivalent: no ternary operator exists in Go)",
+      "symbol": "plainIfElse",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 2,
+      "returnedControls": 2,
+      "matchedControls": 2,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 3,
+      "returnedFlows": 3,
+      "matchedFlows": 3,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 2,
+      "fileAnchorScopedRows": 2,
+      "fileAnchorScopedMatched": 2,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 2,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "nestedif.go",
+      "construct": "nested if (inner if inside the outer T arm)",
+      "symbol": "nestedIf",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 5,
+      "returnedFlows": 5,
+      "matchedFlows": 5,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "elseifchain.go",
+      "construct": "if / else-if / else chain",
+      "symbol": "elseIfChain",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 4,
+      "returnedControls": 4,
+      "matchedControls": 4,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 5,
+      "returnedFlows": 5,
+      "matchedFlows": 5,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 4,
+      "fileAnchorScopedRows": 4,
+      "fileAnchorScopedMatched": 4,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 4,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "switchexpr.go",
+      "construct": "switch with an expression and a default",
+      "symbol": "switchExpr",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 4,
+      "returnedFlows": 4,
+      "matchedFlows": 4,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "switchnoexpr.go",
+      "construct": "expressionless switch (switch { case cond: }) with NO default",
+      "symbol": "switchNoExpr",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 2,
+      "returnedControls": 2,
+      "matchedControls": 2,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 5,
+      "returnedFlows": 4,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "n",
+          "defLine": 3,
+          "useLine": 6,
+          "rationale": "case-test read; a likely D2 coarsening victim if the test is harvested onto the dispatch block at line 5"
+        },
+        {
+          "variable": "n",
+          "defLine": 3,
+          "useLine": 8
+        }
+      ],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "n",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "switch{}",
+          "raw": {
+            "functionLine": 3,
+            "variable": "n",
+            "def": {
+              "line": 3
+            },
+            "use": {
+              "line": 5,
+              "text": "switch{}"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 2,
+      "fileAnchorScopedRows": 2,
+      "fileAnchorScopedMatched": 2,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 2,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "typeswitch.go",
+      "construct": "type switch (switch t := v.(type)) with a default",
+      "symbol": "typeSwitch",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 6,
+      "returnedFlows": 6,
+      "matchedFlows": 6,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "selectcase.go",
+      "construct": "select with two communication cases and a default",
+      "symbol": "selectCase",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 6,
+      "returnedFlows": 6,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "v",
+          "defLine": 6,
+          "useLine": 7,
+          "rationale": "`case v := <-ch:` defines the channel-received binding (go-visitor.test.ts #2195 P2)"
+        },
+        {
+          "variable": "ch",
+          "defLine": 3,
+          "useLine": 6
+        },
+        {
+          "variable": "done",
+          "defLine": 3,
+          "useLine": 8
+        }
+      ],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "ch",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "select",
+          "raw": {
+            "functionLine": 3,
+            "variable": "ch",
+            "def": {
+              "line": 3
+            },
+            "use": {
+              "line": 5,
+              "text": "select"
+            }
+          }
+        },
+        {
+          "functionLine": 3,
+          "variable": "done",
+          "defLine": 3,
+          "useLine": 5,
+          "text": "select",
+          "raw": {
+            "functionLine": 3,
+            "variable": "done",
+            "def": {
+              "line": 3
+            },
+            "use": {
+              "line": 5,
+              "text": "select"
+            }
+          }
+        },
+        {
+          "functionLine": 3,
+          "variable": "v",
+          "defLine": 5,
+          "useLine": 7,
+          "text": "got = v",
+          "raw": {
+            "functionLine": 3,
+            "variable": "v",
+            "def": {
+              "line": 5
+            },
+            "use": {
+              "line": 7,
+              "text": "got = v"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "forbreak.go",
+      "construct": "for loop (while-style) with break",
+      "symbol": "forBreak",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 4,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [
+        {
+          "functionLine": 3,
+          "controllerLine": 6,
+          "dependentLine": 5,
+          "label": "F",
+          "guard": false,
+          "text": "i < n",
+          "raw": {
+            "functionLine": 3,
+            "controller": {
+              "line": 6
+            },
+            "dependent": {
+              "line": 5,
+              "text": "i < n"
+            },
+            "label": "F"
+          }
+        }
+      ],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 9,
+      "returnedFlows": 9,
+      "matchedFlows": 9,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 4,
+      "fileAnchorScopedRows": 4,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 4,
+      "guardExpected": 1,
+      "guardFound": 1,
+      "guardMissing": 0,
+      "guardRowsReturned": 1,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "rangecontinue.go",
+      "construct": "for-range with continue",
+      "symbol": "rangeContinue",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 4,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [
+        {
+          "functionLine": 3,
+          "controllerLine": 5,
+          "dependentLine": 5,
+          "label": "T",
+          "guard": false,
+          "text": "_, v := range xs",
+          "raw": {
+            "functionLine": 3,
+            "controller": {
+              "line": 5
+            },
+            "dependent": {
+              "line": 5,
+              "text": "_, v := range xs"
+            },
+            "label": "T"
+          }
+        }
+      ],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 7,
+      "returnedFlows": 7,
+      "matchedFlows": 7,
+      "missedFlows": [],
+      "extraFlows": [],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 4,
+      "fileAnchorScopedRows": 4,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 4,
+      "guardExpected": 1,
+      "guardFound": 1,
+      "guardMissing": 0,
+      "guardRowsReturned": 1,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "deferguard.go",
+      "construct": "defer: a deferred call registered before a guarded return",
+      "symbol": "deferGuard",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 4,
+      "returnedFlows": 5,
+      "matchedFlows": 4,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "total",
+          "defLine": 9,
+          "useLine": 5,
+          "text": "defer record(total)",
+          "raw": {
+            "functionLine": 3,
+            "variable": "total",
+            "def": {
+              "line": 9
+            },
+            "use": {
+              "line": 5,
+              "text": "defer record(total)"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 1,
+      "guardFound": 1,
+      "guardMissing": 0,
+      "guardRowsReturned": 2,
+      "falseGuardRows": [
+        {
+          "functionLine": 3,
+          "controllerLine": 6,
+          "dependentLine": 10,
+          "label": "F",
+          "guard": true,
+          "text": "return total",
+          "raw": {
+            "functionLine": 3,
+            "controller": {
+              "line": 6
+            },
+            "dependent": {
+              "line": 10,
+              "text": "return total"
+            },
+            "label": "F",
+            "guard": true
+          }
+        }
+      ],
+      "falseGuardCount": 1,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "shortdecl.go",
+      "construct": "short declaration := data flow (no branches at all)",
+      "symbol": "shortDecl",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 0,
+      "returnedControls": 0,
+      "matchedControls": 0,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 6,
+      "returnedFlows": 6,
+      "matchedFlows": 2,
+      "missedFlows": [
+        {
+          "variable": "x",
+          "defLine": 4,
+          "useLine": 5
+        },
+        {
+          "variable": "y",
+          "defLine": 5,
+          "useLine": 6
+        },
+        {
+          "variable": "y",
+          "defLine": 5,
+          "useLine": 7
+        },
+        {
+          "variable": "x",
+          "defLine": 6,
+          "useLine": 7
+        }
+      ],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "x",
+          "defLine": 4,
+          "useLine": 4,
+          "text": "x := a + b y := x * 2 x = y - 1",
+          "raw": {
+            "functionLine": 3,
+            "variable": "x",
+            "def": {
+              "line": 4
+            },
+            "use": {
+              "line": 4,
+              "text": "x := a + b\ny := x * 2\nx = y - 1"
+            }
+          }
+        },
+        {
+          "functionLine": 3,
+          "variable": "y",
+          "defLine": 4,
+          "useLine": 4,
+          "text": "x := a + b y := x * 2 x = y - 1",
+          "raw": {
+            "functionLine": 3,
+            "variable": "y",
+            "def": {
+              "line": 4
+            },
+            "use": {
+              "line": 4,
+              "text": "x := a + b\ny := x * 2\nx = y - 1"
+            }
+          }
+        },
+        {
+          "functionLine": 3,
+          "variable": "x",
+          "defLine": 4,
+          "useLine": 7,
+          "text": "return x + y",
+          "raw": {
+            "functionLine": 3,
+            "variable": "x",
+            "def": {
+              "line": 4
+            },
+            "use": {
+              "line": 7,
+              "text": "return x + y"
+            }
+          }
+        },
+        {
+          "functionLine": 3,
+          "variable": "y",
+          "defLine": 4,
+          "useLine": 7,
+          "text": "return x + y",
+          "raw": {
+            "functionLine": 3,
+            "variable": "y",
+            "def": {
+              "line": 4
+            },
+            "use": {
+              "line": 7,
+              "text": "return x + y"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 0,
+      "fileAnchorScopedRows": 0,
+      "fileAnchorScopedMatched": 0,
+      "fileAnchorOtherFunctions": [],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 0,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "multireturn.go",
+      "construct": "multi-value return (val, err) flow",
+      "symbol": "multiReturn",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 3,
+      "returnedControls": 3,
+      "matchedControls": 3,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 5,
+      "returnedFlows": 6,
+      "matchedFlows": 5,
+      "missedFlows": [],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "val",
+          "defLine": 8,
+          "useLine": 8,
+          "text": "val = val * 2",
+          "raw": {
+            "functionLine": 3,
+            "variable": "val",
+            "def": {
+              "line": 8
+            },
+            "use": {
+              "line": 8,
+              "text": "val = val * 2"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 3,
+      "fileAnchorScopedRows": 3,
+      "fileAnchorScopedMatched": 3,
+      "fileAnchorOtherFunctions": [
+        3
+      ],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 3,
+      "guardExpected": 1,
+      "guardFound": 1,
+      "guardMissing": 0,
+      "guardRowsReturned": 2,
+      "falseGuardRows": [
+        {
+          "functionLine": 3,
+          "controllerLine": 5,
+          "dependentLine": 9,
+          "label": "F",
+          "guard": true,
+          "text": "return val, nil",
+          "raw": {
+            "functionLine": 3,
+            "controller": {
+              "line": 5
+            },
+            "dependent": {
+              "line": 9,
+              "text": "return val, nil"
+            },
+            "label": "F",
+            "guard": true
+          }
+        }
+      ],
+      "falseGuardCount": 1,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "goroutine.go",
+      "construct": "goroutine closure capture (EXPECTED BLIND SPOT)",
+      "symbol": "goroutineCapture",
+      "entryLine": 3,
+      "expectedGap": true,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 0,
+      "returnedControls": 0,
+      "matchedControls": 0,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 2,
+      "returnedFlows": 2,
+      "matchedFlows": 0,
+      "missedFlows": [
+        {
+          "variable": "base",
+          "defLine": 3,
+          "useLine": 8
+        },
+        {
+          "variable": "out",
+          "defLine": 8,
+          "useLine": 9
+        }
+      ],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "base",
+          "defLine": 3,
+          "useLine": 4,
+          "text": "out := 0 go func() { out = base + 1 }() out = base",
+          "raw": {
+            "functionLine": 3,
+            "variable": "base",
+            "def": {
+              "line": 3
+            },
+            "use": {
+              "line": 4,
+              "text": "out := 0\ngo func() {\n\t\tout = base + 1\n\t}()\nout = base"
+            }
+          }
+        },
+        {
+          "functionLine": 3,
+          "variable": "out",
+          "defLine": 4,
+          "useLine": 9,
+          "text": "return out",
+          "raw": {
+            "functionLine": 3,
+            "variable": "out",
+            "def": {
+              "line": 4
+            },
+            "use": {
+              "line": 9,
+              "text": "return out"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 0,
+      "fileAnchorScopedRows": 0,
+      "fileAnchorScopedMatched": 0,
+      "fileAnchorOtherFunctions": [],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 0,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    },
+    {
+      "file": "shortcircuit.go",
+      "construct": "short-circuit && / || in VALUE position (no statement-level branch)",
+      "symbol": "shortCircuitValue",
+      "entryLine": 3,
+      "expectedGap": false,
+      "anchorKind": "results",
+      "transportError": null,
+      "expectedControls": 0,
+      "returnedControls": 0,
+      "matchedControls": 0,
+      "missedControls": [],
+      "extraControls": [],
+      "missedControlsIgnoringLabel": 0,
+      "expectedFlows": 6,
+      "returnedFlows": 4,
+      "matchedFlows": 3,
+      "missedFlows": [
+        {
+          "variable": "a",
+          "defLine": 3,
+          "useLine": 5
+        },
+        {
+          "variable": "b",
+          "defLine": 3,
+          "useLine": 5
+        },
+        {
+          "variable": "guard",
+          "defLine": 5,
+          "useLine": 6
+        }
+      ],
+      "extraFlows": [
+        {
+          "functionLine": 3,
+          "variable": "guard",
+          "defLine": 4,
+          "useLine": 6,
+          "text": "return ok && guard",
+          "raw": {
+            "functionLine": 3,
+            "variable": "guard",
+            "def": {
+              "line": 4
+            },
+            "use": {
+              "line": 6,
+              "text": "return ok && guard"
+            }
+          }
+        }
+      ],
+      "duplicateControlRows": 0,
+      "emptyTextControlRows": 0,
+      "fileAnchorRows": 0,
+      "fileAnchorScopedRows": 0,
+      "fileAnchorScopedMatched": 0,
+      "fileAnchorOtherFunctions": [],
+      "fileAnchorSameAsSymbol": true,
+      "basenameAnchorRows": 0,
+      "guardExpected": 0,
+      "guardFound": 0,
+      "guardMissing": 0,
+      "guardRowsReturned": 0,
+      "falseGuardRows": [],
+      "falseGuardCount": 0,
+      "payloadNote": null,
+      "truncated": false
+    }
+  ],
+  "uidProbes": [
+    {
+      "file": "earlyguard.go",
+      "symbol": "earlyGuard",
+      "uid": "Function:src/earlyguard.go:earlyGuard",
+      "cypherError": null,
+      "viaUid": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "Function:src/earlyguard.go:earlyGuard"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "viaRelPath": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/earlyguard.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 5,
+                "text": "return 0, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 7,
+                "text": "total := n + 1"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return total, nil"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      }
+    },
+    {
+      "file": "forbreak.go",
+      "symbol": "forBreak",
+      "uid": "Function:src/forbreak.go:forBreak",
+      "cypherError": null,
+      "viaUid": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "Function:src/forbreak.go:forBreak"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "viaRelPath": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/forbreak.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "i == 3"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < n"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "break"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "i = i + 1"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      }
+    }
+  ],
+  "raw": [
+    {
+      "file": "earlyguard.go",
+      "symbol": "earlyGuard",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/earlyguard.go",
+            "symbol": "earlyGuard",
+            "startLine": 3,
+            "endLine": 9
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 5,
+                "text": "return 0, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 7,
+                "text": "total := n + 1"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return total, nil"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/earlyguard.go",
+            "symbol": "earlyGuard",
+            "startLine": 3,
+            "endLine": 9
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "err != nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "return 0, err"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "total := n + 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 8,
+                "text": "return total, nil"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/earlyguard.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 5,
+                "text": "return 0, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 7,
+                "text": "total := n + 1"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 4
+              },
+              "dependent": {
+                "line": 8,
+                "text": "return total, nil"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/earlyguard.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "err != nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "return 0, err"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "total := n + 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 8,
+                "text": "return total, nil"
+              }
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "plainifelse.go",
+      "symbol": "plainIfElse",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/plainifelse.go",
+            "symbol": "plainIfElse",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "bonus = 1"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "bonus = -1"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 2
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/plainifelse.go",
+            "symbol": "plainIfElse",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "bonus",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 10,
+                "text": "return bonus"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "bonus",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 10,
+                "text": "return bonus"
+              }
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/plainifelse.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "bonus = 1"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "bonus = -1"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 2
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/plainifelse.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "bonus",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 10,
+                "text": "return bonus"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "bonus",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 10,
+                "text": "return bonus"
+              }
+            }
+          ],
+          "total": 3
+        }
+      }
+    },
+    {
+      "file": "nestedif.go",
+      "symbol": "nestedIf",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/nestedif.go",
+            "symbol": "nestedIf",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "active"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "label = \"hot\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "label = \"warm\""
+              },
+              "label": "F"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/nestedif.go",
+            "symbol": "nestedIf",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "active",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "active"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 12,
+                "text": "return label"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 12,
+                "text": "return label"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 12,
+                "text": "return label"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/nestedif.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "active"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "label = \"hot\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "label = \"warm\""
+              },
+              "label": "F"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/nestedif.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "active",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "active"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 12,
+                "text": "return label"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 12,
+                "text": "return label"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "label",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 12,
+                "text": "return label"
+              }
+            }
+          ],
+          "total": 5
+        }
+      }
+    },
+    {
+      "file": "elseifchain.go",
+      "symbol": "elseIfChain",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/elseifchain.go",
+            "symbol": "elseIfChain",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "band = \"high\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "score > 50"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "band = \"mid\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "band = \"low\""
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/elseifchain.go",
+            "symbol": "elseIfChain",
+            "startLine": 3,
+            "endLine": 13
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 90"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 12,
+                "text": "return band"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 12,
+                "text": "return band"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 12,
+                "text": "return band"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/elseifchain.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "band = \"high\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "score > 50"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 8,
+                "text": "band = \"mid\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 7
+              },
+              "dependent": {
+                "line": 10,
+                "text": "band = \"low\""
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/elseifchain.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "score > 90"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "score",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 7,
+                "text": "score > 50"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 6
+              },
+              "use": {
+                "line": 12,
+                "text": "return band"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 12,
+                "text": "return band"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "band",
+              "def": {
+                "line": 10
+              },
+              "use": {
+                "line": 12,
+                "text": "return band"
+              }
+            }
+          ],
+          "total": 5
+        }
+      }
+    },
+    {
+      "file": "switchexpr.go",
+      "symbol": "switchExpr",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/switchexpr.go",
+            "symbol": "switchExpr",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "name = \"one\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "name = \"two\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "name = \"many\""
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/switchexpr.go",
+            "symbol": "switchExpr",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "kind",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "kind"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "name",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 13,
+                "text": "return name"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "name",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 13,
+                "text": "return name"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "name",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 13,
+                "text": "return name"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/switchexpr.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "name = \"one\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "name = \"two\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "name = \"many\""
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/switchexpr.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "kind",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "kind"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "name",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 13,
+                "text": "return name"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "name",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 13,
+                "text": "return name"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "name",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 13,
+                "text": "return name"
+              }
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "switchnoexpr.go",
+      "symbol": "switchNoExpr",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/switchnoexpr.go",
+            "symbol": "switchNoExpr",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "tag = \"big\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "tag = \"small\""
+              },
+              "label": "T"
+            }
+          ],
+          "total": 2
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/switchnoexpr.go",
+            "symbol": "switchNoExpr",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "switch{}"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "tag",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return tag"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "tag",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 11,
+                "text": "return tag"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "tag",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return tag"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/switchnoexpr.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "tag = \"big\""
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "tag = \"small\""
+              },
+              "label": "T"
+            }
+          ],
+          "total": 2
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/switchnoexpr.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "switch{}"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "tag",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return tag"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "tag",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 11,
+                "text": "return tag"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "tag",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return tag"
+              }
+            }
+          ],
+          "total": 4
+        }
+      }
+    },
+    {
+      "file": "typeswitch.go",
+      "symbol": "typeSwitch",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/typeswitch.go",
+            "symbol": "typeSwitch",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "n = t"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "n = int(t)"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "n = -1"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/typeswitch.go",
+            "symbol": "typeSwitch",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "switch t := v.(type)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "t",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 7,
+                "text": "n = t"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "t",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "n = int(t)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 13,
+                "text": "return n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 13,
+                "text": "return n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 13,
+                "text": "return n"
+              }
+            }
+          ],
+          "total": 6
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/typeswitch.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "n = t"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "n = int(t)"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "n = -1"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/typeswitch.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "switch t := v.(type)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "t",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 7,
+                "text": "n = t"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "t",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "n = int(t)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 13,
+                "text": "return n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 13,
+                "text": "return n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 13,
+                "text": "return n"
+              }
+            }
+          ],
+          "total": 6
+        }
+      }
+    },
+    {
+      "file": "selectcase.go",
+      "symbol": "selectCase",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/selectcase.go",
+            "symbol": "selectCase",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "got = v"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "got = -1"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "got = 2"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/selectcase.go",
+            "symbol": "selectCase",
+            "startLine": 3,
+            "endLine": 14
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "ch",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "select"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "done",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "select"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 7,
+                "text": "got = v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "got",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 13,
+                "text": "return got"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "got",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 13,
+                "text": "return got"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "got",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 13,
+                "text": "return got"
+              }
+            }
+          ],
+          "total": 6
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/selectcase.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 7,
+                "text": "got = v"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "got = -1"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 11,
+                "text": "got = 2"
+              },
+              "label": "T"
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/selectcase.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "ch",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "select"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "done",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "select"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 7,
+                "text": "got = v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "got",
+              "def": {
+                "line": 7
+              },
+              "use": {
+                "line": 13,
+                "text": "return got"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "got",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 13,
+                "text": "return got"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "got",
+              "def": {
+                "line": 11
+              },
+              "use": {
+                "line": 13,
+                "text": "return got"
+              }
+            }
+          ],
+          "total": 6
+        }
+      }
+    },
+    {
+      "file": "forbreak.go",
+      "symbol": "forBreak",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/forbreak.go",
+            "symbol": "forBreak",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "i == 3"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < n"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "break"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "i = i + 1"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/forbreak.go",
+            "symbol": "forBreak",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "i < n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "i < n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "i == 3"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "i = i + 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return i"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 5,
+                "text": "i < n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 6,
+                "text": "i == 3"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "i = i + 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return i"
+              }
+            }
+          ],
+          "total": 9
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/forbreak.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "i == 3"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 5,
+                "text": "i < n"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "break"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "i = i + 1"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/forbreak.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "i < n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "i < n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "i == 3"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "i = i + 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return i"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 5,
+                "text": "i < n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 6,
+                "text": "i == 3"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "i = i + 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "i",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return i"
+              }
+            }
+          ],
+          "total": 9
+        }
+      }
+    },
+    {
+      "file": "rangecontinue.go",
+      "symbol": "rangeContinue",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/rangecontinue.go",
+            "symbol": "rangeContinue",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 5,
+                "text": "_, v := range xs"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "v < 0"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "continue"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "sum += v"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/rangecontinue.go",
+            "symbol": "rangeContinue",
+            "startLine": 3,
+            "endLine": 12
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "xs",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "_, v := range xs"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "sum += v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 6,
+                "text": "v < 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "sum += v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "sum += v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum"
+              }
+            }
+          ],
+          "total": 7
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/rangecontinue.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 5,
+                "text": "_, v := range xs"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "v < 0"
+              },
+              "label": "T"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "continue"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "sum += v"
+              },
+              "label": "F"
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/rangecontinue.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "xs",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 5,
+                "text": "_, v := range xs"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "sum += v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 6,
+                "text": "v < 0"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "v",
+              "def": {
+                "line": 5
+              },
+              "use": {
+                "line": 9,
+                "text": "sum += v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 9,
+                "text": "sum += v"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "sum",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 11,
+                "text": "return sum"
+              }
+            }
+          ],
+          "total": 7
+        }
+      }
+    },
+    {
+      "file": "deferguard.go",
+      "symbol": "deferGuard",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/deferguard.go",
+            "symbol": "deferGuard",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "return -1"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "total = n"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 10,
+                "text": "return total"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/deferguard.go",
+            "symbol": "deferGuard",
+            "startLine": 3,
+            "endLine": 11
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "err != nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 9,
+                "text": "total = n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "defer record(total)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 5,
+                "text": "defer record(total)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 10,
+                "text": "return total"
+              }
+            }
+          ],
+          "total": 5
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/deferguard.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 7,
+                "text": "return -1"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 9,
+                "text": "total = n"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 6
+              },
+              "dependent": {
+                "line": 10,
+                "text": "return total"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/deferguard.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 6,
+                "text": "err != nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 9,
+                "text": "total = n"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "defer record(total)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 5,
+                "text": "defer record(total)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "total",
+              "def": {
+                "line": 9
+              },
+              "use": {
+                "line": 10,
+                "text": "return total"
+              }
+            }
+          ],
+          "total": 5
+        }
+      }
+    },
+    {
+      "file": "shortdecl.go",
+      "symbol": "shortDecl",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/shortdecl.go",
+            "symbol": "shortDecl",
+            "startLine": 3,
+            "endLine": 8
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/shortdecl.go",
+            "symbol": "shortDecl",
+            "startLine": 3,
+            "endLine": 8
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "a",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "b",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "x",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "y",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "x",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 7,
+                "text": "return x + y"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "y",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 7,
+                "text": "return x + y"
+              }
+            }
+          ],
+          "total": 6
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/shortdecl.go"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/shortdecl.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "a",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "b",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "x",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "y",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 4,
+                "text": "x := a + b\ny := x * 2\nx = y - 1"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "x",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 7,
+                "text": "return x + y"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "y",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 7,
+                "text": "return x + y"
+              }
+            }
+          ],
+          "total": 6
+        }
+      }
+    },
+    {
+      "file": "multireturn.go",
+      "symbol": "multiReturn",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/multireturn.go",
+            "symbol": "multiReturn",
+            "startLine": 3,
+            "endLine": 10
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "return 0, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "val = val * 2"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "return val, nil"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/multireturn.go",
+            "symbol": "multiReturn",
+            "startLine": 3,
+            "endLine": 10
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "val, err := load(n)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "err != nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return 0, err"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "val",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 8,
+                "text": "val = val * 2"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "val",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 8,
+                "text": "val = val * 2"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "val",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 9,
+                "text": "return val, nil"
+              }
+            }
+          ],
+          "total": 6
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/multireturn.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 6,
+                "text": "return 0, err"
+              },
+              "label": "T",
+              "guard": true
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 8,
+                "text": "val = val * 2"
+              },
+              "label": "F"
+            },
+            {
+              "functionLine": 3,
+              "controller": {
+                "line": 5
+              },
+              "dependent": {
+                "line": 9,
+                "text": "return val, nil"
+              },
+              "label": "F",
+              "guard": true
+            }
+          ],
+          "total": 3
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/multireturn.go"
+          },
+          "results": [
+            {
+              "functionLine": 12,
+              "variable": "n",
+              "def": {
+                "line": 12
+              },
+              "use": {
+                "line": 13,
+                "text": "return n, nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "n",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "val, err := load(n)"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 5,
+                "text": "err != nil"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "err",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return 0, err"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "val",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 8,
+                "text": "val = val * 2"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "val",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 8,
+                "text": "val = val * 2"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "val",
+              "def": {
+                "line": 8
+              },
+              "use": {
+                "line": 9,
+                "text": "return val, nil"
+              }
+            }
+          ],
+          "total": 7
+        }
+      }
+    },
+    {
+      "file": "goroutine.go",
+      "symbol": "goroutineCapture",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/goroutine.go",
+            "symbol": "goroutineCapture",
+            "startLine": 3,
+            "endLine": 10
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/goroutine.go",
+            "symbol": "goroutineCapture",
+            "startLine": 3,
+            "endLine": 10
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "base",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "out := 0\ngo func() {\n\t\tout = base + 1\n\t}()\nout = base"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "out",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "return out"
+              }
+            }
+          ],
+          "total": 2
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/goroutine.go"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/goroutine.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "base",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "out := 0\ngo func() {\n\t\tout = base + 1\n\t}()\nout = base"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "out",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 9,
+                "text": "return out"
+              }
+            }
+          ],
+          "total": 2
+        }
+      }
+    },
+    {
+      "file": "shortcircuit.go",
+      "symbol": "shortCircuitValue",
+      "symbolControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/shortcircuit.go",
+            "symbol": "shortCircuitValue",
+            "startLine": 3,
+            "endLine": 7
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "symbolFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/shortcircuit.go",
+            "symbol": "shortCircuitValue",
+            "startLine": 3,
+            "endLine": 7
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "a",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "ok := a && b\nguard := a || b"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "b",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "ok := a && b\nguard := a || b"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "guard",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return ok && guard"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "ok",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return ok && guard"
+              }
+            }
+          ],
+          "total": 4
+        }
+      },
+      "fileControls": {
+        "ok": true,
+        "payload": {
+          "mode": "controls",
+          "anchor": {
+            "file": "src/shortcircuit.go"
+          },
+          "results": [],
+          "total": 0
+        }
+      },
+      "fileFlows": {
+        "ok": true,
+        "payload": {
+          "mode": "flows",
+          "anchor": {
+            "file": "src/shortcircuit.go"
+          },
+          "results": [
+            {
+              "functionLine": 3,
+              "variable": "a",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "ok := a && b\nguard := a || b"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "b",
+              "def": {
+                "line": 3
+              },
+              "use": {
+                "line": 4,
+                "text": "ok := a && b\nguard := a || b"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "guard",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return ok && guard"
+              }
+            },
+            {
+              "functionLine": 3,
+              "variable": "ok",
+              "def": {
+                "line": 4
+              },
+              "use": {
+                "line": 6,
+                "text": "return ok && guard"
+              }
+            }
+          ],
+          "total": 4
+        }
+      }
+    }
+  ]
+}

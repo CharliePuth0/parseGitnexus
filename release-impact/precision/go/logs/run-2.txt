@@ -1,0 +1,108 @@
+fixture repo: /var/folders/r4/zd9tnwkd1xbg1ss7bs0f9fp40000gn/T/gitnexus-go-pdg-precision-3BDBtq
+copied 15 fixture file(s) to src/
+running analyze --pdg --index-only ...
+analyze log: /Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/go/logs/fixture-analyze-1790617381321.log
+analyze counters: {"cdgSkippedFunctions":0,"reachingDefSkippedFunctions":0,"unsoundFunctions":0,"callableValueFlowCaps":0,"summaryLine":"  Repository indexed successfully (6.5s)","warnLines":0}
+mcp server ready on port 59256
+
+=== per-fixture (target = symbol name) ===
+file             ctrl e/r/m  miss  x    P       R       flow e/r/m  fM   fX   note
+earlyguard.go    3/3/3       0     0    100.0%  100.0%  4/4/4       0    0    
+plainifelse.go   2/2/2       0     0    100.0%  100.0%  3/3/3       0    0    
+nestedif.go      3/3/3       0     0    100.0%  100.0%  5/5/5       0    0    
+elseifchain.go   4/4/4       0     0    100.0%  100.0%  5/5/5       0    0    
+switchexpr.go    3/3/3       0     0    100.0%  100.0%  4/4/4       0    0    
+switchnoexpr.go  2/2/2       0     0    100.0%  100.0%  5/4/3       2    1    
+typeswitch.go    3/3/3       0     0    100.0%  100.0%  6/6/6       0    0    
+selectcase.go    3/3/3       0     0    100.0%  100.0%  6/6/3       3    3    
+forbreak.go      3/4/3       0     1    75.0%   100.0%  9/9/9       0    0    
+rangecontinue.go 3/4/3       0     1    75.0%   100.0%  7/7/7       0    0    
+deferguard.go    3/3/3       0     0    100.0%  100.0%  4/5/4       0    1    
+shortdecl.go     0/0/0       0     0    100.0%  100.0%  6/6/2       4    4    
+multireturn.go   3/3/3       0     0    100.0%  100.0%  5/6/5       0    1    
+goroutine.go     0/0/0       0     0    100.0%  100.0%  2/2/0       2    2    EXPECTED-GAP
+shortcircuit.go  0/0/0       0     0    100.0%  100.0%  6/4/3       3    1    
+
+=== GATE (symbol-name anchor, expectedGap fixtures excluded) ===
+controls: expected=35 matched=35 returned=37 recall=100.0% precision=94.6%
+flows:    expected=75 matched=63 returned=74 recall=84.0% precision=85.1%
+guard edges: expected=5 found=5 missed=0 false-guard-flagged=3
+control misses ignoring the T/F label (edge-level): 0
+duplicate control rows: 0; control rows with EMPTY dependent text: 0
+
+=== misses ===
+switchnoexpr.go:
+  MISSED flow n 3->6
+  MISSED flow n 3->8
+selectcase.go:
+  MISSED flow v 6->7
+  MISSED flow ch 3->6
+  MISSED flow done 3->8
+shortdecl.go:
+  MISSED flow x 4->5
+  MISSED flow y 5->6
+  MISSED flow y 5->7
+  MISSED flow x 6->7
+goroutine.go:
+  MISSED flow base 3->8
+  MISSED flow out 8->9
+shortcircuit.go:
+  MISSED flow a 3->5
+  MISSED flow b 3->5
+  MISSED flow guard 5->6
+
+=== extras (returned but not annotated) ===
+switchnoexpr.go:
+  EXTRA flow n 3->5 "switch{}"
+selectcase.go:
+  EXTRA flow ch 3->5 "select"
+  EXTRA flow done 3->5 "select"
+  EXTRA flow v 5->7 "got = v"
+forbreak.go:
+  EXTRA control 6->5 [F] "i < n"
+rangecontinue.go:
+  EXTRA control 5->5 [T] "_, v := range xs"
+deferguard.go:
+  EXTRA flow total 9->5 "defer record(total)"
+shortdecl.go:
+  EXTRA flow x 4->4 "x := a + b y := x * 2 x = y - 1"
+  EXTRA flow y 4->4 "x := a + b y := x * 2 x = y - 1"
+  EXTRA flow x 4->7 "return x + y"
+  EXTRA flow y 4->7 "return x + y"
+multireturn.go:
+  EXTRA flow val 8->8 "val = val * 2"
+goroutine.go:
+  EXTRA flow base 3->4 "out := 0 go func() { out = base + 1 }() out = base"
+  EXTRA flow out 4->9 "return out"
+shortcircuit.go:
+  EXTRA flow guard 4->6 "return ok && guard"
+
+=== anchors: symbol vs file path vs basename ===
+earlyguard.go    fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+plainifelse.go   fileRows=2   scopedByFunctionLine(3)=2   scopedMatched=2 identicalToSymbol=true otherFunctionLines=[3] basenameRows=2
+nestedif.go      fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+elseifchain.go   fileRows=4   scopedByFunctionLine(3)=4   scopedMatched=4 identicalToSymbol=true otherFunctionLines=[3] basenameRows=4
+switchexpr.go    fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+switchnoexpr.go  fileRows=2   scopedByFunctionLine(3)=2   scopedMatched=2 identicalToSymbol=true otherFunctionLines=[3] basenameRows=2
+typeswitch.go    fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+selectcase.go    fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+forbreak.go      fileRows=4   scopedByFunctionLine(3)=4   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=4
+rangecontinue.go fileRows=4   scopedByFunctionLine(3)=4   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=4
+deferguard.go    fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+shortdecl.go     fileRows=0   scopedByFunctionLine(3)=0   scopedMatched=0 identicalToSymbol=true otherFunctionLines=[] basenameRows=0
+multireturn.go   fileRows=3   scopedByFunctionLine(3)=3   scopedMatched=3 identicalToSymbol=true otherFunctionLines=[3] basenameRows=3
+goroutine.go     fileRows=0   scopedByFunctionLine(3)=0   scopedMatched=0 identicalToSymbol=true otherFunctionLines=[] basenameRows=0
+shortcircuit.go  fileRows=0   scopedByFunctionLine(3)=0   scopedMatched=0 identicalToSymbol=true otherFunctionLines=[] basenameRows=0
+
+=== UID targeting probe ===
+earlyguard.go symbol=earlyGuard
+  uid from cypher: Function:src/earlyguard.go:earlyGuard
+  target=UID      -> kind=results rows=0
+  target=relpath  -> kind=results
+forbreak.go symbol=forBreak
+  uid from cypher: Function:src/forbreak.go:forBreak
+  target=UID      -> kind=results rows=0
+  target=relpath  -> kind=results
+
+GATE: PASS (control recall 100.0% on the symbol-name anchor; flow recall 84.0%; missed guard edges 0)
+raw results: /Users/sugerdaddy/AI/agent/parseCode/GitNexus/release-impact/precision/go/results/latest.json

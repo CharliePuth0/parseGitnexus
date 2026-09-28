@@ -1,0 +1,295 @@
+{
+  "meta": {
+    "purpose": "Hand-annotated ground truth for GO PDG (CDG + REACHING_DEF) precision/recall verification. WRITTEN BEFORE ANY pdg_query WAS RUN (integrity rule). Do not edit to fit results; corrections must be documented as annotation errors in FINDINGS.md.",
+    "scope": "Mirror of the Java Phase A instrument (../fixtures/java/ground-truth.json) with two deliberate instrument fixes, both pre-registered here before the first query. (F1) JOIN POINTS ARE NOT ANNOTATED: the Java instrument listed the join point of every if/else as a dependent ('reachable under this arm'), which is not classical control dependence and produced 12 self-inflicted misses out of 18. (F2) DEAD DEFS ARE NOT ANNOTATED: the Java instrument listed initializers that every path overwrites, which REACHING_DEF correctly drops via gen/kill (8 more self-inflicted misses). Both fixes make the instrument measure the tool, not the annotator.",
+    "lineConvention": "All line numbers are 1-based source lines of the named fixture file. Fixtures are staged verbatim at src/<file> in the throwaway repo, so line numbers are those of fixtures/<file>.",
+    "granularityCaveat": "GitNexus emits BasicBlock granularity and reports every statement inside a straight-line block at the block's START line (the Java run's D2). Expected edges are recorded at SOURCE-STATEMENT granularity (the level a human reads a guard edge at). A tool row that lands on the expected source line is a match; a row whose block merged two adjacent statements onto one line is scored as an extra AND the annotated edge as a miss. That asymmetry is intentional: it is the measurement of D2, not an annotation error. For a block that begins at a `case`/`default` clause the block start is the clause line, which is why case labels and their bodies are on separate lines here (matching the Java SwitchColon fixture, where the tool reported the body line for colon-form cases).",
+    "derivationRules": {
+      "CDG": "Classical Ferrante. X is a branch block (if condition, switch/select dispatch, loop header). Y is control dependent on X iff Y post-dominates some successor S of X and Y does NOT post-dominate X. Every such Y is annotated with the line of the first statement of Y's block. label 'T' = Y is reached via the taken/true successor of X; 'F' = via the fall-through/false successor. BRANCH-TO-BRANCH EDGES ARE INCLUDED (the header block of a nested `if` is itself a dependent of the enclosing predicate; at basic-block granularity it is a classical edge). Join points are excluded by the rule above (they post-dominate X), i.e. a plain if/else yields exactly {if -> thenBody : T} and {if -> elseBody : F} and no edge into the code after the join.",
+      "guards": "expectedGuard=true is annotated on a control row whose dependent statement text is return/break/continue. It is a property of the expected edge, scored independently of whether the tool sets its own `guard` flag.",
+      "REACHING_DEF": "gen/kill. One row for each (def, use) pair such that a definition at defLine can reach the read at useLine along some CFG path with no intervening redefinition of the same variable on that path. A def killed on EVERY path before any read (a dead initializer, e.g. `bonus := 0` in plainifelse.go whose both arms assign before the read) is NOT annotated: the tool drops it correctly and the Java instrument's habit of annotating it was the single largest source of phantom flow misses. A formal parameter's def is its declaration line = the `func` line.",
+      "switchSelect": "All case bodies (including `default`) are annotated with label 'T' — the tool's documented uniform case labelling (Java SwitchArrow: every arm returned 'T'). The controller line annotated is the first line of the dispatch statement (the `switch` / `select` keyword line), because the visitor harvests the case-test expressions onto the dispatch block (gitnexus/src/core/ingestion/cfg/visitors/go.ts, 'case test is harvested as a conditional use'; go-visitor.test.ts 'switch case test is harvested as a conditional (may-def-capable) use'). A switch with no default has a fall-through successor; the statement after it post-dominates the dispatch and is therefore NOT an annotated dependent.",
+      "ternaryEquiv": "Go has NO ternary/conditional expression operator. The Go equivalent of the Java Ternary fixture is a value assigned under both arms of an if/else, which is exactly plainifelse.go; no separate fixture exists and the absence of the construct is itself noted in FINDINGS.md.",
+      "filesBlindSpot": "go/goroutine.go is annotated expectedGap:true — the goroutine closure is a separate CFG unit and its capture of the enclosing frame is expected to be a blind spot. It is reported but excluded from the gate."
+    },
+    "anchor": "Every fixture is queried TWICE: (a) target = the unique function name (function-scoped line-range anchor, the scoring anchor) and (b) target = the repo-relative file path src/<file>.go (the file branch of resolveBlockAnchor applies NO line window, so its rows are additionally filtered by functionLine == entryLine to recover the consumer workaround). Names are globally unique across the 15 fixture files by construction (one entry func per file, no duplicated helper names), so the D6 name-ambiguity trap is not in play in the fixture repo and IS exercised in PROMETHEUS-SPOTCHECK.md.",
+    "gate": "Exit code 0 iff control recall is 100% on the symbol-name anchor over the non-expectedGap fixtures (release-impact/precision/go/runner.mjs). Flow recall and all precision numbers are reported but do not gate, matching the instruction that the exit code be driven by controls."
+  },
+  "fixtures": [
+    {
+      "file": "earlyguard.go",
+      "construct": "if err != nil { return err } early guard",
+      "symbol": "earlyGuard",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 4, "dependentLine": 5, "label": "T", "guard": true, "rationale": "T arm is `return 0, err`; it post-dominates itself (the T successor) and does not post-dominate line 4. THE canonical Go error guard." },
+        { "controllerLine": 4, "dependentLine": 7, "label": "F", "rationale": "`total := n + 1` post-dominates the fall-through successor. It does NOT post-dominate line 4, because the T arm returns — so this is a genuine classical edge, not a join over-annotation: it is the long-range escape the release-impact consumer wants." },
+        { "controllerLine": 4, "dependentLine": 8, "label": "F", "rationale": "`return total, nil` likewise post-dominates the fall-through successor and not line 4." }
+      ],
+      "expectedFlows": [
+        { "variable": "err", "defLine": 3, "useLine": 4, "rationale": "parameter formal def read by the guard condition" },
+        { "variable": "err", "defLine": 3, "useLine": 5, "rationale": "parameter read again by `return 0, err`" },
+        { "variable": "n", "defLine": 3, "useLine": 7 },
+        { "variable": "total", "defLine": 7, "useLine": 8 }
+      ],
+      "notes": "Multi-value return `(int, error)` used only as the error-propagation vehicle here; the dedicated multi-value fixture is multireturn.go. The `nil` identifier on line 4/8 is not annotated: `nil` is predeclared and has no def, so any row naming it is an extra. No exception path in Go, so no Java-D4 analogue is expected on this fixture."
+    },
+    {
+      "file": "plainifelse.go",
+      "construct": "plain if/else (also the Go ternary-equivalent: no ternary operator exists in Go)",
+      "symbol": "plainIfElse",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 8, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "bonus", "defLine": 6, "useLine": 10 },
+        { "variable": "bonus", "defLine": 8, "useLine": 10 },
+        { "variable": "score", "defLine": 3, "useLine": 5 }
+      ],
+      "notes": "The initializer `bonus := 0` (line 4) is DEAD: both arms assign before the read at line 10, so no path carries def 4 to any use and it is deliberately NOT annotated (instrument fix F2; the Java instrument annotated the identical line and recorded a phantom miss). Line 10 (`return bonus`) post-dominates line 5 and is not annotated as a dependent (instrument fix F1)."
+    },
+    {
+      "file": "nestedif.go",
+      "construct": "nested if (inner if inside the outer T arm)",
+      "symbol": "nestedIf",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T", "rationale": "the inner `if` header block post-dominates the outer T successor and does not post-dominate line 5 — a classical branch-to-branch edge, annotated here because at basic-block granularity it is real" },
+        { "controllerLine": 6, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 6, "dependentLine": 9, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "label", "defLine": 4, "useLine": 12, "rationale": "NOT dead: the false arm of the outer predicate skips the whole block, so def 4 reaches the read at 12" },
+        { "variable": "label", "defLine": 7, "useLine": 12 },
+        { "variable": "label", "defLine": 9, "useLine": 12 },
+        { "variable": "score", "defLine": 3, "useLine": 5 },
+        { "variable": "active", "defLine": 3, "useLine": 6 }
+      ],
+      "notes": "{5 -> 12} and {6 -> 12} are NOT annotated: line 12 post-dominates both predicates (every path reaches it), so neither is a control dependence. The Java instrument annotated {5 -> 12 : F} and recorded it as a join over-annotation error; instrument fix F1 removes it. Note that the inner arms 7/9 are NOT dependents of line 5 — line 6 (not 7/9) is what post-dominates the outer T successor."
+    },
+    {
+      "file": "elseifchain.go",
+      "construct": "if / else-if / else chain",
+      "symbol": "elseIfChain",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 7, "label": "F", "rationale": "the else-if header block is the F successor of the first predicate (branch-to-branch, classical at block granularity)" },
+        { "controllerLine": 7, "dependentLine": 8, "label": "T" },
+        { "controllerLine": 7, "dependentLine": 10, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "band", "defLine": 6, "useLine": 12 },
+        { "variable": "band", "defLine": 8, "useLine": 12 },
+        { "variable": "band", "defLine": 10, "useLine": 12 },
+        { "variable": "score", "defLine": 3, "useLine": 5 },
+        { "variable": "score", "defLine": 3, "useLine": 7 }
+      ],
+      "notes": "`band := \"low\"` at line 4 is DEAD (all three arms assign before the read at 12) — NOT annotated. Line 12 is not a dependent of 5 or 7 (post-dominates both). Go's else-if is a nested if in the `alternative` field with NO else_clause wrapper (go-visitor.test.ts), so the chain shape differs from Java's; the CDG shape does not."
+    },
+    {
+      "file": "switchexpr.go",
+      "construct": "switch with an expression and a default",
+      "symbol": "switchExpr",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 11, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "name", "defLine": 7, "useLine": 13 },
+        { "variable": "name", "defLine": 9, "useLine": 13 },
+        { "variable": "name", "defLine": 11, "useLine": 13 },
+        { "variable": "kind", "defLine": 3, "useLine": 5 }
+      ],
+      "notes": "Every arm is annotated 'T' (the tool's documented uniform case labelling). Because a `default` exists there is no distinct no-match successor, so no 'F' row is annotated. `name := \"other\"` at line 4 is DEAD — not annotated. The dependents are the BODY lines (7/9/11); Go cases do not fall through implicitly, so no `fallthrough` edge exists here."
+    },
+    {
+      "file": "switchnoexpr.go",
+      "construct": "expressionless switch (switch { case cond: }) with NO default",
+      "symbol": "switchNoExpr",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "tag", "defLine": 4, "useLine": 11, "rationale": "no default: the no-match successor reaches line 11, so def 4 is NOT dead" },
+        { "variable": "tag", "defLine": 7, "useLine": 11 },
+        { "variable": "tag", "defLine": 9, "useLine": 11 },
+        { "variable": "n", "defLine": 3, "useLine": 6, "rationale": "case-test read; a likely D2 coarsening victim if the test is harvested onto the dispatch block at line 5" },
+        { "variable": "n", "defLine": 3, "useLine": 8 }
+      ],
+      "notes": "The controller line is annotated as 5 (the `switch` keyword) rather than 6/8 because the case-test expressions live on the dispatch block. Without a default the fall-through successor leads to line 11; line 11 post-dominates the dispatch and is NOT a dependent. The no-match arm therefore has NO control dependence — a classical boundary, not a defect. This is the Go construct with no Java counterpart (Java expressionless switches do not exist); the closest is Java switch-with-expression."
+    },
+    {
+      "file": "typeswitch.go",
+      "construct": "type switch (switch t := v.(type)) with a default",
+      "symbol": "typeSwitch",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 11, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "t", "defLine": 5, "useLine": 7, "rationale": "the type-switch alias is a def on the dispatch header (go-visitor.test.ts asserts the def fact); the bound value is in scope only inside its own case" },
+        { "variable": "t", "defLine": 5, "useLine": 9 },
+        { "variable": "v", "defLine": 3, "useLine": 5 },
+        { "variable": "n", "defLine": 7, "useLine": 13 },
+        { "variable": "n", "defLine": 9, "useLine": 13 },
+        { "variable": "n", "defLine": 11, "useLine": 13 }
+      ],
+      "notes": "`n := 0` at line 4 is DEAD (a default is present so every path assigns) — NOT annotated. The `t` def is annotated at the dispatch line 5, not at the case line: the alias is bound by the dispatch. GO-SPECIFIC RISK: in real Go `t` is bound per-case with a different static type in each arm, so a single def at line 5 reaching BOTH case bodies (7 and 9) is a modelling approximation; the annotated rows are the ones the visitor claims (alias def on the header), and an arm-specific reading would instead be t 6->7 / t 8->9. Both readings are recorded here so the result can be classified either way."
+    },
+    {
+      "file": "selectcase.go",
+      "construct": "select with two communication cases and a default",
+      "symbol": "selectCase",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 7, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "T" },
+        { "controllerLine": 5, "dependentLine": 11, "label": "T" }
+      ],
+      "expectedFlows": [
+        { "variable": "v", "defLine": 6, "useLine": 7, "rationale": "`case v := <-ch:` defines the channel-received binding (go-visitor.test.ts #2195 P2)" },
+        { "variable": "ch", "defLine": 3, "useLine": 6 },
+        { "variable": "done", "defLine": 3, "useLine": 8 },
+        { "variable": "got", "defLine": 7, "useLine": 13 },
+        { "variable": "got", "defLine": 9, "useLine": 13 },
+        { "variable": "got", "defLine": 11, "useLine": 13 }
+      ],
+      "notes": "`got := 0` at line 4 is DEAD (default present, all arms assign) — NOT annotated. The second case is `<-done` (receive without binding), so `done` is a use at line 8 with no def introduced. With a default present a select never blocks, so line 13 post-dominates the dispatch and is not a dependent; the visitor's structural exit-escape edge for `select {}` is not exercised here (that is deferred to the Prometheus spot check)."
+    },
+    {
+      "file": "forbreak.go",
+      "construct": "for loop (while-style) with break",
+      "symbol": "forBreak",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T", "rationale": "the loop body entry block post-dominates the T successor of the header and not the header itself" },
+        { "controllerLine": 6, "dependentLine": 7, "label": "T", "guard": true },
+        { "controllerLine": 6, "dependentLine": 9, "label": "F", "rationale": "line 9 does not post-dominate line 6 (the break path skips it)" }
+      ],
+      "expectedFlows": [
+        { "variable": "i", "defLine": 4, "useLine": 5 },
+        { "variable": "i", "defLine": 4, "useLine": 6 },
+        { "variable": "i", "defLine": 4, "useLine": 9 },
+        { "variable": "i", "defLine": 4, "useLine": 11, "rationale": "zero-iteration exit: the header's F arm reaches line 11 carrying def 4" },
+        { "variable": "i", "defLine": 9, "useLine": 5, "rationale": "loop-carried back edge" },
+        { "variable": "i", "defLine": 9, "useLine": 6 },
+        { "variable": "i", "defLine": 9, "useLine": 9, "rationale": "`i = i + 1` reads and writes i on the same line" },
+        { "variable": "i", "defLine": 9, "useLine": 11 },
+        { "variable": "n", "defLine": 3, "useLine": 5 }
+      ],
+      "notes": "The loop-exit dependence {5 -> 11} is NOT annotated and is not a defect: line 11 post-dominates the header, so classical CDG has no edge there (the same boundary the Java run recorded as informational). Line 9 is NOT a dependent of the header, because the `break` at 7 means line 9 does not post-dominate the body entry — a consequence of the Ferrante rule worth stating explicitly, since the intuitive reading ('the loop test gates the body') would wrongly predict it."
+    },
+    {
+      "file": "rangecontinue.go",
+      "construct": "for-range with continue",
+      "symbol": "rangeContinue",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T" },
+        { "controllerLine": 6, "dependentLine": 7, "label": "T", "guard": true },
+        { "controllerLine": 6, "dependentLine": 9, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "v", "defLine": 5, "useLine": 6, "rationale": "the range value variable is a def on the loop header" },
+        { "variable": "v", "defLine": 5, "useLine": 9 },
+        { "variable": "xs", "defLine": 3, "useLine": 5 },
+        { "variable": "sum", "defLine": 4, "useLine": 9, "rationale": "`sum += v` reads sum (compound assignment is both a use and a def)" },
+        { "variable": "sum", "defLine": 4, "useLine": 11, "rationale": "empty-range exit carries def 4 to the return" },
+        { "variable": "sum", "defLine": 9, "useLine": 9, "rationale": "self pair on the compound assignment" },
+        { "variable": "sum", "defLine": 9, "useLine": 11 }
+      ],
+      "notes": "The blank identifier `_` is not annotated (no binding). Line 9 is NOT a dependent of the range header, because the `continue` at 7 means line 9 does not post-dominate the body entry. The range header carries both the entry test and the back-edge test on one source line, so the def/use pairs are annotated in both directions."
+    },
+    {
+      "file": "deferguard.go",
+      "construct": "defer: a deferred call registered before a guarded return",
+      "symbol": "deferGuard",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 6, "dependentLine": 7, "label": "T", "guard": true },
+        { "controllerLine": 6, "dependentLine": 9, "label": "F" },
+        { "controllerLine": 6, "dependentLine": 10, "label": "F", "rationale": "`return total` post-dominates the fall-through successor and not line 6, because the T arm returns early" }
+      ],
+      "expectedFlows": [
+        { "variable": "total", "defLine": 4, "useLine": 5, "rationale": "the deferred call's ARGUMENT is read at defer time (line 5), not at function exit — Go evaluates defer arguments immediately" },
+        { "variable": "total", "defLine": 9, "useLine": 10 },
+        { "variable": "err", "defLine": 3, "useLine": 6 },
+        { "variable": "n", "defLine": 3, "useLine": 9 }
+      ],
+      "notes": "THE KEY GO-SPECIFIC PROBE. The deferred call `record(total)` is executed at function exit (the visitor drains a finalizer chain at every return), which puts a USE of `total` on a block whose start line is 5 — lexically BEFORE the def at line 9. A reaching-def solver that treats that block's read as an ordinary use will emit `total 9 -> 5`, which is UNSOUND for Go (the argument was captured at line 4/5, so the exit-time call reads the value of def 4, never def 9). It is NOT annotated; if it appears it is a Go-specific false data edge (recorded in FINDINGS as defect class D8-defer). Note also that the deferred block must NOT become a control dependent of line 6: it post-dominates line 6 (both the early return and the normal return thread through it), so a `6 -> 5` control row would be a false guard edge. No CDG edge is annotated onto line 5."
+    },
+    {
+      "file": "shortdecl.go",
+      "construct": "short declaration := data flow (no branches at all)",
+      "symbol": "shortDecl",
+      "entryLine": 3,
+      "expectedControls": [],
+      "expectedFlows": [
+        { "variable": "a", "defLine": 3, "useLine": 4 },
+        { "variable": "b", "defLine": 3, "useLine": 4 },
+        { "variable": "x", "defLine": 4, "useLine": 5 },
+        { "variable": "y", "defLine": 5, "useLine": 6 },
+        { "variable": "y", "defLine": 5, "useLine": 7 },
+        { "variable": "x", "defLine": 6, "useLine": 7 }
+      ],
+      "notes": "Zero-control baseline: a function with no branch must yield zero CDG rows (an empty control set is the correct answer here, and is the fixture that separates 'no dependence' from the D7 silent-empty trap — here empty is RIGHT). `x`'s def at line 4 is killed by the def at line 6, and line 6 reads `y` not `x`, so no `x 4 -> 6` row exists and none is annotated."
+    },
+    {
+      "file": "multireturn.go",
+      "construct": "multi-value return (val, err) flow",
+      "symbol": "multiReturn",
+      "entryLine": 3,
+      "expectedControls": [
+        { "controllerLine": 5, "dependentLine": 6, "label": "T", "guard": true },
+        { "controllerLine": 5, "dependentLine": 8, "label": "F" },
+        { "controllerLine": 5, "dependentLine": 9, "label": "F" }
+      ],
+      "expectedFlows": [
+        { "variable": "val", "defLine": 4, "useLine": 8, "rationale": "`val = val * 2` reads the value bound from the two-result call" },
+        { "variable": "val", "defLine": 8, "useLine": 9 },
+        { "variable": "err", "defLine": 4, "useLine": 5 },
+        { "variable": "err", "defLine": 4, "useLine": 6 },
+        { "variable": "n", "defLine": 3, "useLine": 4 }
+      ],
+      "notes": "`val, err := load(n)` defines BOTH names from one call (go-visitor.test.ts asserts both def facts). `n` here shadows the `n` parameter of the file-local `load` — the two units are separate and a solver that merges them would produce a cross-function false edge (`n 3 -> 12`), which is NOT annotated. The file path anchor additionally returns `load`'s own rows for this fixture (the D6 non-function-scoped file branch); those are expected and are filtered by functionLine in the runner."
+    },
+    {
+      "file": "goroutine.go",
+      "construct": "goroutine closure capture (EXPECTED BLIND SPOT)",
+      "symbol": "goroutineCapture",
+      "entryLine": 3,
+      "expectedGap": true,
+      "expectedControls": [],
+      "expectedFlows": [
+        { "variable": "base", "defLine": 3, "useLine": 8 },
+        { "variable": "out", "defLine": 8, "useLine": 9 }
+      ],
+      "notes": "DOCUMENTED GAP. The `go func(){...}()` closure is collected as its OWN function (go-visitor.test.ts) keyed to the `func` keyword line 5, and the visitor explicitly does NOT follow the spawned flow inline; nothing is dropped, but the closure's blocks belong to a different unit, so the capture `base 3 -> 6` and the closure's write of `out` at line 6 are not part of the enclosing unit's rows. Whether the tool still joins them is the probe: a joined capture appears as an extra `base 3 -> 6`; a joined write appears as an extra `out 6 -> 9` and a WRONG `out 4 -> 9` (its true killer is line 6 only if the closure is inlined, which it is not). The outer unit's own def of `out` at line 4 is killed by line 8 before the read at 9, so `out 4 -> 9` is NOT annotated and its appearance would be a false edge, not a capture artifact. expectedGap excludes this fixture from the gate."
+    },
+    {
+      "file": "shortcircuit.go",
+      "construct": "short-circuit && / || in VALUE position (no statement-level branch)",
+      "symbol": "shortCircuitValue",
+      "entryLine": 3,
+      "expectedControls": [],
+      "expectedFlows": [
+        { "variable": "a", "defLine": 3, "useLine": 4 },
+        { "variable": "b", "defLine": 3, "useLine": 4, "rationale": "the right operand of && is still walked as a use (go-visitor.test.ts)" },
+        { "variable": "a", "defLine": 3, "useLine": 5 },
+        { "variable": "b", "defLine": 3, "useLine": 5 },
+        { "variable": "ok", "defLine": 4, "useLine": 6 },
+        { "variable": "guard", "defLine": 5, "useLine": 6 }
+      ],
+      "notes": "D5 analogue. `&&`/`||` in value position create a branch in the CFG but no statement-level predicate, so ZERO control rows are annotated — the classical answer, matching the Java Ternary/ShortCircuit finding. Note the deliberate contrast with the Java run's shortcircuit fixture: there the compound `&&` also appeared inside an `if` TEST, where the tool DOES emit a guard edge; here every short-circuit is in a value position, which isolates the D5 class. If the tool emits guard rows onto lines 4/5/6 from an internal short-circuit block, they are FALSE control edges relative to this annotation (a data, not control, selection) and are reported as extras under the D5 heading. Go has no ternary operator, so this fixture and plainifelse.go together cover the two Java expression-level fixtures."
+    }
+  ]
+}
