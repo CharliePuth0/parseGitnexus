@@ -293,6 +293,7 @@ export function buildChangeEntry({
   upstream,
   downstream,
   intraProcedural,
+  source,
   processIndex = new Map(),
   fileStatus = new Map(),
 }) {
@@ -334,6 +335,18 @@ export function buildChangeEntry({
     filePath: symbol.filePath,
     isTestFile: symbol.isTestFile,
     changeType,
+    ...(source && typeof source === 'object' && typeof source.content === 'string'
+      ? {
+          source: {
+            startLine: source.startLine,
+            endLine: source.endLine,
+            content: source.content,
+            symbolStartLine: source.symbolStartLine,
+            symbolEndLine: source.symbolEndLine,
+            approximate: source.approximate === true,
+          },
+        }
+      : {}),
     impact: {
       risk: mergedRisk(upstream, downstream),
       epistemic: mergeEpistemic([up.ok ? up.epistemic : 'unknown', down.ok ? down.epistemic : 'unknown']),
@@ -378,6 +391,7 @@ export function buildReport({ meta, detect, analyses, taint, options = {}, fileS
       upstream: analysis.upstream,
       downstream: analysis.downstream,
       intraProcedural: analysis.intraProcedural,
+      source: analysis.source,
       processIndex,
       fileStatus,
     });
@@ -544,6 +558,18 @@ function validateChangeEntry(errors, path, entry) {
   if (typeof entry.isTestFile !== 'boolean') errors.push(`${path}.isTestFile: expected boolean, got ${typeof entry.isTestFile}`);
   // Optional in v1.1, but when present it must be one of the three literals.
   if (entry.changeType !== undefined) checkEnum(errors, `${path}.changeType`, entry.changeType, CHANGE_TYPES);
+
+  // v1.4 optional source snippet.
+  if (entry.source !== undefined) {
+    const src = entry.source;
+    if (!isPlainObject(src)) {
+      errors.push(`${path}.source: expected object`);
+    } else {
+      checkNumber(errors, `${path}.source.startLine`, src.startLine);
+      checkNumber(errors, `${path}.source.endLine`, src.endLine);
+      checkString(errors, `${path}.source.content`, src.content);
+    }
+  }
 
   const impact = entry.impact;
   if (!isPlainObject(impact)) {

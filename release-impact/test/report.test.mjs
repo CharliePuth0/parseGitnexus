@@ -509,7 +509,7 @@ test('buildLlmRequest honors the same env the Anthropic SDK reads', () => {
   assert.equal(withKey.url, 'https://api.anthropic.com/v1/messages');
   assert.equal(withKey.headers['x-api-key'], 'key');
   assert.equal(withKey.body.model, 'claude-opus-5');
-  assert.equal(withKey.body.max_tokens, 8000);
+  assert.equal(withKey.body.max_tokens, 16000);
 
   // No credentials → an error, never a request.
   assert.ok(buildLlmRequest('x', {}).error);

@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { getSyntaxLanguageFromFilename } from 'gitnexus-shared';
 import type { ChangeEntry, ImpactNode, ReleaseImpactReport } from '../types/report';
 import type { TKey } from '../lib/i18n';
 import { useT } from '../lib/i18n';
@@ -13,6 +16,11 @@ import { ProcessList } from './ProcessList';
 import { NarrativeSection } from './NarrativeSection';
 import { ChevronIcon, InfoIcon, KindGlyph, WarningIcon } from './icons';
 import './detail.css';
+
+/** Prism language slug from a repo-relative path (falls back to plain text). */
+function getSyntaxLanguage(filePath: string): string {
+  return getSyntaxLanguageFromFilename(filePath) ?? 'text';
+}
 
 const EPISTEMIC_KEYS: Record<string, { label: TKey; hint: TKey }> = {
   exact: { label: 'epistemic.exact', hint: 'epistemic.exact.hint' },
@@ -59,6 +67,17 @@ function ChangeDetail({
     ? impact.affectedProcesses
     : impact.affectedProcesses.slice(0, CHIP_LIMIT);
 
+  // Guard lines for in-code highlighting: controller predicates + their early
+  // exits (the statement-level evidence the code window should make visible).
+  const guardLines = useMemo(() => {
+    const lines = new Set<number>();
+    for (const guard of impact.intraProcedural?.guards ?? []) {
+      lines.add(guard.controllerLine);
+      lines.add(guard.line);
+    }
+    return lines;
+  }, [impact.intraProcedural?.guards]);
+
   return (
     <>
       <section className="panel__section detail__head">
@@ -72,6 +91,30 @@ function ChangeDetail({
           {location}
         </div>
       </section>
+
+      {change.source ? (
+        <Section title={t('detail.source')}>
+          {change.source.approximate ? (
+            <p className="muted detail__hint">{t('detail.sourceApprox')}</p>
+          ) : null}
+          <div className="sourceBlock">
+            <SyntaxHighlighter
+              language={getSyntaxLanguage(change.filePath)}
+              style={vscDarkPlus}
+              showLineNumbers
+              startingLineNumber={change.source.startLine}
+              wrapLongLines={false}
+              lineProps={(lineNumber) =>
+                guardLines.has(lineNumber) ? { style: { backgroundColor: 'rgba(250, 178, 25, 0.12)' } } : {}
+              }
+              customStyle={{ margin: 0, background: 'transparent', fontSize: '11px' }}
+              codeTagProps={{ style: { fontFamily: 'var(--font-mono, ui-monospace, monospace)' } }}
+            >
+              {change.source.content}
+            </SyntaxHighlighter>
+          </div>
+        </Section>
+      ) : null}
 
       <Section title={t('detail.risk')}>
         <dl className="kv">

@@ -89,7 +89,19 @@ export interface ChangeEntry {
   isTestFile: boolean;
   /** added | modified | removed(v1.1 可选,缺失时不做任何推断) */
   changeType?: ChangeType;
+  /** v1.4 源码片段(引擎从本地仓库读的,有界窗口) */
+  source?: SourceSnippet;
   impact: Impact;
+}
+
+export interface SourceSnippet {
+  startLine: number;
+  endLine: number;
+  content: string;
+  symbolStartLine: number;
+  symbolEndLine: number;
+  /** file+functionLine 兜底时符号区间是近似值 */
+  approximate: boolean;
 }
 
 export interface ProcessEntry {

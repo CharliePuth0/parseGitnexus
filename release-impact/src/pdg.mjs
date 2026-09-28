@@ -181,9 +181,20 @@ export async function querySymbolPdg(client, symbol, { pdgQuery } = {}) {
   const cleanedControls = cleanControls(rows);
   const cleanedFlows = cleanFlows(flowsRows);
 
+  // Symbol span for the source-code snippet (uid/name anchors carry the exact
+  // window; the file+functionLine fallback gets a start-only approximation).
+  const anchorSpan = controls?.anchor ?? null;
+  const span =
+    anchorSpan && typeof anchorSpan.startLine === 'number' && typeof anchorSpan.endLine === 'number'
+      ? { startLine: anchorSpan.startLine, endLine: anchorSpan.endLine, approximate: false }
+      : matchingLine !== null
+        ? { startLine: matchingLine, endLine: matchingLine + 40, approximate: true }
+        : null;
+
   return {
     pdgLayer: true,
     resolution,
+    ...(span ? { span } : {}),
     guards: cleanedControls.rows.slice(0, PDG_ROW_CAP),
     flows: cleanedFlows.rows.slice(0, PDG_ROW_CAP),
     truncated: {

@@ -28,6 +28,7 @@ import { fileURLToPath } from 'node:url';
 import { readChangedFileStatus, readRangeInfo } from './src/git-status.mjs';
 import { generateNarrative } from './src/llm.mjs';
 import { querySymbolPdg, readPdgStamp } from './src/pdg.mjs';
+import { readSourceSnippet } from './src/source.mjs';
 import { GitNexusClient } from './src/gitnexus-client.mjs';
 import { buildLlmPrompt } from './src/prompt.mjs';
 import { buildReport, mergedRisk, selectAnalysisTargets, toPublicReport, validateReport } from './src/report.mjs';
@@ -285,7 +286,16 @@ export async function run(config, log = () => {}) {
         intraProcedural = await querySymbolPdg(client, symbol);
       }
 
-      analyses.push({ symbol, upstream, downstream, intraProcedural });
+      // Source snippet for the report (the repo lives next to the engine): a
+      // bounded window around the symbol's span, guard lines highlighted by the
+      // frontend via intraProcedural.guards.
+      let source = null;
+      if (intraProcedural?.span) {
+        const snippet = readSourceSnippet(config.repoPath, symbol.filePath, intraProcedural.span);
+        if (!snippet.error) source = snippet;
+      }
+
+      analyses.push({ symbol, upstream, downstream, intraProcedural, source });
 
       // Same merge the report uses, so the progress line never disagrees with report.json.
       log(`[${i + 1}/${selection.targets.length}] ${symbol.name} → ${mergedRisk(upstream, downstream)}`);

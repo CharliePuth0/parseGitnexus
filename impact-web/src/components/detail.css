@@ -550,3 +550,16 @@
   font-size: 10px;
   color: var(--ink-3);
 }
+
+/* ── 源码片段(v1.4) ─────────────────────────────────────────── */
+.sourceBlock {
+  max-height: 340px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  background: var(--surface-1);
+}
+.sourceBlock code {
+  font-size: 11px;
+  line-height: 1.55;
+}

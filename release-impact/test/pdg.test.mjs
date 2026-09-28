@@ -173,3 +173,22 @@ test('querySymbolPdg treats empty name results as UNKNOWN', async () => {
   assert.equal(result.pdgLayer, true);
   assert.match(result.note, /UNKNOWN/);
 });
+
+test('readSourceSnippet slices a bounded window and rejects path escapes', async () => {
+  const { readSourceSnippet } = await import('../src/source.mjs');
+  const dir = mkdtempSync(path.join(tmpdir(), 'gnx-src-'));
+  const file = path.join(dir, 'pkg', 'a.go');
+  mkdirSync(path.dirname(file), { recursive: true });
+  writeFileSync(file, Array.from({ length: 50 }, (_, i) => `line ${i + 1}`).join('\n'));
+
+  const snippet = readSourceSnippet(dir, 'pkg/a.go', { startLine: 10, endLine: 20 });
+  assert.equal(snippet.startLine, 4); // 10 - 6 context
+  assert.equal(snippet.endLine, 26); // 20 + 6 context
+  assert.match(snippet.content, /^line 4\n/);
+  assert.equal(snippet.symbolStartLine, 10);
+
+  const escaped = readSourceSnippet(dir, '../outside.go', { startLine: 1, endLine: 5 });
+  assert.ok(escaped.error);
+
+  rmSync(dir, { recursive: true, force: true });
+});

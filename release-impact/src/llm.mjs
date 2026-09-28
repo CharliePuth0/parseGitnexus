@@ -21,7 +21,7 @@ export function buildLlmRequest(prompt, env = {}) {
   const authToken = env.ANTHROPIC_AUTH_TOKEN || '';
   const apiKey = env.ANTHROPIC_API_KEY || '';
   const model = env.ANTHROPIC_MODEL || 'claude-opus-5';
-  const maxTokens = Number(env.RELEASE_IMPACT_MAX_TOKENS) || 8000;
+  const maxTokens = Number(env.RELEASE_IMPACT_MAX_TOKENS) || 16000;
   if (!authToken && !apiKey) {
     return { error: 'no credentials: set ANTHROPIC_AUTH_TOKEN or ANTHROPIC_API_KEY' };
   }
