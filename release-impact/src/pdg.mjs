@@ -72,7 +72,7 @@ function cleanFlows(rows) {
       useText: use.text,
     });
   }
-  return { rows: kept, droppedEmptyText: 0 };
+  return { rows: kept };
 }
 
 /**

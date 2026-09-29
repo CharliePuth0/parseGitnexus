@@ -101,8 +101,6 @@ function formatChangeSection(entry, index) {
           '- statement-level rows are capped and block-granular: the line is a block anchor, the quoted text is the true statement; empty results mean UNKNOWN, not "no dependence"',
         );
       }
-    } else if (ip.note) {
-      lines.push(`- statement-level (PDG): ${ip.note}`);
     }
   }
   lines.push('');
